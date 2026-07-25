@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,15 +9,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { TerminalCard } from "@/components/auth/terminal-card";
+import { OtpInput } from "@/components/auth/otp-input";
+
+type Step = "form" | "otp";
 
 export function RegisterForm() {
+  const router = useRouter();
   const supabase = createClient();
+  const [step, setStep] = useState<Step>("form");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
+  const [resent, setResent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,10 +33,7 @@ export function RegisterForm() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-        data: { user_name: username },
-      },
+      options: { data: { user_name: username } },
     });
 
     setLoading(false);
@@ -37,20 +41,70 @@ export function RegisterForm() {
       setError(error.message);
       return;
     }
-    setDone(true);
+    setStep("otp");
   }
 
-  if (done) {
+  async function handleVerify(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: otp,
+      type: "signup",
+    });
+
+    setLoading(false);
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    router.push("/dashboard");
+    router.refresh();
+  }
+
+  async function handleResend() {
+    setError(null);
+    const { error } = await supabase.auth.resend({ type: "signup", email });
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    setResent(true);
+    setTimeout(() => setResent(false), 3000);
+  }
+
+  if (step === "otp") {
     return (
-      <TerminalCard command="fathir auth --register">
-        <p className="font-data text-sm text-signal">
-          check your inbox — confirmation link sent to {email}
-        </p>
-        <p className="mt-4 text-xs font-data text-muted">
-          <Link href="/login" className="text-accent hover:underline">
-            back to login
-          </Link>
-        </p>
+      <TerminalCard command="fathir auth --verify-otp">
+        <form onSubmit={handleVerify} className="space-y-5">
+          <p className="text-center font-data text-xs text-muted">
+            kode 6 digit sudah dikirim ke <span className="text-text">{email}</span>
+          </p>
+          <OtpInput value={otp} onChange={setOtp} />
+
+          {error && (
+            <p className="text-center font-data text-xs text-danger" role="alert">
+              error: {error}
+            </p>
+          )}
+          {resent && (
+            <p className="text-center font-data text-xs text-signal">kode baru terkirim</p>
+          )}
+
+          <Button type="submit" disabled={loading || otp.length < 6} className="w-full">
+            {loading ? "verifying..." : "verify & masuk"}
+          </Button>
+
+          <button
+            type="button"
+            onClick={handleResend}
+            className="w-full text-center font-data text-xs text-muted hover:text-accent"
+          >
+            kirim ulang kode
+          </button>
+        </form>
       </TerminalCard>
     );
   }
