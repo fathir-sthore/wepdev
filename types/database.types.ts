@@ -25,6 +25,7 @@ export type Database = {
           display_name?: string | null;
           avatar_url?: string | null;
           bio?: string | null;
+          role?: "user" | "developer" | "admin";
         };
         Relationships: [];
       };
@@ -67,6 +68,261 @@ export type Database = {
           script_id?: string;
           ip_hash?: string | null;
         };
+        Relationships: [];
+      };
+      categories: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          icon: string | null;
+          description: string | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          icon?: string | null;
+          description?: string | null;
+          sort_order?: number;
+        };
+        Update: {
+          name?: string;
+          slug?: string;
+          icon?: string | null;
+          description?: string | null;
+          sort_order?: number;
+        };
+        Relationships: [];
+      };
+      tags: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+        };
+        Update: {
+          name?: string;
+          slug?: string;
+        };
+        Relationships: [];
+      };
+      scripts: {
+        Row: {
+          id: string;
+          slug: string;
+          title: string;
+          short_description: string;
+          description: string;
+          developer_id: string;
+          category_id: string | null;
+          version: string;
+          programming_language: string | null;
+          framework: string | null;
+          license: string | null;
+          file_path: string | null;
+          file_size_bytes: number | null;
+          checksum_sha256: string | null;
+          password_zip: string | null;
+          thumbnail_path: string | null;
+          screenshot_paths: string[];
+          documentation_path: string | null;
+          video_url: string | null;
+          github_url: string | null;
+          website_url: string | null;
+          changelog: string | null;
+          is_premium: boolean;
+          price: number;
+          status: "draft" | "published" | "archived";
+          view_count: number;
+          download_count: number;
+          favorite_count: number;
+          rating_avg: number;
+          rating_count: number;
+          published_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          short_description: string;
+          description: string;
+          developer_id: string;
+          category_id?: string | null;
+          version?: string;
+          programming_language?: string | null;
+          framework?: string | null;
+          license?: string | null;
+          file_path?: string | null;
+          file_size_bytes?: number | null;
+          checksum_sha256?: string | null;
+          password_zip?: string | null;
+          thumbnail_path?: string | null;
+          screenshot_paths?: string[];
+          documentation_path?: string | null;
+          video_url?: string | null;
+          github_url?: string | null;
+          website_url?: string | null;
+          changelog?: string | null;
+          is_premium?: boolean;
+          price?: number;
+          status?: "draft" | "published" | "archived";
+          published_at?: string | null;
+        };
+        Update: {
+          slug?: string;
+          title?: string;
+          short_description?: string;
+          description?: string;
+          category_id?: string | null;
+          version?: string;
+          programming_language?: string | null;
+          framework?: string | null;
+          license?: string | null;
+          file_path?: string | null;
+          file_size_bytes?: number | null;
+          checksum_sha256?: string | null;
+          password_zip?: string | null;
+          thumbnail_path?: string | null;
+          screenshot_paths?: string[];
+          documentation_path?: string | null;
+          video_url?: string | null;
+          github_url?: string | null;
+          website_url?: string | null;
+          changelog?: string | null;
+          is_premium?: boolean;
+          price?: number;
+          status?: "draft" | "published" | "archived";
+          published_at?: string | null;
+        };
+        Relationships: [];
+      };
+      script_tags: {
+        Row: {
+          script_id: string;
+          tag_id: string;
+        };
+        Insert: {
+          script_id: string;
+          tag_id: string;
+        };
+        Update: {
+          script_id?: string;
+          tag_id?: string;
+        };
+        Relationships: [];
+      };
+      reviews: {
+        Row: {
+          id: string;
+          script_id: string;
+          user_id: string;
+          rating: number;
+          comment: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          script_id: string;
+          user_id: string;
+          rating: number;
+          comment?: string | null;
+        };
+        Update: {
+          rating?: number;
+          comment?: string | null;
+        };
+        Relationships: [];
+      };
+      reports: {
+        Row: {
+          id: string;
+          script_id: string;
+          user_id: string | null;
+          reason: string;
+          details: string | null;
+          status: "open" | "reviewed" | "dismissed";
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          script_id: string;
+          user_id?: string | null;
+          reason: string;
+          details?: string | null;
+          status?: "open" | "reviewed" | "dismissed";
+        };
+        Update: {
+          status?: "open" | "reviewed" | "dismissed";
+        };
+        Relationships: [];
+      };
+      purchases: {
+        Row: {
+          id: string;
+          user_id: string;
+          script_id: string;
+          order_id: string;
+          payment_method: string;
+          amount: number;
+          fee: number | null;
+          total_payment: number | null;
+          qr_string: string | null;
+          status: "pending" | "completed" | "failed" | "expired" | "cancelled";
+          expires_at: string | null;
+          completed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          script_id: string;
+          order_id: string;
+          payment_method?: string;
+          amount: number;
+          fee?: number | null;
+          total_payment?: number | null;
+          qr_string?: string | null;
+          status?: "pending" | "completed" | "failed" | "expired" | "cancelled";
+          expires_at?: string | null;
+        };
+        Update: {
+          status?: "pending" | "completed" | "failed" | "expired" | "cancelled";
+          fee?: number | null;
+          total_payment?: number | null;
+          qr_string?: string | null;
+          expires_at?: string | null;
+          completed_at?: string | null;
+        };
+        Relationships: [];
+      };
+      views: {
+        Row: {
+          id: string;
+          script_id: string;
+          user_id: string | null;
+          ip_hash: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          script_id: string;
+          user_id?: string | null;
+          ip_hash?: string | null;
+        };
+        Update: never;
         Relationships: [];
       };
     };

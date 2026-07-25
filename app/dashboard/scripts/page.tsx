@@ -1,0 +1,78 @@
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { getMyScripts } from "@/lib/queries/developer";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { formatCount } from "@/lib/storage";
+import { DeleteScriptButton } from "@/components/dashboard/delete-script-button";
+
+export const metadata = { title: "My Scripts — Dashboard" };
+
+const statusColor: Record<string, string> = {
+  draft: "text-muted",
+  published: "text-signal",
+  archived: "text-danger",
+};
+
+export default async function MyScriptsPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const scripts = await getMyScripts(supabase, user!.id);
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <p className="font-data text-xs text-signal mb-2">$ fathir scripts --mine</p>
+          <h1 className="font-mono text-2xl text-text">My scripts</h1>
+        </div>
+        <Link href="/dashboard/scripts/new">
+          <Button>upload new</Button>
+        </Link>
+      </div>
+
+      {scripts.length === 0 ? (
+        <Card>
+          <CardContent className="text-sm text-muted font-data">
+            you haven't uploaded any scripts yet.
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-3">
+          {scripts.map((script) => (
+            <Card key={script.id}>
+              <CardContent className="flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-sm text-text truncate">{script.title}</span>
+                    <span className={`font-data text-[11px] uppercase ${statusColor[script.status]}`}>
+                      {script.status}
+                    </span>
+                  </div>
+                  <p className="font-data text-[11px] text-muted mt-1">
+                    v{script.version} · {formatCount(script.download_count)} downloads ·{" "}
+                    {formatCount(script.view_count)} views · rating {script.rating_avg.toFixed(1)}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {script.status === "published" && (
+                    <Link href={`/script/${script.slug}`} target="_blank">
+                      <Button variant="ghost" size="sm">view</Button>
+                    </Link>
+                  )}
+                  <Link href={`/dashboard/scripts/${script.id}/edit`}>
+                    <Button variant="outline" size="sm">edit</Button>
+                  </Link>
+                  <DeleteScriptButton scriptId={script.id} title={script.title} />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

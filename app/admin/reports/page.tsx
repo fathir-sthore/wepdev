@@ -1,0 +1,18 @@
+import { createClient } from "@/lib/supabase/server";
+import { getAllReports } from "@/lib/queries/admin";
+import { AdminReportsTable } from "@/components/admin/reports-table";
+
+export const metadata = { title: "Reports — Admin" };
+
+export default async function AdminReportsPage() {
+  const supabase = await createClient();
+  const reports = await getAllReports(supabase);
+
+  return (
+    <div>
+      <p className="font-data text-xs text-signal mb-2">$ fathir admin --reports</p>
+      <h1 className="font-mono text-2xl text-text mb-6">Reports</h1>
+      <AdminReportsTable reports={reports} />
+    </div>
+  );
+}

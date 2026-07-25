@@ -1,0 +1,32 @@
+import { createClient } from "@/lib/supabase/server";
+import { getAllUsers } from "@/lib/queries/admin";
+import { AdminUsersTable } from "@/components/admin/users-table";
+import { Pagination } from "@/components/public/pagination";
+
+export const metadata = { title: "Users — Admin" };
+
+type Props = { searchParams: Promise<{ page?: string }> };
+
+export default async function AdminUsersPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { users, total, page, pageSize } = await getAllUsers(supabase, {
+    page: params.page ? parseInt(params.page, 10) : 1,
+  });
+
+  return (
+    <div>
+      <p className="font-data text-xs text-signal mb-2">$ fathir admin --users</p>
+      <h1 className="font-mono text-2xl text-text mb-6">Users</h1>
+      <p className="font-data text-xs text-muted mb-4">{total} user(s)</p>
+
+      <AdminUsersTable users={users} currentUserId={user!.id} />
+
+      <Pagination page={page} totalPages={Math.ceil(total / pageSize)} buildHref={(p) => `/admin/users?page=${p}`} />
+    </div>
+  );
+}

@@ -1,4 +1,7 @@
+import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
+import { publicStorageUrl } from "@/lib/storage";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata = { title: "Favorites — Dashboard" };
@@ -11,9 +14,15 @@ export default async function DashboardFavoritesPage() {
 
   const { data: favorites } = await supabase
     .from("favorites")
-    .select("*")
+    .select("id, created_at, script_id")
     .eq("user_id", user!.id)
     .order("created_at", { ascending: false });
+
+  const scriptIds = (favorites ?? []).map((f) => f.script_id);
+  const { data: scripts } = scriptIds.length
+    ? await supabase.from("scripts").select("id, slug, title, thumbnail_path").in("id", scriptIds)
+    : { data: [] };
+  const scriptMap = new Map((scripts ?? []).map((s) => [s.id, s]));
 
   return (
     <div>
@@ -23,29 +32,36 @@ export default async function DashboardFavoritesPage() {
       {!favorites || favorites.length === 0 ? (
         <Card>
           <CardContent className="text-sm text-muted font-data">
-            no favorites yet. once script pages ship, tap the heart on any
-            script to save it here.
+            no favorites yet. tap the heart on any script to save it here.
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-3">
-          {favorites.map((fav) => (
-            <Card key={fav.id}>
-              <CardContent className="flex items-center justify-between">
-                <span className="font-data text-sm text-text">
-                  script #{fav.script_id.slice(0, 8)}
-                </span>
-                <span className="font-data text-xs text-muted">
-                  {new Date(fav.created_at).toLocaleDateString()}
-                </span>
-              </CardContent>
-            </Card>
-          ))}
+          {favorites.map((fav) => {
+            const script = scriptMap.get(fav.script_id);
+            const thumbnail = script ? publicStorageUrl("thumbnails", script.thumbnail_path) : null;
+            return (
+              <Link key={fav.id} href={script ? `/script/${script.slug}` : "#"}>
+                <Card className="hover:border-accent/50 transition-colors">
+                  <CardContent className="flex items-center gap-3">
+                    <div className="relative h-12 w-20 shrink-0 rounded bg-panel2 overflow-hidden">
+                      {thumbnail && (
+                        <Image src={thumbnail} alt={script?.title ?? ""} fill className="object-cover" />
+                      )}
+                    </div>
+                    <span className="font-mono text-sm text-text flex-1">
+                      {script?.title ?? "script no longer available"}
+                    </span>
+                    <span className="font-data text-xs text-muted">
+                      {new Date(fav.created_at).toLocaleDateString()}
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       )}
-      <p className="mt-4 text-xs font-data text-muted">
-        note: titles and thumbnails appear once the script catalog slice is built.
-      </p>
     </div>
   );
 }

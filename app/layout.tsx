@@ -10,9 +10,80 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-data",
 });
 
+const SITE_URL = "https://fathirsthore.my.id";
+
+// Target keywords from the original site brief — used here (metadata) and
+// echoed in the WebSite JSON-LD below. Google mostly ignores the <meta
+// keywords> tag itself these days, but Bing and some other crawlers still
+// read it, and it costs nothing to include.
+const KEYWORDS = [
+  "download free script fathir",
+  "download script free",
+  "download script",
+  "download whatsapp bot",
+  "download nodejs script",
+  "download php script",
+  "download html template",
+  "download flutter project",
+  "download telegram bot",
+  "download javascript project",
+  "download source code gratis",
+  "download script indonesia",
+  "download script premium",
+  "script open source",
+  "script github",
+];
+
 export const metadata: Metadata = {
-  title: "Fathir Sthore — Script Download Center",
-  description: "Download free and premium scripts: bots, panels, and apps.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Fathir Sthore — Script Download Center",
+    template: "%s — Fathir Sthore",
+  },
+  description:
+    "Download script gratis dan premium: bot Telegram, bot WhatsApp, aplikasi Flutter, panel hosting, dan source code lainnya. Diupload langsung oleh developer.",
+  keywords: KEYWORDS,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: "Fathir Sthore",
+    title: "Fathir Sthore — Script Download Center",
+    description:
+      "Download script gratis dan premium: bot Telegram, bot WhatsApp, aplikasi Flutter, panel hosting, dan source code lainnya.",
+    url: SITE_URL,
+    locale: "id_ID",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fathir Sthore — Script Download Center",
+    description: "Download script gratis dan premium: bot, panel, dan aplikasi siap pakai.",
+  },
+  robots: { index: true, follow: true },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "Fathir Sthore",
+      url: SITE_URL,
+      logo: `${SITE_URL}/icon`,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      name: "Fathir Sthore",
+      url: SITE_URL,
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -22,7 +93,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className={`${inter.variable} ${jetbrainsMono.variable} ${plexMono.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
