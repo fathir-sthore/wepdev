@@ -38,7 +38,7 @@ export function OtpInput({
   }
 
   return (
-    <div className="flex justify-center gap-2" onPaste={handlePaste}>
+    <div className="flex justify-center gap-1.5" onPaste={handlePaste}>
       {Array.from({ length }).map((_, i) => (
         <input
           key={i}
@@ -49,7 +49,7 @@ export function OtpInput({
           value={value[i] ?? ""}
           onChange={(e) => handleChange(i, e.target.value)}
           onKeyDown={(e) => handleKeyDown(i, e)}
-          className="h-12 w-10 rounded-md border border-line bg-panel2 text-center text-lg font-data text-text focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent focus-visible:border-accent"
+          className="h-12 w-9 rounded-md border border-line bg-panel2 text-center text-lg font-data text-text focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent focus-visible:border-accent"
         />
       ))}
     </div>

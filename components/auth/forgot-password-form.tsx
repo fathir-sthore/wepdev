@@ -83,7 +83,7 @@ export function ForgotPasswordForm() {
             </p>
           </div>
 
-          <OtpInput value={otp} onChange={setOtp} />
+          <OtpInput value={otp} onChange={setOtp} length={8} />
 
           <div>
             <Label htmlFor="new_password">Password baru</Label>
@@ -105,7 +105,7 @@ export function ForgotPasswordForm() {
             </p>
           )}
 
-          <Button type="submit" disabled={loading || otp.length < 6} className="w-full font-display">
+          <Button type="submit" disabled={loading || otp.length < 8} className="w-full font-display">
             {loading ? "memperbarui..." : "Verifikasi & perbarui password"}
           </Button>
         </form>

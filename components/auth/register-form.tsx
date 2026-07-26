@@ -82,7 +82,7 @@ export function RegisterForm() {
         imageAlt="Verifikasi akun Fathir Sthore"
         eyebrow="hampir selesai"
         title="Cek email kamu"
-        subtitle="Kami kirim kode 6 digit ke alamat email yang kamu daftarkan."
+        subtitle="Kami kirim kode 8 digit ke alamat email yang kamu daftarkan."
       >
         <form onSubmit={handleVerify} className="space-y-6">
           <div>
@@ -92,7 +92,7 @@ export function RegisterForm() {
             </p>
           </div>
 
-          <OtpInput value={otp} onChange={setOtp} />
+          <OtpInput value={otp} onChange={setOtp} length={8} />
 
           {error && (
             <p className="text-center font-display text-sm text-danger" role="alert">
@@ -103,7 +103,7 @@ export function RegisterForm() {
             <p className="text-center font-display text-sm text-signal">kode baru terkirim</p>
           )}
 
-          <Button type="submit" disabled={loading || otp.length < 6} className="w-full font-display">
+          <Button type="submit" disabled={loading || otp.length < 8} className="w-full font-display">
             {loading ? "memverifikasi..." : "Verifikasi & masuk"}
           </Button>
 
