@@ -29,6 +29,7 @@ const config: Config = {
         mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
         sans: ["var(--font-sans)", "Inter", "sans-serif"],
         data: ["var(--font-data)", "IBM Plex Mono", "monospace"],
+        display: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
       },
       boxShadow: {
         glow: "0 0 0 1px rgba(242,179,61,0.15), 0 0 24px rgba(242,179,61,0.08)",

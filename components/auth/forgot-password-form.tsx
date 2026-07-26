@@ -7,8 +7,8 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TerminalCard } from "@/components/auth/terminal-card";
 import { OtpInput } from "@/components/auth/otp-input";
+import { AuthSplitLayout } from "@/components/auth/auth-split-layout";
 
 type Step = "request" | "reset";
 
@@ -68,11 +68,20 @@ export function ForgotPasswordForm() {
 
   if (step === "reset") {
     return (
-      <TerminalCard command="fathir auth --reset-password">
-        <form onSubmit={handleReset} className="space-y-5">
-          <p className="text-center font-data text-xs text-muted">
-            kode 6 digit sudah dikirim ke <span className="text-text">{email}</span>
-          </p>
+      <AuthSplitLayout
+        imageAlt="Reset password Fathir Sthore"
+        eyebrow="atur ulang password"
+        title="Hampir selesai."
+        subtitle="Masukkan kode dari email dan password baru kamu."
+      >
+        <form onSubmit={handleReset} className="space-y-6">
+          <div>
+            <h1 className="font-display text-2xl font-bold text-text">Masukkan kode</h1>
+            <p className="mt-1 text-sm text-muted">
+              kode dikirim ke <span className="text-text">{email}</span>
+            </p>
+          </div>
+
           <OtpInput value={otp} onChange={setOtp} />
 
           <div>
@@ -90,21 +99,35 @@ export function ForgotPasswordForm() {
           </div>
 
           {error && (
-            <p className="font-data text-xs text-danger" role="alert">
-              error: {error}
+            <p className="font-display text-sm text-danger" role="alert">
+              {error}
             </p>
           )}
 
-          <Button type="submit" disabled={loading || otp.length < 6} className="w-full">
-            {loading ? "updating..." : "verify & update password"}
+          <Button type="submit" disabled={loading || otp.length < 6} className="w-full font-display">
+            {loading ? "memperbarui..." : "Verifikasi & perbarui password"}
           </Button>
         </form>
-      </TerminalCard>
+      </AuthSplitLayout>
     );
   }
 
   return (
-    <TerminalCard command="fathir auth --reset-password">
+    <AuthSplitLayout
+      imageAlt="Lupa password Fathir Sthore"
+      eyebrow="lupa password?"
+      title="Gak masalah, kita bantu."
+      subtitle="Masukkan email kamu, kami kirim kode buat atur ulang password."
+    >
+      <div className="mb-8">
+        <h1 className="font-display text-2xl font-bold text-text">Lupa password</h1>
+        <p className="mt-1 text-sm text-muted">
+          <Link href="/login" className="text-accent hover:underline">
+            kembali ke login
+          </Link>
+        </p>
+      </div>
+
       <form onSubmit={handleRequest} className="space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
@@ -118,19 +141,14 @@ export function ForgotPasswordForm() {
           />
         </div>
         {error && (
-          <p className="font-data text-xs text-danger" role="alert">
-            error: {error}
+          <p className="font-display text-sm text-danger" role="alert">
+            {error}
           </p>
         )}
-        <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "sending..." : "send otp code"}
+        <Button type="submit" disabled={loading} className="w-full font-display">
+          {loading ? "mengirim..." : "Kirim kode OTP"}
         </Button>
       </form>
-      <p className="mt-6 text-center text-xs font-data text-muted">
-        <Link href="/login" className="text-accent hover:underline">
-          back to login
-        </Link>
-      </p>
-    </TerminalCard>
+    </AuthSplitLayout>
   );
 }

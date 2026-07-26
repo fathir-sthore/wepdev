@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, IBM_Plex_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -8,6 +8,14 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-data",
+});
+// Modern sans used specifically on the register / forgot-password pages —
+// the rest of the site keeps the terminal aesthetic (JetBrains Mono / IBM
+// Plex Mono), this is a deliberate departure just for those two pages.
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-display",
 });
 
 const SITE_URL = "https://fathirsthore.my.id";
@@ -92,7 +100,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${inter.variable} ${jetbrainsMono.variable} ${plexMono.variable}`}>
+    <html lang="id" className={`${inter.variable} ${jetbrainsMono.variable} ${plexMono.variable} ${plusJakarta.variable}`}>
       <body className="font-sans antialiased">
         <script
           type="application/ld+json"

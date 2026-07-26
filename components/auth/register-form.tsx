@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
-import { TerminalCard } from "@/components/auth/terminal-card";
 import { OtpInput } from "@/components/auth/otp-input";
+import { AuthSplitLayout } from "@/components/auth/auth-split-layout";
 
 type Step = "form" | "otp";
 
@@ -77,40 +77,64 @@ export function RegisterForm() {
 
   if (step === "otp") {
     return (
-      <TerminalCard command="fathir auth --verify-otp">
-        <form onSubmit={handleVerify} className="space-y-5">
-          <p className="text-center font-data text-xs text-muted">
-            kode 6 digit sudah dikirim ke <span className="text-text">{email}</span>
-          </p>
+      <AuthSplitLayout
+        imageAlt="Verifikasi akun Fathir Sthore"
+        eyebrow="hampir selesai"
+        title="Cek email kamu"
+        subtitle="Kami kirim kode 6 digit ke alamat email yang kamu daftarkan."
+      >
+        <form onSubmit={handleVerify} className="space-y-6">
+          <div>
+            <h1 className="font-display text-2xl font-bold text-text">Verifikasi email</h1>
+            <p className="mt-1 text-sm text-muted">
+              masukkan kode yang dikirim ke <span className="text-text">{email}</span>
+            </p>
+          </div>
+
           <OtpInput value={otp} onChange={setOtp} />
 
           {error && (
-            <p className="text-center font-data text-xs text-danger" role="alert">
-              error: {error}
+            <p className="text-center font-display text-sm text-danger" role="alert">
+              {error}
             </p>
           )}
           {resent && (
-            <p className="text-center font-data text-xs text-signal">kode baru terkirim</p>
+            <p className="text-center font-display text-sm text-signal">kode baru terkirim</p>
           )}
 
-          <Button type="submit" disabled={loading || otp.length < 6} className="w-full">
-            {loading ? "verifying..." : "verify & masuk"}
+          <Button type="submit" disabled={loading || otp.length < 6} className="w-full font-display">
+            {loading ? "memverifikasi..." : "Verifikasi & masuk"}
           </Button>
 
           <button
             type="button"
             onClick={handleResend}
-            className="w-full text-center font-data text-xs text-muted hover:text-accent"
+            className="w-full text-center font-display text-sm text-muted hover:text-accent"
           >
             kirim ulang kode
           </button>
         </form>
-      </TerminalCard>
+      </AuthSplitLayout>
     );
   }
 
   return (
-    <TerminalCard command="fathir auth --register">
+    <AuthSplitLayout
+      imageAlt="Bergabung dengan Fathir Sthore"
+      eyebrow="bergabung gratis"
+      title="Ribuan script siap pakai, satu akun."
+      subtitle="Download, upload, dan kelola script kamu sendiri di satu dashboard."
+    >
+      <div className="mb-8">
+        <h1 className="font-display text-2xl font-bold text-text">Buat akun</h1>
+        <p className="mt-1 text-sm text-muted">
+          sudah punya akun?{" "}
+          <Link href="/login" className="text-accent hover:underline">
+            login di sini
+          </Link>
+        </p>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Label htmlFor="username">Username</Label>
@@ -152,30 +176,23 @@ export function RegisterForm() {
         </div>
 
         {error && (
-          <p className="font-data text-xs text-danger" role="alert">
-            error: {error}
+          <p className="font-display text-sm text-danger" role="alert">
+            {error}
           </p>
         )}
 
-        <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "creating account..." : "run register"}
+        <Button type="submit" disabled={loading} className="w-full font-display">
+          {loading ? "membuat akun..." : "Buat akun"}
         </Button>
       </form>
 
       <div className="my-6 flex items-center gap-3">
         <div className="h-px flex-1 bg-line" />
-        <span className="text-xs font-data text-muted">or continue with</span>
+        <span className="text-xs font-display text-muted">atau lanjut dengan</span>
         <div className="h-px flex-1 bg-line" />
       </div>
 
       <OAuthButtons />
-
-      <p className="mt-6 text-center text-xs font-data text-muted">
-        already have an account?{" "}
-        <Link href="/login" className="text-accent hover:underline">
-          login
-        </Link>
-      </p>
-    </TerminalCard>
+    </AuthSplitLayout>
   );
 }
