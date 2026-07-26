@@ -34,23 +34,27 @@ export function AuthSplitLayout({
             }}
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-transparent" />
 
         <div className="relative z-10 flex h-full flex-col justify-between p-10">
           <Link href="/" className="flex items-center gap-2 w-fit">
             <Terminal size={22} className="text-accent" />
-            <span className="font-display font-semibold text-text">Fathir Sthore</span>
+            <span className="font-display font-semibold text-text drop-shadow-md">Fathir Sthore</span>
           </Link>
 
-          <div className="max-w-sm">
-            <p className="font-display text-xs font-semibold uppercase tracking-widest text-signal mb-3">
-              {eyebrow}
-            </p>
-            <h2 className="font-display text-3xl font-bold text-text leading-tight">
-              {title}
-            </h2>
-            <p className="mt-3 text-sm text-muted">{subtitle}</p>
-          </div>
+          {/* Skip the redundant caption when a custom image is used — the
+              artwork already carries its own title treatment. */}
+          {!imageSrc && (
+            <div className="max-w-sm">
+              <p className="font-display text-xs font-semibold uppercase tracking-widest text-signal mb-3">
+                {eyebrow}
+              </p>
+              <h2 className="font-display text-3xl font-bold text-text leading-tight">
+                {title}
+              </h2>
+              <p className="mt-3 text-sm text-muted">{subtitle}</p>
+            </div>
+          )}
         </div>
       </div>
 

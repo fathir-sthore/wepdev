@@ -78,6 +78,7 @@ export function RegisterForm() {
   if (step === "otp") {
     return (
       <AuthSplitLayout
+        imageSrc="/auth-otp-verify.png"
         imageAlt="Verifikasi akun Fathir Sthore"
         eyebrow="hampir selesai"
         title="Cek email kamu"
@@ -120,6 +121,7 @@ export function RegisterForm() {
 
   return (
     <AuthSplitLayout
+      imageSrc="/auth-otp-verify.png"
       imageAlt="Bergabung dengan Fathir Sthore"
       eyebrow="bergabung gratis"
       title="Ribuan script siap pakai, satu akun."

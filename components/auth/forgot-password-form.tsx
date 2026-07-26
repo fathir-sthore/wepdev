@@ -69,6 +69,7 @@ export function ForgotPasswordForm() {
   if (step === "reset") {
     return (
       <AuthSplitLayout
+        imageSrc="/auth-reset-password.png"
         imageAlt="Reset password Fathir Sthore"
         eyebrow="atur ulang password"
         title="Hampir selesai."
@@ -114,6 +115,7 @@ export function ForgotPasswordForm() {
 
   return (
     <AuthSplitLayout
+      imageSrc="/auth-reset-password.png"
       imageAlt="Lupa password Fathir Sthore"
       eyebrow="lupa password?"
       title="Gak masalah, kita bantu."
