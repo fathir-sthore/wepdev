@@ -1,25 +1,68 @@
+import { Flame, Sparkles, Star, Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { getHomeSections } from "@/lib/queries/scripts";
+import { getCategories } from "@/lib/queries/scripts";
+import { getActiveBanners } from "@/lib/queries/banners";
+import { getUserDashboardSections } from "@/lib/queries/dashboard";
 import { Hero } from "@/components/public/hero";
 import { StatsBar } from "@/components/public/stats-bar";
 import { CategoryGrid } from "@/components/public/category-grid";
 import { ScriptSection } from "@/components/public/script-section";
+import { BannerSlider } from "@/components/dashboard-home/banner-slider";
 import { Faq } from "@/components/public/faq";
 
 export const revalidate = 60;
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const { trending, popular, newest, categories, stats } = await getHomeSections(supabase);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const [categories, banners, sections, statsRes] = await Promise.all([
+    getCategories(supabase),
+    getActiveBanners(supabase),
+    getUserDashboardSections(supabase, user?.id ?? null),
+    supabase.from("scripts").select("download_count").eq("status", "published"),
+  ]);
+
+  const totalDownloads = (statsRes.data ?? []).reduce(
+    (sum, row) => sum + (row.download_count ?? 0),
+    0
+  );
 
   return (
     <>
       <Hero />
-      <StatsBar totalScripts={stats.totalScripts} totalDownloads={stats.totalDownloads} />
+      <BannerSlider banners={banners} />
+      <StatsBar totalScripts={(statsRes.data ?? []).length} totalDownloads={totalDownloads} />
+
+      <ScriptSection
+        title="Trending"
+        icon={<Flame size={18} className="text-danger" />}
+        scripts={sections.trending}
+        viewAllHref="/search?sort=popular"
+        hot
+      />
+      <ScriptSection
+        title="New Release"
+        icon={<Sparkles size={18} className="text-signal" />}
+        scripts={sections.newRelease}
+        viewAllHref="/search?sort=newest"
+      />
+      <ScriptSection
+        title="Most Downloaded"
+        icon={<Star size={18} className="text-accent" />}
+        scripts={sections.mostDownloaded}
+        viewAllHref="/search?sort=downloads"
+      />
+      <ScriptSection
+        title="Recommended"
+        icon={<Heart size={18} className="text-danger" />}
+        scripts={sections.recommended}
+        viewAllHref="/search"
+      />
+
       <CategoryGrid categories={categories} />
-      <ScriptSection title="Trending" scripts={trending} viewAllHref="/search?sort=downloads" />
-      <ScriptSection title="Popular" scripts={popular} viewAllHref="/search?sort=popular" />
-      <ScriptSection title="Newest" scripts={newest} viewAllHref="/search?sort=newest" />
       <Faq />
     </>
   );

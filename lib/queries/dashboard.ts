@@ -6,7 +6,7 @@ type Supabase = SupabaseClient<Database>;
 
 const SECTION_LIMIT = 8;
 
-export async function getUserDashboardSections(supabase: Supabase, userId: string) {
+export async function getUserDashboardSections(supabase: Supabase, userId: string | null) {
   const fourteenDaysAgo = new Date();
   fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
 
@@ -29,11 +29,9 @@ export async function getUserDashboardSections(supabase: Supabase, userId: strin
       .eq("status", "published")
       .order("download_count", { ascending: false })
       .limit(SECTION_LIMIT),
-    supabase
-      .from("favorites")
-      .select("script_id")
-      .eq("user_id", userId)
-      .limit(20),
+    userId
+      ? supabase.from("favorites").select("script_id").eq("user_id", userId).limit(20)
+      : Promise.resolve({ data: [] }),
   ]);
 
   // Tally recent views per script, take the top N.
