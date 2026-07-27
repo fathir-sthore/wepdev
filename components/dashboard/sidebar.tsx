@@ -2,26 +2,28 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Heart, Download, LogOut, Code2, ShieldCheck, Receipt } from "lucide-react";
+import { LayoutDashboard, Search, Heart, Download, LogOut, Code2, ShieldCheck, Receipt, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/dashboard", label: "profile", icon: LayoutDashboard },
-  { href: "/dashboard/scripts", label: "my scripts", icon: Code2 },
-  { href: "/dashboard/purchases", label: "purchases", icon: Receipt },
-  { href: "/dashboard/favorites", label: "favorites", icon: Heart },
-  { href: "/dashboard/downloads", label: "downloads", icon: Download },
+  { href: "/dashboard", label: "dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/search", label: "explore", icon: Search, exact: false },
+  { href: "/dashboard/favorites", label: "favorites", icon: Heart, exact: false },
+  { href: "/dashboard/downloads", label: "downloads", icon: Download, exact: false },
+  { href: "/dashboard/purchases", label: "purchases", icon: Receipt, exact: false },
+  { href: "/dashboard/scripts", label: "my scripts", icon: Code2, exact: false },
+  { href: "/dashboard/profile", label: "profile & settings", icon: User, exact: false },
 ];
 
 export function DashboardSidebar({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-56 shrink-0 border-r border-line bg-panel/60 min-h-screen p-4 flex flex-col">
+    <aside className="hidden md:flex w-56 shrink-0 border-r border-line bg-panel/60 min-h-screen p-4 flex-col">
       <p className="font-data text-xs text-muted mb-6 px-2">~/dashboard</p>
       <nav className="flex flex-col gap-1">
-        {links.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+        {links.map(({ href, label, icon: Icon, exact }) => {
+          const active = exact ? pathname === href : pathname.startsWith(href);
           return (
             <Link
               key={href}

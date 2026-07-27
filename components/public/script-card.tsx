@@ -4,10 +4,19 @@ import { Download, Eye } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { RatingStars } from "@/components/public/rating-stars";
 import { publicStorageUrl, formatCount } from "@/lib/storage";
+import { computeBadges } from "@/lib/badges";
+import { cn } from "@/lib/utils";
 import type { ScriptWithRelations } from "@/lib/queries/scripts";
 
-export function ScriptCard({ script }: { script: ScriptWithRelations }) {
+const badgeStyles: Record<string, string> = {
+  NEW: "bg-signal/20 text-signal border-signal/40",
+  UPDATED: "bg-accent/20 text-accent border-accent/40",
+  HOT: "bg-danger/20 text-danger border-danger/40",
+};
+
+export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?: boolean }) {
   const thumbnail = publicStorageUrl("thumbnails", script.thumbnail_path);
+  const badges = computeBadges({ ...script, hot }).filter((b) => b !== "FREE" && b !== "PREMIUM");
 
   return (
     <Link href={`/script/${script.slug}`} className="group block">
@@ -29,6 +38,21 @@ export function ScriptCard({ script }: { script: ScriptWithRelations }) {
           <span className="absolute top-2 right-2 rounded bg-ink/80 backdrop-blur px-2 py-0.5 font-data text-[11px] text-accent border border-line">
             {script.is_premium ? `Rp ${script.price.toLocaleString("id-ID")}` : "FREE"}
           </span>
+          {badges.length > 0 && (
+            <div className="absolute top-2 left-2 flex gap-1">
+              {badges.map((b) => (
+                <span
+                  key={b}
+                  className={cn(
+                    "rounded border px-1.5 py-0.5 font-data text-[10px] backdrop-blur",
+                    badgeStyles[b]
+                  )}
+                >
+                  {b}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="p-4 flex-1 flex flex-col gap-2">

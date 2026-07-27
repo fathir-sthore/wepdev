@@ -18,6 +18,13 @@ export type ScriptWithRelations = ScriptRow & {
  * we batch-fetch categories/developers/tags by id and merge in JS. One extra
  * round trip per list, fully type-safe either way.
  */
+export async function attachRelationsExport(
+  supabase: Supabase,
+  scripts: ScriptRow[]
+): Promise<ScriptWithRelations[]> {
+  return attachRelations(supabase, scripts);
+}
+
 async function attachRelations(
   supabase: Supabase,
   scripts: ScriptRow[]

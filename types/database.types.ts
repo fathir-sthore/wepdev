@@ -268,6 +268,49 @@ export type Database = {
         };
         Relationships: [];
       };
+      banners: {
+        Row: {
+          id: string;
+          title: string;
+          subtitle: string | null;
+          description: string | null;
+          image_path: string | null;
+          link_url: string | null;
+          category_id: string | null;
+          status: "draft" | "published";
+          start_date: string | null;
+          end_date: string | null;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          subtitle?: string | null;
+          description?: string | null;
+          image_path?: string | null;
+          link_url?: string | null;
+          category_id?: string | null;
+          status?: "draft" | "published";
+          start_date?: string | null;
+          end_date?: string | null;
+          sort_order?: number;
+        };
+        Update: {
+          title?: string;
+          subtitle?: string | null;
+          description?: string | null;
+          image_path?: string | null;
+          link_url?: string | null;
+          category_id?: string | null;
+          status?: "draft" | "published";
+          start_date?: string | null;
+          end_date?: string | null;
+          sort_order?: number;
+        };
+        Relationships: [];
+      };
       purchases: {
         Row: {
           id: string;
