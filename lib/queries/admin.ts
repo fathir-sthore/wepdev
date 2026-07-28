@@ -26,20 +26,42 @@ export async function getAdminStats(supabase: Supabase) {
   const since = new Date();
   since.setDate(since.getDate() - 14);
 
-  const [scriptsCountRes, usersCountRes, downloadsRes, uploadsRes, popularRes, sizeRes] =
-    await Promise.all([
-      supabase.from("scripts").select("id", { count: "exact", head: true }),
-      supabase.from("profiles").select("id", { count: "exact", head: true }),
-      supabase.from("downloads").select("created_at").gte("created_at", since.toISOString()),
-      supabase.from("scripts").select("created_at").gte("created_at", since.toISOString()),
-      supabase
-        .from("scripts")
-        .select("id, title, slug, download_count")
-        .order("download_count", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-      supabase.from("scripts").select("file_size_bytes"),
-    ]);
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  const [
+    scriptsCountRes,
+    usersCountRes,
+    downloadsRes,
+    uploadsRes,
+    popularRes,
+    sizeRes,
+    reviewsCountRes,
+    favoritesCountRes,
+    revenueRes,
+    visitorsTodayRes,
+    visitorsMonthRes,
+  ] = await Promise.all([
+    supabase.from("scripts").select("id", { count: "exact", head: true }),
+    supabase.from("profiles").select("id", { count: "exact", head: true }),
+    supabase.from("downloads").select("created_at").gte("created_at", since.toISOString()),
+    supabase.from("scripts").select("created_at").gte("created_at", since.toISOString()),
+    supabase
+      .from("scripts")
+      .select("id, title, slug, download_count")
+      .order("download_count", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    supabase.from("scripts").select("file_size_bytes"),
+    supabase.from("reviews").select("id", { count: "exact", head: true }),
+    supabase.from("favorites").select("id", { count: "exact", head: true }),
+    supabase.from("purchases").select("total_payment, amount").eq("status", "completed"),
+    supabase.from("views").select("ip_hash, user_id").gte("created_at", startOfToday.toISOString()),
+    supabase.from("views").select("ip_hash, user_id").gte("created_at", startOfMonth.toISOString()),
+  ]);
 
   const days = lastNDays(14);
   const totalDownloadsAllTime = await supabase
@@ -54,12 +76,27 @@ export async function getAdminStats(supabase: Supabase) {
     (sum, row) => sum + (row.download_count ?? 0),
     0
   );
+  const totalRevenue = (revenueRes.data ?? []).reduce(
+    (sum, row) => sum + (row.total_payment ?? row.amount ?? 0),
+    0
+  );
+
+  // "Visitors" approximated as distinct user/ip signatures on script views —
+  // we don't track site-wide pageviews outside script pages.
+  function countUnique(rows: { ip_hash: string | null; user_id: string | null }[]) {
+    return new Set(rows.map((r) => r.user_id ?? r.ip_hash ?? Math.random())).size;
+  }
 
   return {
     totalScripts: scriptsCountRes.count ?? 0,
     totalUsers: usersCountRes.count ?? 0,
     totalDownloads,
     storageUsedBytes,
+    totalReviews: reviewsCountRes.count ?? 0,
+    totalFavorites: favoritesCountRes.count ?? 0,
+    totalRevenue,
+    visitorsToday: countUnique(visitorsTodayRes.data ?? []),
+    visitorsThisMonth: countUnique(visitorsMonthRes.data ?? []),
     popularScript: popularRes.data,
     downloadsPerDay: bucketByDay(downloadsRes.data ?? [], days),
     uploadsPerDay: bucketByDay(uploadsRes.data ?? [], days),
