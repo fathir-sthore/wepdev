@@ -29,6 +29,12 @@ export function ReportDialog({ scriptId }: { scriptId: string }) {
       details: details || null,
     });
 
+    fetch("/api/notify/report-filed", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ scriptId, reason, details: details || null }),
+    }).catch(() => {});
+
     setLoading(false);
     setSent(true);
   }

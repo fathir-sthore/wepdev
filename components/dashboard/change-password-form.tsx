@@ -29,6 +29,12 @@ export function ChangePasswordForm() {
     setPassword("");
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
+
+    fetch("/api/notify/security-alert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "Password akunmu baru saja diubah." }),
+    }).catch(() => {});
   }
 
   return (

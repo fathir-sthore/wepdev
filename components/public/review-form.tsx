@@ -45,6 +45,13 @@ export function ReviewForm({ scriptId, userId }: { scriptId: string; userId: str
       setError(error.message);
       return;
     }
+
+    fetch("/api/notify/review-received", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ scriptId, rating, comment: comment || null }),
+    }).catch(() => {});
+
     setComment("");
     router.refresh();
   }

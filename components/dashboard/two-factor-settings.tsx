@@ -77,6 +77,12 @@ export function TwoFactorSettings() {
     setSecret(null);
     setCode("");
     refresh();
+
+    fetch("/api/notify/security-alert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "2FA baru saja diaktifkan di akunmu." }),
+    }).catch(() => {});
   }
 
   async function disable(id: string) {
@@ -89,6 +95,12 @@ export function TwoFactorSettings() {
       return;
     }
     refresh();
+
+    fetch("/api/notify/security-alert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "2FA baru saja dinonaktifkan di akunmu." }),
+    }).catch(() => {});
   }
 
   if (loading) return <p className="font-data text-xs text-muted">memuat...</p>;
