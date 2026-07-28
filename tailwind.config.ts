@@ -9,21 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0B0D12",
-        panel: "#12151C",
-        panel2: "#1A1E27",
-        line: "#262B36",
-        text: "#E7E9EE",
-        muted: "#8A93A3",
+        ink: "var(--color-ink)",
+        panel: "var(--color-panel)",
+        panel2: "var(--color-panel2)",
+        line: "var(--color-line)",
+        text: "var(--color-text)",
+        muted: "var(--color-muted)",
         accent: {
-          DEFAULT: "#F2B33D",
-          dim: "#8A6A2A",
+          DEFAULT: "var(--color-accent)",
+          dim: "var(--color-accent-dim)",
         },
         signal: {
-          DEFAULT: "#33E0C2",
-          dim: "#1F7A6C",
+          DEFAULT: "var(--color-signal)",
+          dim: "var(--color-signal-dim)",
         },
-        danger: "#F2555A",
+        danger: "var(--color-danger)",
       },
       fontFamily: {
         mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],

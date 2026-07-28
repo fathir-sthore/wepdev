@@ -5,6 +5,15 @@ function daysSince(dateStr: string) {
   return (Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24);
 }
 
+export type UserBadge = "Newcomer" | "Active Member" | "Power User" | "Legend";
+
+export function computeUserBadge(downloadCount: number): UserBadge {
+  if (downloadCount >= 50) return "Legend";
+  if (downloadCount >= 20) return "Power User";
+  if (downloadCount >= 5) return "Active Member";
+  return "Newcomer";
+}
+
 export type ScriptBadge = "FREE" | "PREMIUM" | "NEW" | "UPDATED" | "HOT";
 
 export function computeBadges(script: {

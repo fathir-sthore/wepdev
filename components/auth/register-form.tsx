@@ -60,6 +60,12 @@ export function RegisterForm() {
       setError(error.message);
       return;
     }
+    fetch("/api/account/log-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ method: "register" }),
+    }).catch(() => {});
+
     router.push("/dashboard");
     router.refresh();
   }

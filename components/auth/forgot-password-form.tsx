@@ -62,6 +62,12 @@ export function ForgotPasswordForm() {
       return;
     }
 
+    fetch("/api/account/log-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ method: "password_reset" }),
+    }).catch(() => {});
+
     router.push("/dashboard");
     router.refresh();
   }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { hashIp, getClientIp } from "@/lib/ip";
 
 // Handles both the OAuth redirect (code) and email confirmation links.
 export async function GET(request: Request) {
@@ -9,8 +10,15 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      const provider = data.user?.app_metadata?.provider ?? "oauth";
+      await supabase.from("login_history").insert({
+        user_id: data.user!.id,
+        method: provider,
+        ip_hash: hashIp(getClientIp(request)),
+        user_agent: request.headers.get("user-agent"),
+      });
       return NextResponse.redirect(`${origin}${next}`);
     }
   }

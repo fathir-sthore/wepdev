@@ -2,10 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+.dark {
   --font-sans: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --font-data: "IBM Plex Mono", monospace;
+
+  --color-ink: #0B0D12;
+  --color-panel: #12151C;
+  --color-panel2: #1A1E27;
+  --color-line: #262B36;
+  --color-text: #E7E9EE;
+  --color-muted: #8A93A3;
+  --color-accent: #F2B33D;
+  --color-accent-dim: #8A6A2A;
+  --color-signal: #33E0C2;
+  --color-signal-dim: #1F7A6C;
+  --color-danger: #F2555A;
+}
+
+.light {
+  --color-ink: #F7F7F9;
+  --color-panel: #FFFFFF;
+  --color-panel2: #F0F1F4;
+  --color-line: #E1E3E8;
+  --color-text: #14161B;
+  --color-muted: #6B7280;
+  --color-accent: #B8790A;
+  --color-accent-dim: #F2B33D;
+  --color-signal: #0E9A82;
+  --color-signal-dim: #33E0C2;
+  --color-danger: #D6303A;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -19,11 +46,22 @@
 }
 
 body {
-  background-color: #0B0D12;
-  color: #E7E9EE;
+  background-color: var(--color-ink);
+  color: var(--color-text);
   background-image:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(242, 179, 61, 0.08), transparent),
     repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+}
+
+.light body,
+.light {
+  color-scheme: light;
+}
+
+.light body {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(184, 121, 10, 0.06), transparent),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 3px);
 }
 
 /* terminal window chrome, used by the auth card */
@@ -35,6 +73,6 @@ body {
 
 /* visible keyboard focus, applied globally */
 :focus-visible {
-  outline: 2px solid #F2B33D;
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }

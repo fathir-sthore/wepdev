@@ -9,6 +9,9 @@ export type Database = {
           avatar_url: string | null;
           role: "user" | "developer" | "admin";
           bio: string | null;
+          theme_preference: "dark" | "light" | "system";
+          language_preference: "id" | "en";
+          email_notifications: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -19,6 +22,9 @@ export type Database = {
           avatar_url?: string | null;
           role?: "user" | "developer" | "admin";
           bio?: string | null;
+          theme_preference?: "dark" | "light" | "system";
+          language_preference?: "id" | "en";
+          email_notifications?: boolean;
         };
         Update: {
           username?: string;
@@ -26,6 +32,9 @@ export type Database = {
           avatar_url?: string | null;
           bio?: string | null;
           role?: "user" | "developer" | "admin";
+          theme_preference?: "dark" | "light" | "system";
+          language_preference?: "id" | "en";
+          email_notifications?: boolean;
         };
         Relationships: [];
       };
@@ -309,6 +318,25 @@ export type Database = {
           end_date?: string | null;
           sort_order?: number;
         };
+        Relationships: [];
+      };
+      login_history: {
+        Row: {
+          id: string;
+          user_id: string;
+          method: string;
+          ip_hash: string | null;
+          user_agent: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          method: string;
+          ip_hash?: string | null;
+          user_agent?: string | null;
+        };
+        Update: never;
         Relationships: [];
       };
       purchases: {
