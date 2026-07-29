@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { slugify } from "@/lib/slugify";
 import { sha256File } from "@/lib/checksum";
+import { resizeImagePreserveAspect } from "@/lib/image-crop";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -69,6 +70,17 @@ export function ScriptForm({
     return path;
   }
 
+  /** Downscales large images before upload — keeps the original aspect
+   * ratio (no forced square crop), just caps file size/dimensions. */
+  async function uploadImage(bucket: string, path: string, file: File) {
+    const blob = await resizeImagePreserveAspect(file, 1600);
+    const { error } = await supabase.storage
+      .from(bucket)
+      .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
+    if (error) throw new Error(`upload failed (${bucket}): ${error.message}`);
+    return path;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -96,18 +108,14 @@ export function ScriptForm({
       let thumbnailPath = initialData?.thumbnail_path ?? null;
       if (thumbnailFile) {
         setProgress("uploading thumbnail...");
-        const ext = thumbnailFile.name.split(".").pop();
-        thumbnailPath = await uploadOne("thumbnails", `${basePath}/thumbnail.${ext}`, thumbnailFile);
+        thumbnailPath = await uploadImage("thumbnails", `${basePath}/thumbnail.jpg`, thumbnailFile);
       }
 
       let screenshotPaths = initialData?.screenshot_paths ?? [];
       if (screenshotFiles.length > 0) {
         setProgress("uploading screenshots...");
         screenshotPaths = await Promise.all(
-          screenshotFiles.map((f, i) => {
-            const ext = f.name.split(".").pop();
-            return uploadOne("screenshots", `${basePath}/screenshot-${i}.${ext}`, f);
-          })
+          screenshotFiles.map((f, i) => uploadImage("screenshots", `${basePath}/screenshot-${i}.jpg`, f))
         );
       }
 

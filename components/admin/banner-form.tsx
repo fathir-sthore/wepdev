@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { cropAndResizeImage } from "@/lib/image-crop";
+import { resizeImagePreserveAspect } from "@/lib/image-crop";
 import { publicStorageUrl } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,7 +67,7 @@ export function BannerForm({
       let imagePath = initialData?.image_path ?? null;
 
       if (imageFile) {
-        const blob = await cropAndResizeImage(imageFile, 1200);
+        const blob = await resizeImagePreserveAspect(imageFile, 1600);
         const path = `${bannerId}/banner.jpg`;
         const { error: uploadError } = await supabase.storage
           .from("banners")
