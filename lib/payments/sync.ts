@@ -3,6 +3,7 @@ import type { Database } from "@/types/database.types";
 import { getPakasirTransactionDetail } from "@/lib/payments/pakasir";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { purchaseConfirmationEmail } from "@/lib/email/templates";
+import { createNotification } from "@/lib/notifications";
 
 type Purchase = Database["public"]["Tables"]["purchases"]["Row"];
 
@@ -10,25 +11,34 @@ async function sendPurchaseConfirmation(admin: SupabaseClient<Database>, purchas
   try {
     const [{ data: authUser }, { data: script }] = await Promise.all([
       admin.auth.admin.getUserById(purchase.user_id),
-      admin.from("scripts").select("id, title").eq("id", purchase.script_id).maybeSingle(),
+      admin.from("scripts").select("id, title, slug").eq("id", purchase.script_id).maybeSingle(),
     ]);
 
     const email = authUser?.user?.email;
     if (!email || !script) return;
 
-    await sendTransactionalEmail({
-      to: [{ email }],
-      subject: `Pembayaran berhasil — ${script.title}`,
-      html: purchaseConfirmationEmail({
-        scriptTitle: script.title,
-        amount: purchase.total_payment ?? purchase.amount,
-        orderId: purchase.order_id,
-        downloadUrl: `https://fathirsthore.my.id/api/scripts/${script.id}/download`,
+    await Promise.all([
+      sendTransactionalEmail({
+        to: [{ email }],
+        subject: `Pembayaran berhasil — ${script.title}`,
+        html: purchaseConfirmationEmail({
+          scriptTitle: script.title,
+          amount: purchase.total_payment ?? purchase.amount,
+          orderId: purchase.order_id,
+          downloadUrl: `https://fathirsthore.my.id/api/scripts/${script.id}/download`,
+        }),
       }),
-    });
+      createNotification({
+        userId: purchase.user_id,
+        type: "purchase_completed",
+        title: "Pembayaran berhasil",
+        message: `${script.title} sudah bisa didownload.`,
+        linkUrl: `/script/${script.slug}`,
+      }),
+    ]);
   } catch (err) {
-    // Never let an email failure break the payment flow.
-    console.error("failed to send purchase confirmation email", err);
+    // Never let an email/notification failure break the payment flow.
+    console.error("failed to send purchase confirmation", err);
   }
 }
 

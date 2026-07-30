@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { reportFiledEmail } from "@/lib/email/templates";
+import { createNotification } from "@/lib/notifications";
 
 export async function POST(request: Request) {
   const { scriptId, reason, details } = await request.json();
@@ -22,6 +23,18 @@ export async function POST(request: Request) {
 
     const admin = createAdminClient();
     const { data: admins } = await admin.from("profiles").select("id").eq("role", "admin");
+
+    await Promise.all(
+      (admins ?? []).map((a) =>
+        createNotification({
+          userId: a.id,
+          type: "report_filed",
+          title: "Laporan baru",
+          message: `${reason} — ${script.title}`,
+          linkUrl: "/admin/reports",
+        })
+      )
+    );
 
     const emails: { email: string }[] = [];
     for (const a of admins ?? []) {

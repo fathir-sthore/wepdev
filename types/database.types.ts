@@ -339,6 +339,31 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          type: string;
+          title: string;
+          message: string | null;
+          link_url: string | null;
+          is_read: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          type: string;
+          title: string;
+          message?: string | null;
+          link_url?: string | null;
+          is_read?: boolean;
+        };
+        Update: {
+          is_read?: boolean;
+        };
+        Relationships: [];
+      };
       purchases: {
         Row: {
           id: string;

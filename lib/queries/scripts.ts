@@ -124,6 +124,8 @@ export type SearchParams = {
   category?: string;
   language?: string;
   framework?: string;
+  developer?: string;
+  minRating?: number;
   pricing?: "free" | "premium";
   sort?: "newest" | "popular" | "downloads" | "az";
   page?: number;
@@ -148,6 +150,12 @@ export async function searchScripts(supabase: Supabase, params: SearchParams) {
   }
   if (params.framework) {
     query = query.eq("framework", params.framework);
+  }
+  if (params.developer) {
+    query = query.eq("developer_id", params.developer);
+  }
+  if (params.minRating) {
+    query = query.gte("rating_avg", params.minRating);
   }
   if (params.pricing === "free") {
     query = query.eq("is_premium", false);
@@ -215,11 +223,20 @@ export async function getReviews(supabase: Supabase, scriptId: string) {
 export async function getDistinctFilterValues(supabase: Supabase) {
   const { data } = await supabase
     .from("scripts")
-    .select("programming_language, framework")
+    .select("programming_language, framework, developer_id")
     .eq("status", "published");
 
   const languages = [...new Set((data ?? []).map((s) => s.programming_language).filter(Boolean))] as string[];
   const frameworks = [...new Set((data ?? []).map((s) => s.framework).filter(Boolean))] as string[];
+  const developerIds = [...new Set((data ?? []).map((s) => s.developer_id))];
 
-  return { languages, frameworks };
+  const { data: developerProfiles } = developerIds.length
+    ? await supabase.from("profiles").select("id, username").in("id", developerIds)
+    : { data: [] };
+
+  return {
+    languages,
+    frameworks,
+    developers: (developerProfiles ?? []).sort((a, b) => a.username.localeCompare(b.username)),
+  };
 }

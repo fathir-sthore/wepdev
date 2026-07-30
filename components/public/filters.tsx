@@ -4,15 +4,18 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import type { Database } from "@/types/database.types";
 
 type Category = Database["public"]["Tables"]["categories"]["Row"];
+type Developer = { id: string; username: string };
 
 export function Filters({
   categories,
   languages,
   frameworks,
+  developers,
 }: {
   categories: Category[];
   languages: string[];
   frameworks: string[];
+  developers: Developer[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -65,6 +68,28 @@ export function Filters({
         {frameworks.map((f) => (
           <option key={f} value={f}>{f}</option>
         ))}
+      </select>
+
+      <select
+        className={selectClass}
+        value={searchParams.get("developer") ?? ""}
+        onChange={(e) => setParam("developer", e.target.value)}
+      >
+        <option value="">all developers</option>
+        {developers.map((d) => (
+          <option key={d.id} value={d.id}>@{d.username}</option>
+        ))}
+      </select>
+
+      <select
+        className={selectClass}
+        value={searchParams.get("minRating") ?? ""}
+        onChange={(e) => setParam("minRating", e.target.value)}
+      >
+        <option value="">semua rating</option>
+        <option value="4">4★ ke atas</option>
+        <option value="3">3★ ke atas</option>
+        <option value="2">2★ ke atas</option>
       </select>
 
       <select

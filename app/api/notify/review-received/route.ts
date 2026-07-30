@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { reviewReceivedEmail } from "@/lib/email/templates";
+import { createNotification } from "@/lib/notifications";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -37,8 +38,16 @@ export async function POST(request: Request) {
       admin.auth.admin.getUserById(script.developer_id),
     ]);
 
+    await createNotification({
+      userId: script.developer_id,
+      type: "review_received",
+      title: "Review baru",
+      message: `@${reviewer?.username ?? "seseorang"} kasih rating ${rating}★ buat ${script.title}`,
+      linkUrl: `/script/${script.slug}`,
+    });
+
     if (!devProfile?.email_notifications) {
-      return NextResponse.json({ ok: true, skipped: "notifications disabled" });
+      return NextResponse.json({ ok: true, skipped: "email notifications disabled" });
     }
 
     const email = devAuthUser?.user?.email;

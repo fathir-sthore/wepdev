@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Terminal } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { SearchBar } from "@/components/public/search-bar";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 
@@ -42,14 +43,17 @@ export async function Navbar() {
           </Link>
 
           {user && profile ? (
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <Avatar
-                src={profile.avatar_url}
-                alt={profile.username}
-                fallback={profile.username}
-                size={32}
-              />
-            </Link>
+            <>
+              <NotificationBell userId={user.id} />
+              <Link href="/dashboard" className="flex items-center gap-2">
+                <Avatar
+                  src={profile.avatar_url}
+                  alt={profile.username}
+                  fallback={profile.username}
+                  size={32}
+                />
+              </Link>
+            </>
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/login">

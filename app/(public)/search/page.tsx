@@ -12,6 +12,8 @@ type Props = {
     category?: string;
     language?: string;
     framework?: string;
+    developer?: string;
+    minRating?: string;
     pricing?: string;
     sort?: string;
     page?: string;
@@ -22,13 +24,15 @@ export default async function SearchPage({ searchParams }: Props) {
   const params = await searchParams;
   const supabase = await createClient();
 
-  const [{ scripts, total, page, pageSize }, categories, { languages, frameworks }] =
+  const [{ scripts, total, page, pageSize }, categories, { languages, frameworks, developers }] =
     await Promise.all([
       searchScripts(supabase, {
         q: params.q,
         category: params.category,
         language: params.language,
         framework: params.framework,
+        developer: params.developer,
+        minRating: params.minRating ? parseFloat(params.minRating) : undefined,
         pricing: params.pricing as "free" | "premium" | undefined,
         sort: params.sort as "newest" | "popular" | "downloads" | "az" | undefined,
         page: params.page ? parseInt(params.page, 10) : 1,
@@ -45,6 +49,8 @@ export default async function SearchPage({ searchParams }: Props) {
     if (params.category) sp.set("category", params.category);
     if (params.language) sp.set("language", params.language);
     if (params.framework) sp.set("framework", params.framework);
+    if (params.developer) sp.set("developer", params.developer);
+    if (params.minRating) sp.set("minRating", params.minRating);
     if (params.pricing) sp.set("pricing", params.pricing);
     if (params.sort) sp.set("sort", params.sort);
     sp.set("page", String(p));
@@ -61,7 +67,7 @@ export default async function SearchPage({ searchParams }: Props) {
       </h1>
 
       <div className="mb-6">
-        <Filters categories={categories} languages={languages} frameworks={frameworks} />
+        <Filters categories={categories} languages={languages} frameworks={frameworks} developers={developers} />
       </div>
 
       <p className="font-data text-xs text-muted mb-4">{total} script(s) found</p>
