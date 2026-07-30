@@ -280,6 +280,91 @@ export type Database = {
         };
         Relationships: [];
       };
+      code_snippets: {
+        Row: {
+          id: string;
+          user_id: string;
+          slug: string;
+          title: string;
+          description: string | null;
+          language: string;
+          content: string;
+          file_name: string | null;
+          view_count: number;
+          rating_avg: number;
+          rating_count: number;
+          status: "published" | "hidden";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          slug: string;
+          title: string;
+          description?: string | null;
+          language: string;
+          content: string;
+          file_name?: string | null;
+          status?: "published" | "hidden";
+        };
+        Update: {
+          slug?: string;
+          title?: string;
+          description?: string | null;
+          language?: string;
+          content?: string;
+          file_name?: string | null;
+          status?: "published" | "hidden";
+        };
+        Relationships: [];
+      };
+      code_snippet_comments: {
+        Row: {
+          id: string;
+          snippet_id: string;
+          user_id: string;
+          rating: number;
+          comment: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          snippet_id: string;
+          user_id: string;
+          rating: number;
+          comment?: string | null;
+        };
+        Update: {
+          rating?: number;
+          comment?: string | null;
+        };
+        Relationships: [];
+      };
+      code_snippet_reports: {
+        Row: {
+          id: string;
+          snippet_id: string;
+          user_id: string | null;
+          reason: string;
+          details: string | null;
+          status: "open" | "reviewed" | "dismissed";
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          snippet_id: string;
+          user_id?: string | null;
+          reason: string;
+          details?: string | null;
+          status?: "open" | "reviewed" | "dismissed";
+        };
+        Update: {
+          status?: "open" | "reviewed" | "dismissed";
+        };
+        Relationships: [];
+      };
       banners: {
         Row: {
           id: string;
@@ -429,6 +514,10 @@ export type Database = {
     Functions: {
       decrement_script_stock: {
         Args: { p_script_id: string };
+        Returns: void;
+      };
+      increment_snippet_view_count: {
+        Args: { p_snippet_id: string };
         Returns: void;
       };
     };

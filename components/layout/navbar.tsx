@@ -41,6 +41,12 @@ export async function Navbar() {
           >
             browse
           </Link>
+          <Link
+            href="/code"
+            className="hidden sm:inline font-data text-xs text-muted hover:text-accent"
+          >
+            code
+          </Link>
 
           {user && profile ? (
             <>
