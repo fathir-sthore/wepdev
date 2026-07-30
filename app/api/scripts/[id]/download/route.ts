@@ -6,12 +6,13 @@ import { hasCompletedPurchase } from "@/lib/payments/entitlement";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const { searchParams } = new URL(request.url);
   const supabase = await createClient();
   const admin = createAdminClient();
 
   const { data: script } = await supabase
     .from("scripts")
-    .select("id, file_path, status, is_premium, developer_id")
+    .select("id, file_path, status, is_premium, developer_id, password_zip")
     .eq("id", id)
     .eq("status", "published")
     .maybeSingle();
@@ -34,6 +35,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
     if (!isOwnerOrAdmin && !(await hasCompletedPurchase(supabase, user.id, script.id))) {
       return NextResponse.json({ error: "purchase required" }, { status: 402 });
+    }
+  }
+
+  if (script.password_zip) {
+    const submittedPassword = searchParams.get("password");
+    if (submittedPassword !== script.password_zip) {
+      return NextResponse.json({ error: "password salah" }, { status: 403 });
     }
   }
 

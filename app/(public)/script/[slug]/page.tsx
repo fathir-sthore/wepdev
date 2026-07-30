@@ -212,6 +212,8 @@ export default async function ScriptDetailPage({ params }: Props) {
                 userId={user?.id ?? null}
                 entitled={entitled}
                 redirectTo={`/script/${script.slug}`}
+                stock={script.stock}
+                passwordProtected={!!script.password_zip}
               />
               <FavoriteButton
                 scriptId={script.id}

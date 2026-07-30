@@ -47,6 +47,7 @@ export function ScriptForm({
   const [isPremium, setIsPremium] = useState(initialData?.is_premium ?? false);
   const [price, setPrice] = useState(initialData?.price?.toString() ?? "0");
   const [passwordZip, setPasswordZip] = useState(initialData?.password_zip ?? "");
+  const [stock, setStock] = useState((initialData?.stock ?? 0).toString());
   const [status, setStatus] = useState(initialData?.status ?? "draft");
   const [tagsInput, setTagsInput] = useState(initialData?.tags.join(", ") ?? "");
 
@@ -153,6 +154,7 @@ export function ScriptForm({
         changelog: changelog || null,
         is_premium: isPremium,
         price: isPremium ? parseFloat(price) || 0 : 0,
+        stock: isPremium && parseInt(stock, 10) > 0 ? parseInt(stock, 10) : null,
         status,
         published_at: status === "published" ? new Date().toISOString() : initialData?.published_at ?? null,
       };
@@ -356,6 +358,15 @@ export function ScriptForm({
           <div>
             <Label htmlFor="price">Price (IDR)</Label>
             <Input id="price" type="number" min={0} value={price} onChange={(e) => setPrice(e.target.value)} />
+          </div>
+        )}
+        {isPremium && (
+          <div>
+            <Label htmlFor="stock">Stok (0 = tidak terbatas)</Label>
+            <Input id="stock" type="number" min={0} value={stock} onChange={(e) => setStock(e.target.value)} />
+            <p className="font-data text-[11px] text-muted mt-1">
+              stok berkurang otomatis tiap pembelian berhasil. 0 = tidak ada batas.
+            </p>
           </div>
         )}
         <div>

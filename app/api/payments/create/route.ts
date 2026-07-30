@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   const { data: script } = await supabase
     .from("scripts")
-    .select("id, price, is_premium, status")
+    .select("id, price, is_premium, status, stock")
     .eq("id", scriptId)
     .eq("status", "published")
     .maybeSingle();
@@ -32,6 +32,9 @@ export async function POST(request: Request) {
   }
   if (!script.is_premium || script.price <= 0) {
     return NextResponse.json({ error: "this script is free, no purchase needed" }, { status: 400 });
+  }
+  if (script.stock !== null && script.stock <= 0) {
+    return NextResponse.json({ error: "stok habis" }, { status: 400 });
   }
 
   if (await hasCompletedPurchase(supabase, user.id, script.id)) {

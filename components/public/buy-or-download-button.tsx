@@ -14,6 +14,8 @@ export function BuyOrDownloadButton({
   userId,
   entitled,
   redirectTo,
+  stock,
+  passwordProtected,
 }: {
   scriptId: string;
   scriptTitle: string;
@@ -21,13 +23,17 @@ export function BuyOrDownloadButton({
   userId: string | null;
   entitled: boolean;
   redirectTo: string;
+  stock?: number | null;
+  passwordProtected?: boolean;
 }) {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
 
   if (entitled) {
-    return <DownloadButton scriptId={scriptId} />;
+    return <DownloadButton scriptId={scriptId} passwordProtected={passwordProtected} />;
   }
+
+  const soldOut = stock !== null && stock !== undefined && stock <= 0;
 
   function handleClick() {
     if (!userId) {
@@ -39,10 +45,15 @@ export function BuyOrDownloadButton({
 
   return (
     <>
-      <Button size="lg" className="w-full" onClick={handleClick}>
+      <Button size="lg" className="w-full" onClick={handleClick} disabled={soldOut}>
         <ShoppingCart size={16} />
-        Buy — Rp {price.toLocaleString("id-ID")}
+        {soldOut ? "Stok Habis" : `Buy — Rp ${price.toLocaleString("id-ID")}`}
       </Button>
+      {!soldOut && typeof stock === "number" && (
+        <p className="text-center font-data text-[11px] text-muted mt-1">
+          sisa stok: {stock}
+        </p>
+      )}
 
       {modalOpen && (
         <PaymentModal

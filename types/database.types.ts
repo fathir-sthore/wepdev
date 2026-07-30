@@ -156,6 +156,7 @@ export type Database = {
           favorite_count: number;
           rating_avg: number;
           rating_count: number;
+          stock: number | null;
           published_at: string | null;
           created_at: string;
           updated_at: string;
@@ -185,6 +186,7 @@ export type Database = {
           changelog?: string | null;
           is_premium?: boolean;
           price?: number;
+          stock?: number | null;
           status?: "draft" | "published" | "archived";
           published_at?: string | null;
         };
@@ -211,6 +213,7 @@ export type Database = {
           changelog?: string | null;
           is_premium?: boolean;
           price?: number;
+          stock?: number | null;
           status?: "draft" | "published" | "archived";
           published_at?: string | null;
         };
@@ -423,7 +426,12 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      decrement_script_stock: {
+        Args: { p_script_id: string };
+        Returns: void;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };

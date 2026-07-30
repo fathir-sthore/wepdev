@@ -90,6 +90,7 @@ export async function syncPurchaseStatus(
       .single();
 
     if (nextStatus === "completed" && data) {
+      await admin.rpc("decrement_script_stock", { p_script_id: data.script_id });
       await sendPurchaseConfirmation(admin, data);
     }
 
