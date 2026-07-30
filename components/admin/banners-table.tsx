@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { publicStorageUrl } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import type { Database } from "@/types/database.types";
 
 type Banner = Database["public"]["Tables"]["banners"]["Row"];
@@ -91,7 +92,7 @@ export function AdminBannersTable({ banners }: { banners: Banner[] }) {
                   <option value="draft">draft</option>
                   <option value="published">published</option>
                 </select>
-                <Link href={`/admin/banners/${banner.id}/edit`}>
+                <Link href={`/${ADMIN_BASE_PATH}/banners/${banner.id}/edit`}>
                   <Button variant="outline" size="sm">edit</Button>
                 </Link>
                 <Button

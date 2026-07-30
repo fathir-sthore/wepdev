@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { BottomNav } from "@/components/dashboard/bottom-nav";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 
 export default async function DashboardLayout({
   children,
@@ -26,9 +27,14 @@ export default async function DashboardLayout({
     .eq("id", user.id)
     .single();
 
+  const isAdmin = profile?.role === "admin";
+
   return (
     <div className="flex min-h-screen">
-      <DashboardSidebar isAdmin={profile?.role === "admin"} />
+      {/* adminHref is computed server-side and only passed down when the
+          viewer is actually an admin, so the secret path string never ends
+          up in the shared client bundle every dashboard user downloads. */}
+      <DashboardSidebar isAdmin={isAdmin} adminHref={isAdmin ? `/${ADMIN_BASE_PATH}` : undefined} />
       <div className="flex-1 flex flex-col">
         <div className="flex justify-end border-b border-line px-6 py-2 md:px-10">
           <NotificationBell userId={user.id} />

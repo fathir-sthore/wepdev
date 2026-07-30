@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getAdminStats } from "@/lib/queries/admin";
 import { StatCard } from "@/components/admin/stat-card";
 import { TrendChart } from "@/components/admin/trend-chart";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatFileSize, formatCount } from "@/lib/storage";
 
@@ -92,7 +93,7 @@ export default async function AdminOverviewPage() {
       </Card>
 
       <div className="mt-6">
-        <Link href="/admin/transactions" className="font-data text-xs text-accent hover:underline">
+        <Link href={`/${ADMIN_BASE_PATH}/transactions`} className="font-data text-xs text-accent hover:underline">
           lihat detail transaksi &amp; pendapatan →
         </Link>
       </div>

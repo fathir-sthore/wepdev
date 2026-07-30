@@ -8,6 +8,7 @@ import { publicStorageUrl } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import type { Database } from "@/types/database.types";
 
 type Category = Database["public"]["Tables"]["categories"]["Row"];
@@ -93,7 +94,7 @@ export function BannerForm({
       const { error: upsertError } = await supabase.from("banners").upsert(payload);
       if (upsertError) throw new Error(upsertError.message);
 
-      router.push("/admin/banners");
+      router.push(`/${ADMIN_BASE_PATH}/banners`);
       router.refresh();
     } catch (err: any) {
       setError(err.message ?? "gagal menyimpan banner");

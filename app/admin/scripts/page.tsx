@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getAllScriptsAdmin } from "@/lib/queries/admin";
 import { AdminScriptsTable } from "@/components/admin/scripts-table";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import { Pagination } from "@/components/public/pagination";
 
 export const metadata = { title: "Manage scripts — Admin" };
@@ -26,7 +27,7 @@ export default async function AdminScriptsPage({ searchParams }: Props) {
         {statuses.map((s) => (
           <a
             key={s || "all"}
-            href={s ? `/admin/scripts?status=${s}` : "/admin/scripts"}
+            href={s ? `/${ADMIN_BASE_PATH}/scripts?status=${s}` : `/${ADMIN_BASE_PATH}/scripts`}
             className={`rounded-md border px-3 py-1 font-data text-xs ${
               (params.status ?? "") === s
                 ? "border-accent text-accent"
@@ -49,7 +50,7 @@ export default async function AdminScriptsPage({ searchParams }: Props) {
       <Pagination
         page={page}
         totalPages={Math.ceil(total / pageSize)}
-        buildHref={(p) => `/admin/scripts?${params.status ? `status=${params.status}&` : ""}page=${p}`}
+        buildHref={(p) => `/${ADMIN_BASE_PATH}/scripts?${params.status ? `status=${params.status}&` : ""}page=${p}`}
       />
     </div>
   );

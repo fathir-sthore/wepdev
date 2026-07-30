@@ -1,9 +1,18 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 
 const PROTECTED_PREFIXES = ["/dashboard"];
 
 export async function updateSession(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
+  // The admin panel is only reachable via the obfuscated ADMIN_BASE_PATH —
+  // block the plain /admin path outright, before anything else runs.
+  if (path === "/admin" || path.startsWith("/admin/")) {
+    return new NextResponse(null, { status: 404 });
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -35,7 +44,6 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const path = request.nextUrl.pathname;
   const isProtected = PROTECTED_PREFIXES.some((p) => path.startsWith(p));
 
   if (isProtected && !user) {
@@ -43,6 +51,19 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/login";
     url.searchParams.set("next", path);
     return NextResponse.redirect(url);
+  }
+
+  // Transparently rewrite the secret admin path to the real /admin routes —
+  // done last so it carries over any cookies the session refresh above set,
+  // by copying them onto the rewritten response rather than replacing it.
+  if (path === `/${ADMIN_BASE_PATH}` || path.startsWith(`/${ADMIN_BASE_PATH}/`)) {
+    const url = request.nextUrl.clone();
+    url.pathname = path.replace(`/${ADMIN_BASE_PATH}`, "/admin");
+    const rewritten = NextResponse.rewrite(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      rewritten.cookies.set(cookie);
+    });
+    return rewritten;
   }
 
   return supabaseResponse;

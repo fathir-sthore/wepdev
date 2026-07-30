@@ -5,6 +5,7 @@ import { StatCard } from "@/components/admin/stat-card";
 import { TrendChart } from "@/components/admin/trend-chart";
 import { TransactionsTable } from "@/components/admin/transactions-table";
 import { TransactionExportButtons } from "@/components/admin/transaction-export-buttons";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import { Pagination } from "@/components/public/pagination";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
@@ -105,7 +106,7 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
         {statuses.map((s) => (
           <a
             key={s || "all"}
-            href={s ? `/admin/transactions?status=${s}` : "/admin/transactions"}
+            href={s ? `/${ADMIN_BASE_PATH}/transactions?status=${s}` : `/${ADMIN_BASE_PATH}/transactions`}
             className={`rounded-md border px-3 py-1 font-data text-xs ${
               (params.status ?? "") === s
                 ? "border-accent text-accent"
@@ -122,7 +123,7 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
       <Pagination
         page={page}
         totalPages={Math.ceil(total / pageSize)}
-        buildHref={(p) => `/admin/transactions?${params.status ? `status=${params.status}&` : ""}page=${p}`}
+        buildHref={(p) => `/${ADMIN_BASE_PATH}/transactions?${params.status ? `status=${params.status}&` : ""}page=${p}`}
       />
     </div>
   );

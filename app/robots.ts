@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/dashboard", "/admin", "/api"],
+        disallow: ["/dashboard", "/api"],
       },
     ],
     sitemap: "https://fathirsthore.my.id/sitemap.xml",

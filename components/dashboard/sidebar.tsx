@@ -15,7 +15,7 @@ const links = [
   { href: "/dashboard/profile", label: "profile & settings", icon: User, exact: false },
 ];
 
-export function DashboardSidebar({ isAdmin }: { isAdmin: boolean }) {
+export function DashboardSidebar({ isAdmin, adminHref }: { isAdmin: boolean; adminHref?: string }) {
   const pathname = usePathname();
 
   return (
@@ -41,9 +41,9 @@ export function DashboardSidebar({ isAdmin }: { isAdmin: boolean }) {
           );
         })}
 
-        {isAdmin && (
+        {isAdmin && adminHref && (
           <Link
-            href="/admin"
+            href={adminHref}
             className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-mono text-signal hover:bg-panel2 transition-colors mt-2 border-t border-line pt-4"
           >
             <ShieldCheck size={16} />

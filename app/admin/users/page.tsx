@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getAllUsers } from "@/lib/queries/admin";
 import { AdminUsersTable } from "@/components/admin/users-table";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import { Pagination } from "@/components/public/pagination";
 
 export const metadata = { title: "Users — Admin" };
@@ -26,7 +27,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
 
       <AdminUsersTable users={users} currentUserId={user!.id} />
 
-      <Pagination page={page} totalPages={Math.ceil(total / pageSize)} buildHref={(p) => `/admin/users?page=${p}`} />
+      <Pagination page={page} totalPages={Math.ceil(total / pageSize)} buildHref={(p) => `/${ADMIN_BASE_PATH}/users?page=${p}`} />
     </div>
   );
 }

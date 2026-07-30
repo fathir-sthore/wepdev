@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { reportFiledEmail } from "@/lib/email/templates";
 import { createNotification } from "@/lib/notifications";
+import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 
 export async function POST(request: Request) {
   const { scriptId, reason, details } = await request.json();
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
           type: "report_filed",
           title: "Laporan baru",
           message: `${reason} — ${script.title}`,
-          linkUrl: "/admin/reports",
+          linkUrl: `/${ADMIN_BASE_PATH}/reports`,
         })
       )
     );
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
         scriptTitle: script.title,
         reason,
         details: details ?? null,
-        adminUrl: "https://fathirsthore.my.id/admin/reports",
+        adminUrl: `https://fathirsthore.my.id/${ADMIN_BASE_PATH}/reports`,
       }),
     });
 
