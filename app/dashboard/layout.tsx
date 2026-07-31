@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
-import { BottomNav } from "@/components/dashboard/bottom-nav";
+import { GlobalBottomNav } from "@/components/layout/global-bottom-nav";
+import { HamburgerMenu } from "@/components/layout/hamburger-menu";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 
@@ -36,12 +37,13 @@ export default async function DashboardLayout({
           up in the shared client bundle every dashboard user downloads. */}
       <DashboardSidebar isAdmin={isAdmin} adminHref={isAdmin ? `/${ADMIN_BASE_PATH}` : undefined} />
       <div className="flex-1 flex flex-col">
-        <div className="flex justify-end border-b border-line px-6 py-2 md:px-10">
+        <div className="flex items-center justify-end gap-2 border-b border-line px-6 py-2 md:px-10">
           <NotificationBell userId={user.id} />
+          <HamburgerMenu />
         </div>
-        <div className="flex-1 p-6 md:p-10 pb-20 md:pb-10">{children}</div>
+        <div className="flex-1 p-6 md:p-10 pb-24 md:pb-10">{children}</div>
       </div>
-      <BottomNav />
+      <GlobalBottomNav />
     </div>
   );
 }

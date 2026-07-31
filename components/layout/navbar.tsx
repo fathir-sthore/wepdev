@@ -3,6 +3,7 @@ import { Terminal } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { SearchBar } from "@/components/public/search-bar";
 import { NotificationBell } from "@/components/notifications/notification-bell";
+import { HamburgerMenu } from "@/components/layout/hamburger-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 
@@ -35,19 +36,6 @@ export async function Navbar() {
         <SearchBar className="flex-1 max-w-xl" />
 
         <nav className="flex items-center gap-3 shrink-0">
-          <Link
-            href="/search"
-            className="hidden sm:inline font-data text-xs text-muted hover:text-accent"
-          >
-            browse
-          </Link>
-          <Link
-            href="/code"
-            className="hidden sm:inline font-data text-xs text-muted hover:text-accent"
-          >
-            code
-          </Link>
-
           {user && profile ? (
             <>
               <NotificationBell userId={user.id} />
@@ -61,7 +49,7 @@ export async function Navbar() {
               </Link>
             </>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2">
               <Link href="/login">
                 <Button variant="ghost" size="sm">login</Button>
               </Link>
@@ -70,6 +58,8 @@ export async function Navbar() {
               </Link>
             </div>
           )}
+
+          <HamburgerMenu />
         </nav>
       </div>
     </header>
