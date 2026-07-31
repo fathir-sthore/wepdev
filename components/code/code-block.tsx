@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Copy, Check, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -13,6 +13,16 @@ const EXT_MAP: Record<string, string> = {
   html: "html",
 };
 
+// Maps our detected language ids to Prism's language identifiers.
+const PRISM_LANG: Record<string, string> = {
+  javascript: "javascript",
+  python: "python",
+  json: "json",
+  dart: "dart",
+  shell: "bash",
+  html: "markup",
+};
+
 export function CodeBlock({
   content,
   language,
@@ -23,6 +33,32 @@ export function CodeBlock({
   fileName?: string | null;
 }) {
   const [copied, setCopied] = useState(false);
+  const codeRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function highlight() {
+      const Prism = (await import("prismjs")).default;
+      // Core language dependencies, then the language we actually need.
+      await import("prismjs/components/prism-clike" as any);
+      await import("prismjs/components/prism-markup" as any);
+      await import("prismjs/components/prism-javascript" as any);
+      await import("prismjs/components/prism-python" as any);
+      await import("prismjs/components/prism-json" as any);
+      await import("prismjs/components/prism-bash" as any);
+      await import("prismjs/components/prism-dart" as any);
+
+      if (!cancelled && codeRef.current) {
+        Prism.highlightElement(codeRef.current);
+      }
+    }
+
+    highlight();
+    return () => {
+      cancelled = true;
+    };
+  }, [content, language]);
 
   async function handleCopy() {
     await navigator.clipboard.writeText(content);
@@ -41,6 +77,8 @@ export function CodeBlock({
     URL.revokeObjectURL(url);
   }
 
+  const prismLang = PRISM_LANG[language] ?? "javascript";
+
   return (
     <div className="rounded-md border border-line overflow-hidden">
       <div className="flex items-center justify-between bg-panel2 px-3 py-2 border-b border-line">
@@ -56,8 +94,10 @@ export function CodeBlock({
           </Button>
         </div>
       </div>
-      <pre className="overflow-x-auto p-4 text-xs font-data text-text bg-ink">
-        <code>{content}</code>
+      <pre className="overflow-x-auto p-4 text-xs bg-[#1e1e1e]">
+        <code ref={codeRef} className={`language-${prismLang}`}>
+          {content}
+        </code>
       </pre>
     </div>
   );
