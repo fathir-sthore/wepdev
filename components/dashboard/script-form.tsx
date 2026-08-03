@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/client";
 import { slugify } from "@/lib/slugify";
 import { sha256File } from "@/lib/checksum";
 import { resizeImagePreserveAspect } from "@/lib/image-crop";
+import { uploadFileToR2 } from "@/lib/r2/upload-client";
+import { resolveScriptSubfolder } from "@/lib/r2/paths";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -65,42 +67,28 @@ export function ScriptForm({
     if (!slugEdited) setSlug(slugify(value));
   }
 
-  async function uploadOne(bucket: string, path: string, file: File) {
-    const { error } = await supabase.storage.from(bucket).upload(path, file, { upsert: true });
-    if (error) throw new Error(`upload failed (${bucket}): ${error.message}`);
-    return path;
-  }
-
-  /** Downscales large images before upload — keeps the original aspect
-   * ratio (no forced square crop), just caps file size/dimensions. */
-  async function uploadImage(bucket: string, path: string, file: File) {
-    const blob = await resizeImagePreserveAspect(file, 1600);
-    const { error } = await supabase.storage
-      .from(bucket)
-      .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
-    if (error) throw new Error(`upload failed (${bucket}): ${error.message}`);
-    return path;
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
     try {
-      const scriptId = initialData?.id ?? crypto.randomUUID();
-      const basePath = `${userId}/${scriptId}`;
+      const categorySlug = categories.find((c) => c.id === categoryId)?.slug ?? null;
+      const scriptSubfolder = resolveScriptSubfolder(categorySlug, language);
 
       let filePath = initialData?.file_path ?? null;
       let fileSizeBytes = initialData?.file_size_bytes ?? null;
       let checksum = initialData?.checksum_sha256 ?? null;
 
       if (scriptFile) {
-        setProgress("uploading script file...");
-        const ext = scriptFile.name.split(".").pop();
-        filePath = await uploadOne("scripts", `${basePath}/script.${ext}`, scriptFile);
-        fileSizeBytes = scriptFile.size;
+        setProgress("hashing script file...");
         checksum = await sha256File(scriptFile);
+        setProgress("uploading script file (0%)...");
+        const { key } = await uploadFileToR2(scriptFile, `scripts/${scriptSubfolder}`, (pct) =>
+          setProgress(`uploading script file (${pct}%)...`)
+        );
+        filePath = key;
+        fileSizeBytes = scriptFile.size;
       }
       if (!isEdit && !scriptFile) {
         throw new Error("script file is required");
@@ -109,28 +97,36 @@ export function ScriptForm({
       let thumbnailPath = initialData?.thumbnail_path ?? null;
       if (thumbnailFile) {
         setProgress("uploading thumbnail...");
-        thumbnailPath = await uploadImage("thumbnails", `${basePath}/thumbnail.jpg`, thumbnailFile);
+        const resized = await resizeImagePreserveAspect(thumbnailFile, 1600);
+        const resizedFile = new File([resized], "thumbnail.jpg", { type: "image/jpeg" });
+        const { key } = await uploadFileToR2(resizedFile, "images/thumbnails");
+        thumbnailPath = key;
       }
 
       let screenshotPaths = initialData?.screenshot_paths ?? [];
       if (screenshotFiles.length > 0) {
         setProgress("uploading screenshots...");
         screenshotPaths = await Promise.all(
-          screenshotFiles.map((f, i) => uploadImage("screenshots", `${basePath}/screenshot-${i}.jpg`, f))
+          screenshotFiles.map(async (f, i) => {
+            const resized = await resizeImagePreserveAspect(f, 1600);
+            const resizedFile = new File([resized], `screenshot-${i}.jpg`, { type: "image/jpeg" });
+            const { key } = await uploadFileToR2(resizedFile, "images/screenshots");
+            return key;
+          })
         );
       }
 
       let documentationPath = initialData?.documentation_path ?? null;
       if (docFile) {
         setProgress("uploading documentation...");
-        const ext = docFile.name.split(".").pop();
-        documentationPath = await uploadOne("documents", `${basePath}/docs.${ext}`, docFile);
+        const { key } = await uploadFileToR2(docFile, "documents");
+        documentationPath = key;
       }
 
       setProgress("saving script details...");
 
       const payload = {
-        id: scriptId,
+        id: initialData?.id ?? crypto.randomUUID(),
         developer_id: userId,
         slug: slug || slugify(title),
         title,
@@ -161,6 +157,8 @@ export function ScriptForm({
 
       const { error: upsertError } = await supabase.from("scripts").upsert(payload);
       if (upsertError) throw new Error(upsertError.message);
+
+      const scriptId = payload.id;
 
       // Replace tags: parse comma-separated input, upsert each tag, relink.
       const tagNames = [...new Set(
@@ -302,12 +300,12 @@ export function ScriptForm({
         <h2 className="font-mono text-sm text-signal">files</h2>
         <div>
           <Label htmlFor="script_file">
-            Script file (.zip .7z .rar) {isEdit && "— leave empty to keep current file"}
+            Script file (.zip .7z .rar .js .ts .json .html .css .php .py .java .c .cpp .dart .yaml .xml .sql .txt) {isEdit && "— leave empty to keep current file"}
           </Label>
           <input
             id="script_file"
             type="file"
-            accept=".zip,.7z,.rar,.js,.php,.html,.css,.json,.py,.sh,.txt,.dart,.yml,.yaml,.sql,.md,.xml,.env"
+            accept=".zip,.7z,.rar,.js,.ts,.json,.html,.css,.php,.py,.java,.c,.cpp,.dart,.yaml,.yml,.xml,.sql,.txt"
             onChange={(e) => setScriptFile(e.target.files?.[0] ?? null)}
             className={fileInputClass}
           />
@@ -317,7 +315,7 @@ export function ScriptForm({
           <input
             id="thumbnail"
             type="file"
-            accept="image/*"
+            accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml"
             onChange={(e) => setThumbnailFile(e.target.files?.[0] ?? null)}
             className={fileInputClass}
           />
@@ -327,17 +325,18 @@ export function ScriptForm({
           <input
             id="screenshots"
             type="file"
-            accept="image/*"
+            accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml"
             multiple
             onChange={(e) => setScreenshotFiles(Array.from(e.target.files ?? []))}
             className={fileInputClass}
           />
         </div>
         <div>
-          <Label htmlFor="docs">Documentation file (optional)</Label>
+          <Label htmlFor="docs">Documentation file (optional, PDF)</Label>
           <input
             id="docs"
             type="file"
+            accept=".pdf,.txt"
             onChange={(e) => setDocFile(e.target.files?.[0] ?? null)}
             className={fileInputClass}
           />

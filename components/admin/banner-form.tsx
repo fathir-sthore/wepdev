@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { resizeImagePreserveAspect } from "@/lib/image-crop";
+import { uploadFileToR2 } from "@/lib/r2/upload-client";
 import { publicStorageUrl } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,12 +70,9 @@ export function BannerForm({
 
       if (imageFile) {
         const blob = await resizeImagePreserveAspect(imageFile, 1600);
-        const path = `${bannerId}/banner.jpg`;
-        const { error: uploadError } = await supabase.storage
-          .from("banners")
-          .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
-        if (uploadError) throw new Error(uploadError.message);
-        imagePath = path;
+        const resizedFile = new File([blob], "banner.jpg", { type: "image/jpeg" });
+        const { key } = await uploadFileToR2(resizedFile, "images/banners");
+        imagePath = key;
       }
 
       const payload = {

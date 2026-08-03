@@ -5,7 +5,15 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 
-export function DeleteScriptButton({ scriptId, title }: { scriptId: string; title: string }) {
+export function DeleteScriptButton({
+  scriptId,
+  title,
+  fileKeys,
+}: {
+  scriptId: string;
+  title: string;
+  fileKeys: (string | null | undefined)[];
+}) {
   const router = useRouter();
   const supabase = createClient();
   const [confirming, setConfirming] = useState(false);
@@ -14,6 +22,16 @@ export function DeleteScriptButton({ scriptId, title }: { scriptId: string; titl
   async function handleDelete() {
     setLoading(true);
     await supabase.from("scripts").delete().eq("id", scriptId);
+
+    const keys = fileKeys.filter(Boolean) as string[];
+    if (keys.length > 0) {
+      await fetch("/api/r2/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keys }),
+      }).catch(() => {});
+    }
+
     router.refresh();
   }
 

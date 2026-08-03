@@ -1,9 +1,13 @@
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
 
-/** Builds a public URL for a file in a public bucket (thumbnails, screenshots, avatars). */
-export function publicStorageUrl(bucket: string, path: string | null | undefined) {
+/** Builds a public URL for a file stored in R2 (thumbnails, screenshots,
+ * avatars, banners). The `bucket` param is kept for call-site compatibility
+ * but unused — R2 uses one bucket with the folder baked into the stored key
+ * itself (e.g. "images/thumbnails/uuid-name.jpg"). */
+export function publicStorageUrl(_bucket: string, path: string | null | undefined) {
   if (!path) return null;
-  return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
+  if (!R2_PUBLIC_URL) return null;
+  return `${R2_PUBLIC_URL.replace(/\/$/, "")}/${path}`;
 }
 
 export function formatFileSize(bytes: number | null | undefined) {

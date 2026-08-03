@@ -29,10 +29,22 @@ export function AdminScriptsTable({ scripts }: { scripts: ScriptRow[] }) {
     router.refresh();
   }
 
-  async function remove(id: string) {
+  async function remove(script: ScriptRow) {
     if (!confirm("delete this script permanently?")) return;
-    setBusyId(id);
-    await supabase.from("scripts").delete().eq("id", id);
+    setBusyId(script.id);
+    await supabase.from("scripts").delete().eq("id", script.id);
+
+    const keys = [script.file_path, script.thumbnail_path, script.documentation_path, ...script.screenshot_paths].filter(
+      Boolean
+    ) as string[];
+    if (keys.length > 0) {
+      await fetch("/api/r2/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keys }),
+      }).catch(() => {});
+    }
+
     setBusyId(null);
     router.refresh();
   }
@@ -72,7 +84,7 @@ export function AdminScriptsTable({ scripts }: { scripts: ScriptRow[] }) {
                 size="sm"
                 className="text-danger"
                 disabled={busyId === script.id}
-                onClick={() => remove(script.id)}
+                onClick={() => remove(script)}
               >
                 delete
               </Button>

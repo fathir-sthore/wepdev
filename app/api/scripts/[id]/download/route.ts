@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { getSignedDownloadUrl } from "@/lib/r2/service";
 import { hashIp, getClientIp } from "@/lib/ip";
 import { hasCompletedPurchase } from "@/lib/payments/entitlement";
 
@@ -8,7 +8,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const { id } = await params;
   const { searchParams } = new URL(request.url);
   const supabase = await createClient();
-  const admin = createAdminClient();
 
   const { data: script } = await supabase
     .from("scripts")
@@ -45,11 +44,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     }
   }
 
-  const { data: signed, error } = await admin.storage
-    .from("scripts")
-    .createSignedUrl(script.file_path, 60);
-
-  if (error || !signed) {
+  let signedUrl: string;
+  try {
+    signedUrl = await getSignedDownloadUrl(script.file_path, 60, user?.id ?? null);
+  } catch {
     return NextResponse.json({ error: "file unavailable" }, { status: 500 });
   }
 
@@ -59,5 +57,5 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     ip_hash: hashIp(getClientIp(request)),
   });
 
-  return NextResponse.redirect(signed.signedUrl);
+  return NextResponse.redirect(signedUrl);
 }

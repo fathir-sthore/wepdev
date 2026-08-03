@@ -66,7 +66,11 @@ export default async function MyScriptsPage() {
                   <Link href={`/dashboard/scripts/${script.id}/edit`}>
                     <Button variant="outline" size="sm">edit</Button>
                   </Link>
-                  <DeleteScriptButton scriptId={script.id} title={script.title} />
+                  <DeleteScriptButton
+                    scriptId={script.id}
+                    title={script.title}
+                    fileKeys={[script.file_path, script.thumbnail_path, script.documentation_path, ...script.screenshot_paths]}
+                  />
                 </div>
               </CardContent>
             </Card>

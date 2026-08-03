@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { cropAndResizeImage } from "@/lib/image-crop";
-import { publicStorageUrl } from "@/lib/storage";
+import { uploadFileToR2 } from "@/lib/r2/upload-client";
+import { r2PublicUrlClient } from "@/lib/r2/url-client";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,33 +61,27 @@ export function AvatarUploader({
     setLoading(true);
     setError(null);
 
-    const path = `${userId}/avatar-${Date.now()}.jpg`;
-    const { error: uploadError } = await supabase.storage
-      .from("avatars")
-      .upload(path, pendingBlob, { upsert: true, contentType: "image/jpeg" });
+    try {
+      const file = new File([pendingBlob], `avatar-${Date.now()}.jpg`, { type: "image/jpeg" });
+      const { key } = await uploadFileToR2(file, "images/avatars");
+      const publicUrl = r2PublicUrlClient(key);
 
-    if (uploadError) {
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ avatar_url: publicUrl })
+        .eq("id", userId);
+
+      if (updateError) throw new Error(updateError.message);
+
+      setPendingBlob(null);
+      setPreviewUrl(null);
+      setUrlInput("");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message ?? "gagal upload foto");
+    } finally {
       setLoading(false);
-      setError(uploadError.message);
-      return;
     }
-
-    const publicUrl = publicStorageUrl("avatars", path);
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ avatar_url: publicUrl })
-      .eq("id", userId);
-
-    setLoading(false);
-    if (updateError) {
-      setError(updateError.message);
-      return;
-    }
-
-    setPendingBlob(null);
-    setPreviewUrl(null);
-    setUrlInput("");
-    router.refresh();
   }
 
   return (

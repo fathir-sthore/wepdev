@@ -25,10 +25,19 @@ export function AdminBannersTable({ banners }: { banners: Banner[] }) {
     router.refresh();
   }
 
-  async function remove(id: string) {
+  async function remove(banner: Banner) {
     if (!confirm("hapus banner ini?")) return;
-    setBusyId(id);
-    await supabase.from("banners").delete().eq("id", id);
+    setBusyId(banner.id);
+    await supabase.from("banners").delete().eq("id", banner.id);
+
+    if (banner.image_path) {
+      await fetch("/api/r2/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: banner.image_path }),
+      }).catch(() => {});
+    }
+
     setBusyId(null);
     router.refresh();
   }
@@ -100,7 +109,7 @@ export function AdminBannersTable({ banners }: { banners: Banner[] }) {
                   size="sm"
                   className="text-danger"
                   disabled={busyId === banner.id}
-                  onClick={() => remove(banner.id)}
+                  onClick={() => remove(banner)}
                 >
                   hapus
                 </Button>

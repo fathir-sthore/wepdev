@@ -452,6 +452,29 @@ export type Database = {
         };
         Relationships: [];
       };
+      storage_logs: {
+        Row: {
+          id: string;
+          action: "upload" | "download" | "delete" | "copy" | "move" | "multipart_complete" | "multipart_abort";
+          object_key: string;
+          size_bytes: number | null;
+          status: "success" | "error";
+          error_message: string | null;
+          user_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          action: "upload" | "download" | "delete" | "copy" | "move" | "multipart_complete" | "multipart_abort";
+          object_key: string;
+          size_bytes?: number | null;
+          status: "success" | "error";
+          error_message?: string | null;
+          user_id?: string | null;
+        };
+        Update: never;
+        Relationships: [];
+      };
       purchases: {
         Row: {
           id: string;
