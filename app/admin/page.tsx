@@ -6,6 +6,7 @@ import { StatCard } from "@/components/admin/stat-card";
 import { TrendChart } from "@/components/admin/trend-chart";
 import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { MigrateStorageButton } from "@/components/admin/migrate-storage-button";
 import { formatFileSize, formatCount } from "@/lib/storage";
 
 export const metadata = { title: "Admin overview" };
@@ -18,6 +19,10 @@ export default async function AdminOverviewPage() {
     <div>
       <p className="font-data text-xs text-signal mb-2">$ fathir admin --stats</p>
       <h1 className="font-mono text-2xl text-text mb-6">Overview</h1>
+
+      <div className="mb-8">
+        <MigrateStorageButton />
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard label="scripts" value={formatCount(stats.totalScripts)} icon={Code2} />
