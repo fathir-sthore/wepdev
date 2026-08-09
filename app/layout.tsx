@@ -1,23 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-data",
-});
-// Modern sans used specifically on the register / forgot-password pages —
-// the rest of the site keeps the terminal aesthetic (JetBrains Mono / IBM
-// Plex Mono), this is a deliberate departure just for those two pages.
+// v1.0.1 "Futuristic Developer Marketplace" design system — two-font
+// system. Plus Jakarta Sans is the primary site-wide UI font (also used
+// for --font-display, see globals.css). JetBrains Mono covers code blocks
+// and stat/data displays (also aliased to --font-data in globals.css).
+// Inter and IBM Plex Mono are no longer self-hosted; "Inter"/"Fira Code"
+// remain only as text fallbacks in the CSS font-family stacks.
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-display",
+  variable: "--font-sans",
 });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 const SITE_URL = "https://fathirsthore.my.id";
 
@@ -103,7 +100,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${plexMono.variable} ${plusJakarta.variable}`}
+      className={`${plusJakarta.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">

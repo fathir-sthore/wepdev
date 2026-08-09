@@ -60,7 +60,7 @@ export function BannerSlider({ banners }: { banners: Banner[] }) {
                   className="absolute inset-0"
                   style={{
                     background:
-                      "radial-gradient(circle at 20% 20%, rgba(242,179,61,0.25), transparent 45%), radial-gradient(circle at 80% 70%, rgba(51,224,194,0.2), transparent 45%), linear-gradient(160deg, #0B0D12 0%, #12151C 60%, #1A1E27 100%)",
+                      "radial-gradient(circle at 20% 20%, rgba(0,240,255,0.25), transparent 45%), radial-gradient(circle at 80% 70%, rgba(112,0,255,0.2), transparent 45%), linear-gradient(160deg, #090A0F 0%, #12141D 60%, #1A1D2B 100%)",
                   }}
                 />
               )}

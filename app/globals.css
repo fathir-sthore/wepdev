@@ -4,35 +4,41 @@
 
 :root,
 .dark {
-  --font-sans: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-data: "IBM Plex Mono", monospace;
+  /* Design System v1.0.1 — "Futuristic Developer Marketplace" */
+  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-data: var(--font-mono);
 
-  --color-ink: #0B0D12;
-  --color-panel: #12151C;
-  --color-panel2: #1A1E27;
-  --color-line: #262B36;
-  --color-text: #E7E9EE;
-  --color-muted: #8A93A3;
-  --color-accent: #F2B33D;
-  --color-accent-dim: #8A6A2A;
-  --color-signal: #33E0C2;
-  --color-signal-dim: #1F7A6C;
-  --color-danger: #F2555A;
+  --color-ink: #090A0F;        /* Deep Space Black — canvas utama */
+  --color-panel: #12141D;      /* Obsidian Surface — cards, sidebar, topbar, modals */
+  --color-panel2: #1A1D2B;     /* Slate Glass — hover states & interactive elements */
+  --color-line: #2A2E43;       /* Steel Border — structural dividers */
+  --color-text: #F0F4FF;       /* Ice White — heading & high contrast text */
+  --color-muted: #8A92B2;      /* Cool Slate — subtitles & secondary info */
+  --color-accent: #00F0FF;     /* Electric Cyan — focus states, CTA utama, glow */
+  --color-accent-dim: #0B8A99;
+  --color-signal: #7000FF;     /* Hyper Purple — category badges, secondary highlights */
+  --color-signal-dim: #4A00AD;
+  --color-danger: #FF3B5C;
+  --color-free: #00FF9D;       /* Neon Mint — badge FREE */
+  --color-premium: #FFB800;    /* Cyber Amber — badge PREMIUM */
 }
 
 .light {
-  --color-ink: #F7F7F9;
+  --color-ink: #F4F6FC;
   --color-panel: #FFFFFF;
-  --color-panel2: #F0F1F4;
-  --color-line: #E1E3E8;
-  --color-text: #14161B;
-  --color-muted: #6B7280;
-  --color-accent: #B8790A;
-  --color-accent-dim: #F2B33D;
-  --color-signal: #0E9A82;
-  --color-signal-dim: #33E0C2;
-  --color-danger: #D6303A;
+  --color-panel2: #E9ECF7;
+  --color-line: #D7DCEC;
+  --color-text: #0B0D16;
+  --color-muted: #565E7E;
+  --color-accent: #0091A8;
+  --color-accent-dim: #00F0FF;
+  --color-signal: #5A00CC;
+  --color-signal-dim: #7000FF;
+  --color-danger: #D6203F;
+  --color-free: #00A36B;
+  --color-premium: #C77E00;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -49,7 +55,8 @@ body {
   background-color: var(--color-ink);
   color: var(--color-text);
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(242, 179, 61, 0.08), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 240, 255, 0.10), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(112, 0, 255, 0.08), transparent),
     repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
 }
 
@@ -60,7 +67,8 @@ body {
 
 .light body {
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(184, 121, 10, 0.06), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 145, 168, 0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(90, 0, 204, 0.05), transparent),
     repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 3px);
 }
 
@@ -85,7 +93,7 @@ code[class*="language-"],
 pre[class*="language-"] {
   color: #d4d4d4;
   background: none;
-  font-family: var(--font-data), "IBM Plex Mono", monospace;
+  font-family: var(--font-data), "JetBrains Mono", "Fira Code", monospace;
   text-shadow: none;
 }
 

@@ -10,7 +10,7 @@ export default function OpengraphImage() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#0B0D12",
+          background: "#090A0F",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -18,7 +18,7 @@ export default function OpengraphImage() {
           gap: 24,
         }}
       >
-        <div style={{ display: "flex", fontSize: 48, color: "#33E0C2", fontFamily: "monospace" }}>
+        <div style={{ display: "flex", fontSize: 48, color: "#7000FF", fontFamily: "monospace" }}>
           $ fathir sthore --init
         </div>
         <div
@@ -26,13 +26,13 @@ export default function OpengraphImage() {
             display: "flex",
             fontSize: 80,
             fontWeight: 700,
-            color: "#E7E9EE",
+            color: "#F0F4FF",
             fontFamily: "monospace",
           }}
         >
           Fathir Sthore
         </div>
-        <div style={{ display: "flex", fontSize: 32, color: "#F2B33D", fontFamily: "monospace" }}>
+        <div style={{ display: "flex", fontSize: 32, color: "#00F0FF", fontFamily: "monospace" }}>
           Script Download Center
         </div>
       </div>

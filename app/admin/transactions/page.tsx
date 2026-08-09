@@ -51,7 +51,7 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
             <p className="font-mono text-sm text-text">Pendapatan harian — 30 hari terakhir</p>
           </CardHeader>
           <CardContent>
-            <TrendChart data={stats.dailyRevenue} color="#33E0C2" />
+            <TrendChart data={stats.dailyRevenue} color="#7000FF" />
           </CardContent>
         </Card>
         <Card>
@@ -59,7 +59,7 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
             <p className="font-mono text-sm text-text">Pendapatan bulanan — 12 bulan terakhir</p>
           </CardHeader>
           <CardContent>
-            <TrendChart data={stats.monthlyRevenue} color="#F2B33D" />
+            <TrendChart data={stats.monthlyRevenue} color="#00F0FF" />
           </CardContent>
         </Card>
       </div>

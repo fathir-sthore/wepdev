@@ -24,15 +24,21 @@ const config: Config = {
           dim: "var(--color-signal-dim)",
         },
         danger: "var(--color-danger)",
+        free: "var(--color-free)",
+        premium: "var(--color-premium)",
       },
       fontFamily: {
-        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
-        sans: ["var(--font-sans)", "Inter", "sans-serif"],
-        data: ["var(--font-data)", "IBM Plex Mono", "monospace"],
+        mono: ["var(--font-mono)", "JetBrains Mono", "Fira Code", "monospace"],
+        sans: ["var(--font-sans)", "Plus Jakarta Sans", "Inter", "sans-serif"],
+        data: ["var(--font-data)", "JetBrains Mono", "Fira Code", "monospace"],
         display: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
       },
       boxShadow: {
-        glow: "0 0 0 1px rgba(242,179,61,0.15), 0 0 24px rgba(242,179,61,0.08)",
+        glow: "0 0 0 1px rgba(0,240,255,0.18), 0 0 24px rgba(0,240,255,0.12)",
+        "glow-purple": "0 0 0 1px rgba(112,0,255,0.18), 0 0 24px rgba(112,0,255,0.12)",
+      },
+      backdropBlur: {
+        glass: "16px",
       },
       keyframes: {
         caret: {
