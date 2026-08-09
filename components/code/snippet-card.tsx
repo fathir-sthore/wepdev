@@ -19,7 +19,7 @@ export function SnippetCard({ snippet }: { snippet: SnippetWithAuthor }) {
             <Eye size={11} /> {formatCount(snippet.view_count)}
           </span>
         </div>
-        <h3 className="font-mono text-sm text-text line-clamp-1 mb-1">{snippet.title}</h3>
+        <h3 className="text-title text-sm text-text line-clamp-1 mb-1">{snippet.title}</h3>
         {snippet.description && (
           <p className="text-xs text-muted line-clamp-2 flex-1">{snippet.description}</p>
         )}

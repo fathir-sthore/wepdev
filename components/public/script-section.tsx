@@ -20,7 +20,7 @@ export function ScriptSection({
   return (
     <section className="mx-auto max-w-7xl px-4 py-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="flex items-center gap-2 font-mono text-lg text-text">
+        <h2 className="flex items-center gap-2 text-title text-lg text-text">
           {icon}
           {title}
         </h2>

@@ -146,7 +146,7 @@ export default async function ScriptDetailPage({ params }: Props) {
           )}
 
           <div>
-            <h1 className="font-mono text-2xl text-text mb-2">{script.title}</h1>
+            <h1 className="text-title text-2xl text-text mb-2">{script.title}</h1>
             <div className="flex items-center gap-3 mb-4">
               <RatingStars rating={script.rating_avg} count={script.rating_count} />
               {script.developer && (
@@ -185,14 +185,14 @@ export default async function ScriptDetailPage({ params }: Props) {
           {script.changelog && (
             <Card>
               <CardContent>
-                <h2 className="font-mono text-sm text-text mb-2">Changelog</h2>
+                <h2 className="text-title text-sm text-text mb-2">Changelog</h2>
                 <p className="text-xs text-muted whitespace-pre-line">{script.changelog}</p>
               </CardContent>
             </Card>
           )}
 
           <div>
-            <h2 className="font-mono text-lg text-text mb-4">
+            <h2 className="text-title text-lg text-text mb-4">
               Reviews ({script.rating_count})
             </h2>
             <div className="mb-6">

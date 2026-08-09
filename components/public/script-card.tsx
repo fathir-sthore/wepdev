@@ -61,7 +61,7 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
               {script.category.name}
             </span>
           )}
-          <h3 className="font-mono text-sm text-text line-clamp-1">{script.title}</h3>
+          <h3 className="text-title text-sm text-text line-clamp-1">{script.title}</h3>
           <p className="text-xs text-muted line-clamp-2 flex-1">
             {script.short_description}
           </p>

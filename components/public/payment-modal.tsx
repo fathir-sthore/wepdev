@@ -133,7 +133,7 @@ export function PaymentModal({
           {phase === "pending" && qrDataUrl && (
             <>
               <img src={qrDataUrl} alt="QRIS code" width={220} height={220} className="rounded-md" />
-              <p className="font-mono text-lg text-accent">{formatRupiah(totalPayment ?? 0)}</p>
+              <p className="text-stat text-lg text-accent">{formatRupiah(totalPayment ?? 0)}</p>
               <p className="font-data text-xs text-muted">
                 scan with any QRIS app (GoPay, OVO, ShopeePay, Dana, m-banking)
               </p>

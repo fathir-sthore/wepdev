@@ -34,7 +34,7 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
           <p className="font-data text-xs text-signal mb-2">$ fathir admin --transactions</p>
-          <h1 className="font-mono text-2xl text-text">Transaksi &amp; Pendapatan</h1>
+          <h1 className="text-title text-2xl text-text">Transaksi &amp; Pendapatan</h1>
         </div>
         <TransactionExportButtons />
       </div>
@@ -101,7 +101,7 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
         </Card>
       </div>
 
-      <h2 className="font-mono text-lg text-text mb-4">Riwayat transaksi</h2>
+      <h2 className="text-title text-lg text-text mb-4">Riwayat transaksi</h2>
       <div className="flex gap-2 mb-6">
         {statuses.map((s) => (
           <a

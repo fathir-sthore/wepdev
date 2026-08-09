@@ -11,7 +11,7 @@ export default async function NewBannerPage() {
   return (
     <div>
       <p className="font-data text-xs text-signal mb-2">$ fathir admin --banners --new</p>
-      <h1 className="font-mono text-2xl text-text mb-6">Tambah banner</h1>
+      <h1 className="text-title text-2xl text-text mb-6">Tambah banner</h1>
       <BannerForm categories={categories} />
     </div>
   );

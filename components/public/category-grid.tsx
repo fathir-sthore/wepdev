@@ -23,7 +23,7 @@ export function CategoryGrid({ categories }: { categories: Category[] }) {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12">
-      <h2 className="font-mono text-lg text-text mb-4">Browse by category</h2>
+      <h2 className="text-title text-lg text-text mb-4">Browse by category</h2>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {categories.map((cat) => (
           <Link key={cat.id} href={`/search?category=${cat.id}`}>

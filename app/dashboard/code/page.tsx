@@ -22,7 +22,7 @@ export default async function MyCodePage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="font-data text-xs text-signal mb-2">$ fathir code --mine</p>
-          <h1 className="font-mono text-2xl text-text">Kode Saya</h1>
+          <h1 className="text-title text-2xl text-text">Kode Saya</h1>
         </div>
         <Link href="/dashboard/code/new">
           <Button>upload kode baru</Button>

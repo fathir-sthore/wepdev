@@ -12,7 +12,7 @@ export default async function NewSnippetPage() {
   return (
     <div>
       <p className="font-data text-xs text-signal mb-2">$ fathir code --upload</p>
-      <h1 className="font-mono text-2xl text-text mb-6">Upload kode baru</h1>
+      <h1 className="text-title text-2xl text-text mb-6">Upload kode baru</h1>
       <SnippetForm userId={user!.id} />
     </div>
   );

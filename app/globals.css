@@ -9,6 +9,7 @@
   --font-display: var(--font-sans);
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
   --font-data: var(--font-mono);
+  --font-serif: "Fraunces", "Georgia", serif;
 
   --color-ink: #090A0F;        /* Deep Space Black — canvas utama */
   --color-panel: #12141D;      /* Obsidian Surface — cards, sidebar, topbar, modals */
@@ -159,4 +160,29 @@ pre[class*="language-"] {
 }
 .token.italic {
   font-style: italic;
+}
+
+/* ============================================================
+   Typography hierarchy (v1.0.1) — role-based font usage
+   Judul -> Bold Serif | Sub-judul -> Italic Bold Sans
+   Deskripsi -> Normal Sans | Angka -> Bold Sans
+   ============================================================ */
+.text-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+}
+.text-subtitle {
+  font-family: var(--font-sans);
+  font-style: italic;
+  font-weight: 700;
+}
+.text-desc {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-style: normal;
+}
+.text-stat {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-style: normal;
 }

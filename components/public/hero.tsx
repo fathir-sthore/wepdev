@@ -8,7 +8,7 @@ export function Hero() {
           $ fathir sthore --init
           <span className="inline-block w-2 h-3 bg-signal ml-1 align-middle animate-caret" />
         </p>
-        <h1 className="font-mono text-3xl md:text-5xl text-text mb-4 leading-tight">
+        <h1 className="text-title text-3xl md:text-5xl text-text mb-4 leading-tight">
           Download free &amp; premium
           <br />
           <span className="text-accent">scripts</span> for your next build

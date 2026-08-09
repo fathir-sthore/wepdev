@@ -72,7 +72,7 @@ export default async function BannerDetailPage({ params }: Props) {
           {banner.subtitle}
         </p>
       )}
-      <h1 className="font-mono text-2xl md:text-3xl text-text mb-4">{banner.title}</h1>
+      <h1 className="text-title text-2xl md:text-3xl text-text mb-4">{banner.title}</h1>
 
       {banner.description && (
         <p className="text-sm text-muted whitespace-pre-line leading-relaxed">

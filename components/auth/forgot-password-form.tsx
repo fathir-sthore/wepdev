@@ -83,7 +83,7 @@ export function ForgotPasswordForm() {
       >
         <form onSubmit={handleReset} className="space-y-6">
           <div>
-            <h1 className="font-display text-2xl font-bold text-text">Masukkan kode</h1>
+            <h1 className="text-title text-2xl font-bold text-text">Masukkan kode</h1>
             <p className="mt-1 text-sm text-muted">
               kode dikirim ke <span className="text-text">{email}</span>
             </p>
@@ -128,7 +128,7 @@ export function ForgotPasswordForm() {
       subtitle="Masukkan email kamu, kami kirim kode buat atur ulang password."
     >
       <div className="mb-8">
-        <h1 className="font-display text-2xl font-bold text-text">Lupa password</h1>
+        <h1 className="text-title text-2xl font-bold text-text">Lupa password</h1>
         <p className="mt-1 text-sm text-muted">
           <Link href="/login" className="text-accent hover:underline">
             kembali ke login

@@ -92,7 +92,7 @@ export function RegisterForm() {
       >
         <form onSubmit={handleVerify} className="space-y-6">
           <div>
-            <h1 className="font-display text-2xl font-bold text-text">Verifikasi email</h1>
+            <h1 className="text-title text-2xl font-bold text-text">Verifikasi email</h1>
             <p className="mt-1 text-sm text-muted">
               masukkan kode yang dikirim ke <span className="text-text">{email}</span>
             </p>
@@ -134,7 +134,7 @@ export function RegisterForm() {
       subtitle="Download, upload, dan kelola script kamu sendiri di satu dashboard."
     >
       <div className="mb-8">
-        <h1 className="font-display text-2xl font-bold text-text">Buat akun</h1>
+        <h1 className="text-title text-2xl font-bold text-text">Buat akun</h1>
         <p className="mt-1 text-sm text-muted">
           sudah punya akun?{" "}
           <Link href="/login" className="text-accent hover:underline">

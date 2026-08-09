@@ -195,7 +195,7 @@ export function ScriptForm({
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
       <section className="space-y-4">
-        <h2 className="font-mono text-sm text-signal">basic info</h2>
+        <h2 className="text-subtitle text-sm text-signal">basic info</h2>
         <div>
           <Label htmlFor="title">Title</Label>
           <Input id="title" required value={title} onChange={(e) => handleTitleChange(e.target.value)} />
@@ -271,7 +271,7 @@ export function ScriptForm({
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-mono text-sm text-signal">links</h2>
+        <h2 className="text-subtitle text-sm text-signal">links</h2>
         <div>
           <Label htmlFor="github">GitHub URL</Label>
           <Input id="github" type="url" value={githubUrl} onChange={(e) => setGithubUrl(e.target.value)} />
@@ -297,7 +297,7 @@ export function ScriptForm({
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-mono text-sm text-signal">files</h2>
+        <h2 className="text-subtitle text-sm text-signal">files</h2>
         <div>
           <Label htmlFor="script_file">
             Script file (.zip .7z .rar .js .ts .json .html .css .php .py .java .c .cpp .dart .yaml .xml .sql .txt) {isEdit && "— leave empty to keep current file"}
@@ -348,7 +348,7 @@ export function ScriptForm({
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-mono text-sm text-signal">pricing &amp; status</h2>
+        <h2 className="text-subtitle text-sm text-signal">pricing &amp; status</h2>
         <label className="flex items-center gap-2 font-data text-xs text-text">
           <input type="checkbox" checked={isPremium} onChange={(e) => setIsPremium(e.target.checked)} />
           this is a premium (paid) script

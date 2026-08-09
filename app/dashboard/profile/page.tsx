@@ -82,7 +82,7 @@ export default async function DashboardProfilePage() {
         </div>
 
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">edit profil</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">edit profil</h2>
           <ProfileForm profile={profile} />
         </div>
       </div>
@@ -91,14 +91,14 @@ export default async function DashboardProfilePage() {
     account: (
       <div className="space-y-8 max-w-2xl">
         <div>
-          <h2 className="font-mono text-sm text-signal mb-1">ganti email</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-1">ganti email</h2>
           <p className="font-data text-xs text-muted mb-3">
             {user!.email_confirmed_at ? "email terverifikasi" : "email belum terverifikasi"}
           </p>
           <ChangeEmailForm currentEmail={user!.email!} />
         </div>
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">ganti password</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">ganti password</h2>
           <ChangePasswordForm />
         </div>
       </div>
@@ -107,15 +107,15 @@ export default async function DashboardProfilePage() {
     security: (
       <div className="space-y-8 max-w-2xl">
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">autentikasi dua faktor (2FA)</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">autentikasi dua faktor (2FA)</h2>
           <TwoFactorSettings />
         </div>
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">sesi</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">sesi</h2>
           <SignOutAllDevicesButton />
         </div>
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">riwayat login</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">riwayat login</h2>
           <LoginHistoryList entries={loginHistoryRes.data ?? []} />
         </div>
       </div>
@@ -124,23 +124,23 @@ export default async function DashboardProfilePage() {
     preferences: (
       <div className="space-y-8 max-w-2xl">
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">tema</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">tema</h2>
           <ThemeToggle />
         </div>
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">bahasa</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">bahasa</h2>
           <LanguageSelect userId={user!.id} initial={profile.language_preference} />
         </div>
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">notifikasi</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">notifikasi</h2>
           <NotificationToggle userId={user!.id} initial={profile.email_notifications} />
         </div>
         <div>
-          <h2 className="font-mono text-sm text-signal mb-3">cache</h2>
+          <h2 className="text-subtitle text-sm text-signal mb-3">cache</h2>
           <ClearCacheButton />
         </div>
         <div className="pt-4 border-t border-line">
-          <h2 className="font-mono text-sm text-danger mb-3">privasi</h2>
+          <h2 className="text-title text-sm text-danger mb-3">privasi</h2>
           <div className="flex flex-wrap gap-2">
             <ExportDataButton />
             <DeleteAccountButton />
@@ -177,7 +177,7 @@ export default async function DashboardProfilePage() {
   return (
     <div>
       <p className="font-data text-xs text-signal mb-2">$ fathir profile --settings</p>
-      <h1 className="font-mono text-2xl text-text mb-6">Profile &amp; Settings</h1>
+      <h1 className="text-title text-2xl text-text mb-6">Profile &amp; Settings</h1>
       <SettingsTabs sections={sections} />
     </div>
   );

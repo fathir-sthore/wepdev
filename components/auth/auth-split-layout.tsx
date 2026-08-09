@@ -49,7 +49,7 @@ export function AuthSplitLayout({
               <p className="font-display text-xs font-semibold uppercase tracking-widest text-signal mb-3">
                 {eyebrow}
               </p>
-              <h2 className="font-display text-3xl font-bold text-text leading-tight">
+              <h2 className="text-title text-3xl font-bold text-text leading-tight">
                 {title}
               </h2>
               <p className="mt-3 text-sm text-muted">{subtitle}</p>

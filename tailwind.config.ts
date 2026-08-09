@@ -32,6 +32,7 @@ const config: Config = {
         sans: ["var(--font-sans)", "Plus Jakarta Sans", "Inter", "sans-serif"],
         data: ["var(--font-data)", "JetBrains Mono", "Fira Code", "monospace"],
         display: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
+        serif: ["var(--font-serif)", "Fraunces", "Georgia", "serif"],
       },
       boxShadow: {
         glow: "0 0 0 1px rgba(0,240,255,0.18), 0 0 24px rgba(0,240,255,0.12)",

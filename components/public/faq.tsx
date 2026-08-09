@@ -28,7 +28,7 @@ export function Faq() {
 
   return (
     <section className="mx-auto max-w-3xl px-4 py-12">
-      <h2 className="font-mono text-lg text-text mb-4">FAQ</h2>
+      <h2 className="text-title text-lg text-text mb-4">FAQ</h2>
       <div className="divide-y divide-line border-y border-line">
         {faqs.map((item, i) => (
           <div key={item.q}>

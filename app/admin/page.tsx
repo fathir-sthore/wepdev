@@ -18,7 +18,7 @@ export default async function AdminOverviewPage() {
   return (
     <div>
       <p className="font-data text-xs text-signal mb-2">$ fathir admin --stats</p>
-      <h1 className="font-mono text-2xl text-text mb-6">Overview</h1>
+      <h1 className="text-title text-2xl text-text mb-6">Overview</h1>
 
       <div className="mb-8">
         <MigrateStorageButton />
@@ -72,7 +72,7 @@ export default async function AdminOverviewPage() {
           <CardHeader>
             <p className="font-mono text-sm text-text">Pengunjung bulan ini</p>
           </CardHeader>
-          <CardContent className="font-mono text-2xl text-accent">
+          <CardContent className="text-stat text-2xl text-accent">
             {formatCount(stats.visitorsThisMonth)}
           </CardContent>
         </Card>

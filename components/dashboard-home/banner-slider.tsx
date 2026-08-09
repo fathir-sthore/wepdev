@@ -71,7 +71,7 @@ export function BannerSlider({ banners }: { banners: Banner[] }) {
                     {banner.subtitle}
                   </p>
                 )}
-                <h2 className="font-mono text-xl md:text-3xl text-text leading-tight">
+                <h2 className="text-title text-xl md:text-3xl text-text leading-tight">
                   {banner.title}
                 </h2>
               </div>

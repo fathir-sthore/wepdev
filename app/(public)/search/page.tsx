@@ -62,7 +62,7 @@ export default async function SearchPage({ searchParams }: Props) {
       <p className="font-data text-xs text-signal mb-2">
         $ fathir search{params.q ? ` --query "${params.q}"` : ""}
       </p>
-      <h1 className="font-mono text-2xl text-text mb-6">
+      <h1 className="text-title text-2xl text-text mb-6">
         {params.q ? `Results for "${params.q}"` : "Browse all scripts"}
       </h1>
 

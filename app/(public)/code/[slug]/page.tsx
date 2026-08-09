@@ -59,7 +59,7 @@ export default async function SnippetDetailPage({ params }: Props) {
         <div className="md:col-span-2 space-y-6">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h1 className="font-mono text-2xl text-text">{snippet.title}</h1>
+              <h1 className="text-title text-2xl text-text">{snippet.title}</h1>
               {isOwner && (
                 <Link href={`/dashboard/code/${snippet.id}/edit`}>
                   <Button variant="outline" size="sm"><Pencil size={13} /> edit</Button>
@@ -83,7 +83,7 @@ export default async function SnippetDetailPage({ params }: Props) {
           <CodeBlock content={snippet.content} language={snippet.language} fileName={snippet.file_name} />
 
           <div>
-            <h2 className="font-mono text-lg text-text mb-4">Komentar &amp; Rating ({snippet.rating_count})</h2>
+            <h2 className="text-title text-lg text-text mb-4">Komentar &amp; Rating ({snippet.rating_count})</h2>
             <div className="mb-6">
               <CommentForm snippetId={snippet.id} userId={user?.id ?? null} />
             </div>

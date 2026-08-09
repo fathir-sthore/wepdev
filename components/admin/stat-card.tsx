@@ -17,7 +17,7 @@ export function StatCard({
           <Icon size={18} className="text-accent" />
         </div>
         <div>
-          <p className="font-mono text-xl text-text">{value}</p>
+          <p className="text-stat text-xl text-text">{value}</p>
           <p className="font-data text-[11px] text-muted uppercase tracking-wide">{label}</p>
         </div>
       </CardContent>

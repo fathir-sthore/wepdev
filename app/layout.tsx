@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-// v1.0.1 "Futuristic Developer Marketplace" design system — two-font
-// system. Plus Jakarta Sans is the primary site-wide UI font (also used
-// for --font-display, see globals.css). JetBrains Mono covers code blocks
-// and stat/data displays (also aliased to --font-data in globals.css).
-// Inter and IBM Plex Mono are no longer self-hosted; "Inter"/"Fira Code"
-// remain only as text fallbacks in the CSS font-family stacks.
+// v1.0.1 "Futuristic Developer Marketplace" design system — typography
+// hierarchy by content role: Judul -> Bold Serif (Fraunces), Sub-judul ->
+// Italic Bold Sans, Deskripsi -> Normal Sans, Angka -> Bold Sans. Code
+// blocks / interface chrome keep JetBrains Mono.
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
+  style: ["normal", "italic"],
   weight: ["400", "500", "600", "700", "800"],
   variable: "--font-sans",
 });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["600", "700", "900"],
+  variable: "--font-serif",
+});
 
 const SITE_URL = "https://fathirsthore.my.id";
 
@@ -100,7 +104,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${plusJakarta.variable} ${jetbrainsMono.variable}`}
+      className={`${plusJakarta.variable} ${jetbrainsMono.variable} ${fraunces.variable}`}
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">

@@ -18,7 +18,7 @@ export default async function AdminBannersPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="font-data text-xs text-signal mb-2">$ fathir admin --banners</p>
-          <h1 className="font-mono text-2xl text-text">Banners</h1>
+          <h1 className="text-title text-2xl text-text">Banners</h1>
         </div>
         <Link href={`/${ADMIN_BASE_PATH}/banners/new`}>
           <Button>tambah banner</Button>
