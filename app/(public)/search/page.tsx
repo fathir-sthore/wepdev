@@ -4,7 +4,7 @@ import { Filters } from "@/components/public/filters";
 import { ScriptCard } from "@/components/public/script-card";
 import { Pagination } from "@/components/public/pagination";
 
-export const metadata = { title: "Browse scripts — Fathir Sthore" };
+export const metadata = { title: "Browse scripts — Fathir Code" };
 
 type Props = {
   searchParams: Promise<{

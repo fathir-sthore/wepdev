@@ -1,6 +1,6 @@
 import { LoginForm } from "@/components/auth/login-form";
 
-export const metadata = { title: "Login — Fathir Sthore" };
+export const metadata = { title: "Login — Fathir Code" };
 
 export default async function LoginPage({
   searchParams,

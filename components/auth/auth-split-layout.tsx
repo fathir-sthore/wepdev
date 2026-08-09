@@ -39,7 +39,7 @@ export function AuthSplitLayout({
         <div className="relative z-10 flex h-full flex-col justify-between p-10">
           <Link href="/" className="flex items-center gap-2 w-fit">
             <Terminal size={22} className="text-accent" />
-            <span className="font-display font-semibold text-text drop-shadow-md">Fathir Sthore</span>
+            <span className="font-display font-semibold drop-shadow-md bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent">Fathir Code</span>
           </Link>
 
           {/* Skip the redundant caption when a custom image is used — the
@@ -63,7 +63,7 @@ export function AuthSplitLayout({
         <div className="w-full max-w-sm">
           <Link href="/" className="mb-8 flex items-center gap-2 md:hidden w-fit">
             <Terminal size={20} className="text-accent" />
-            <span className="font-display font-semibold text-text">Fathir Sthore</span>
+            <span className="font-display font-semibold bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent">Fathir Code</span>
           </Link>
           {children}
         </div>

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   const supabase = await createClient();
   const banner = await getBannerById(supabase, id);
-  return { title: banner ? `${banner.title} — Fathir Sthore` : "Banner — Fathir Sthore" };
+  return { title: banner ? `${banner.title} — Fathir Code` : "Banner — Fathir Code" };
 }
 
 export default async function BannerDetailPage({ params }: Props) {

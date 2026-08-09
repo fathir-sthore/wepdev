@@ -22,9 +22,9 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const supabase = await createClient();
   const snippet = await getSnippetBySlug(supabase, slug);
-  if (!snippet) return { title: "Kode tidak ditemukan — Fathir Sthore" };
+  if (!snippet) return { title: "Kode tidak ditemukan — Fathir Code" };
   return {
-    title: `${snippet.title} — Fathir Sthore`,
+    title: `${snippet.title} — Fathir Code`,
     description: snippet.description ?? `Kode ${LANGUAGE_LABELS[snippet.language as DetectedLanguage] ?? snippet.language} oleh @${snippet.author?.username}`,
   };
 }

@@ -85,7 +85,7 @@ export function RegisterForm() {
     return (
       <AuthSplitLayout
         imageSrc="/auth-otp-verify.png"
-        imageAlt="Verifikasi akun Fathir Sthore"
+        imageAlt="Verifikasi akun Fathir Code"
         eyebrow="hampir selesai"
         title="Cek email kamu"
         subtitle="Kami kirim kode 8 digit ke alamat email yang kamu daftarkan."
@@ -128,7 +128,7 @@ export function RegisterForm() {
   return (
     <AuthSplitLayout
       imageSrc="/auth-otp-verify.png"
-      imageAlt="Bergabung dengan Fathir Sthore"
+      imageAlt="Bergabung dengan Fathir Code"
       eyebrow="bergabung gratis"
       title="Ribuan script siap pakai, satu akun."
       subtitle="Download, upload, dan kelola script kamu sendiri di satu dashboard."
@@ -154,7 +154,7 @@ export function RegisterForm() {
             title="letters, numbers, underscore only"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="fathirsthore"
+            placeholder="fathircode"
           />
         </div>
         <div>

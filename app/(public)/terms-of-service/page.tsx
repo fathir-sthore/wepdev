@@ -9,7 +9,7 @@ export default function TermsOfServicePage() {
 
         <h2 className="text-title text-lg text-text pt-4">Penggunaan layanan</h2>
         <p>
-          Fathir Sthore adalah platform download dan jual-beli script digital. Dengan
+          Fathir Code adalah platform download dan jual-beli script digital. Dengan
           menggunakan layanan ini, kamu setuju untuk tidak mengunggah script yang melanggar
           hukum, mengandung malware, atau melanggar hak cipta pihak lain.
         </p>
@@ -23,7 +23,7 @@ export default function TermsOfServicePage() {
 
         <h2 className="text-title text-lg text-text pt-4">Konten developer</h2>
         <p>
-          Developer bertanggung jawab penuh atas script yang mereka unggah. Fathir Sthore
+          Developer bertanggung jawab penuh atas script yang mereka unggah. Fathir Code
           berhak menghapus atau mengarsipkan script yang dilaporkan melanggar ketentuan ini.
         </p>
 

@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   await Promise.all([
     sendTransactionalEmail({
       to: [{ email: user.email }],
-      subject: "Perubahan keamanan akun — Fathir Sthore",
+      subject: "Perubahan keamanan akun — Fathir Code",
       html: securityAlertEmail({ message: finalMessage }),
     }),
     createNotification({

@@ -6,7 +6,7 @@ function wrapper(glowColor: string, glowColor2: string, bodyHtml: string) {
   <div style="max-width:480px; margin:0 auto; background-color:#12141D; border:1px solid #2A2E43; border-radius:12px; overflow:hidden;">
     <div style="padding:24px 32px 8px; text-align:center;">
       <span style="color:#ffffff; font-family: 'Courier New', monospace; font-size:14px; letter-spacing:2px; text-shadow: 0 0 6px ${glowColor}, 0 0 14px ${glowColor2};">
-        FATHIR STHORE
+        FATHIR CODE
       </span>
     </div>
     <div style="padding:16px 32px 32px; text-align:center;">
@@ -14,7 +14,7 @@ function wrapper(glowColor: string, glowColor2: string, bodyHtml: string) {
     </div>
     <div style="background-color:#090A0F; padding:16px; text-align:center; border-top:1px solid #2A2E43;">
       <p style="color:#8A92B2; font-size:11px; margin:0; font-family: 'Courier New', monospace;">
-        © Fathir Sthore — Script Download Center
+        © Fathir Code — Script Download Center
       </p>
     </div>
   </div>

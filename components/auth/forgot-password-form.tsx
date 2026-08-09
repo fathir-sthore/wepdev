@@ -76,7 +76,7 @@ export function ForgotPasswordForm() {
     return (
       <AuthSplitLayout
         imageSrc="/auth-reset-password.png"
-        imageAlt="Reset password Fathir Sthore"
+        imageAlt="Reset password Fathir Code"
         eyebrow="atur ulang password"
         title="Hampir selesai."
         subtitle="Masukkan kode dari email dan password baru kamu."
@@ -122,7 +122,7 @@ export function ForgotPasswordForm() {
   return (
     <AuthSplitLayout
       imageSrc="/auth-reset-password.png"
-      imageAlt="Lupa password Fathir Sthore"
+      imageAlt="Lupa password Fathir Code"
       eyebrow="lupa password?"
       title="Gak masalah, kita bantu."
       subtitle="Masukkan email kamu, kami kirim kode buat atur ulang password."

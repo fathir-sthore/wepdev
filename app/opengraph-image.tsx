@@ -19,7 +19,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: "flex", fontSize: 48, color: "#7000FF", fontFamily: "monospace" }}>
-          $ fathir sthore --init
+          $ fathir code --init
         </div>
         <div
           style={{
@@ -30,7 +30,7 @@ export default function OpengraphImage() {
             fontFamily: "monospace",
           }}
         >
-          Fathir Sthore
+          Fathir Code
         </div>
         <div style={{ display: "flex", fontSize: 32, color: "#00F0FF", fontFamily: "monospace" }}>
           Script Download Center

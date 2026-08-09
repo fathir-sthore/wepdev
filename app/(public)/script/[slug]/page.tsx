@@ -22,9 +22,9 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const supabase = await createClient();
   const script = await getScriptBySlug(supabase, slug);
-  if (!script) return { title: "Script not found — Fathir Sthore" };
+  if (!script) return { title: "Script not found — Fathir Code" };
   return {
-    title: `${script.title} — Fathir Sthore`,
+    title: `${script.title} — Fathir Code`,
     description: script.short_description,
     openGraph: {
       title: script.title,

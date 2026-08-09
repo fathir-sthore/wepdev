@@ -34,7 +34,7 @@ export async function GET() {
   return new NextResponse(JSON.stringify(exportData, null, 2), {
     headers: {
       "Content-Type": "application/json",
-      "Content-Disposition": `attachment; filename="fathirsthore-data-${user.id}.json"`,
+      "Content-Disposition": `attachment; filename="fathircode-data-${user.id}.json"`,
     },
   });
 }

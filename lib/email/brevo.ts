@@ -3,7 +3,7 @@ const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 // Same verified sender used for Supabase Auth's SMTP relay — see
 // Brevo → Senders in the dashboard. Swap to a fathirsthore.my.id address
 // once that domain is verified as a sender in Brevo.
-const DEFAULT_SENDER = { name: "Fathir Sthore", email: "noreply@fathire.store" };
+const DEFAULT_SENDER = { name: "Fathir Code", email: "noreply@fathire.store" };
 
 export async function sendTransactionalEmail({
   to,

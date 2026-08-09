@@ -59,8 +59,14 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="border-t border-line px-4 py-4 text-center font-data text-xs text-muted">
-        © {new Date().getFullYear()} Fathir Sthore. Built for developers, by a developer.
+      <div className="border-t border-line px-4 py-4 flex flex-col sm:flex-row items-center justify-center gap-2 text-center font-data text-xs text-muted">
+        <span>
+          © {new Date().getFullYear()} Fathir Code. Built for developers, by a developer.
+        </span>
+        <span className="hidden sm:inline text-line">•</span>
+        <span className="inline-flex items-center rounded-full border border-line bg-panel2 px-2 py-0.5 text-accent">
+          v1.0.1
+        </span>
       </div>
     </footer>
   );

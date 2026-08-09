@@ -5,7 +5,7 @@ export function Hero() {
     <section className="relative overflow-hidden border-b border-line">
       <div className="mx-auto max-w-4xl px-4 py-20 text-center">
         <p className="font-data text-xs text-signal mb-3">
-          $ fathir sthore --init
+          $ fathir code --init
           <span className="inline-block w-2 h-3 bg-signal ml-1 align-middle animate-caret" />
         </p>
         <h1 className="text-title text-3xl md:text-5xl text-text mb-4 leading-tight">

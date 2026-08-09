@@ -87,7 +87,7 @@ export function TransactionExportButtons() {
 
     const doc = new jsPDF();
     doc.setFontSize(14);
-    doc.text("Fathir Sthore — Transaction History", 14, 15);
+    doc.text("Fathir Code — Transaction History", 14, 15);
     autoTable(doc, {
       startY: 22,
       head: [["Order ID", "Buyer", "Script", "Amount", "Status", "Date"]],

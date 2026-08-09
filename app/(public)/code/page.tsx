@@ -6,7 +6,7 @@ import { SnippetFilters } from "@/components/code/snippet-filters";
 import { Pagination } from "@/components/public/pagination";
 import { Button } from "@/components/ui/button";
 
-export const metadata = { title: "Source Code — Fathir Sthore" };
+export const metadata = { title: "Source Code — Fathir Code" };
 
 type Props = {
   searchParams: Promise<{ q?: string; language?: string; sort?: string; page?: string }>;

@@ -28,8 +28,8 @@ export async function Navbar() {
       <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Terminal size={20} className="text-accent" />
-          <span className="font-mono text-sm text-text hidden sm:inline">
-            fathir sthore
+          <span className="font-mono text-sm font-semibold hidden sm:inline bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent">
+            fathir code
           </span>
         </Link>
 
