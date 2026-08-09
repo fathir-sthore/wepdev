@@ -5,6 +5,7 @@ import { Github, Globe, PlayCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getScriptBySlug, getReviews } from "@/lib/queries/scripts";
 import { publicStorageUrl, formatFileSize, formatCount } from "@/lib/storage";
+import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { RatingStars } from "@/components/public/rating-stars";
 import { BuyOrDownloadButton } from "@/components/public/buy-or-download-button";
@@ -146,7 +147,19 @@ export default async function ScriptDetailPage({ params }: Props) {
           )}
 
           <div>
-            <h1 className="text-title text-2xl text-text mb-2">{script.title}</h1>
+            <div className="flex items-center gap-2 mb-2">
+              <h1 className="text-title text-2xl text-text">{script.title}</h1>
+              <span
+                className={cn(
+                  "rounded-full border px-2.5 py-0.5 font-data text-[11px] font-medium shrink-0",
+                  script.is_premium
+                    ? "bg-premium/15 text-premium border-premium/40"
+                    : "bg-free/15 text-free border-free/40"
+                )}
+              >
+                {script.is_premium ? `Rp ${script.price.toLocaleString("id-ID")}` : "FREE"}
+              </span>
+            </div>
             <div className="flex items-center gap-3 mb-4">
               <RatingStars rating={script.rating_avg} count={script.rating_count} />
               {script.developer && (
@@ -155,7 +168,7 @@ export default async function ScriptDetailPage({ params }: Props) {
                 </span>
               )}
             </div>
-            <p className="text-sm text-text whitespace-pre-line">{script.description}</p>
+            <p className="text-desc text-sm text-text whitespace-pre-line">{script.description}</p>
           </div>
 
           {script.tags.length > 0 && (
@@ -202,8 +215,8 @@ export default async function ScriptDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="space-y-4">
-          <Card>
+        <div className="space-y-4 md:sticky md:top-20 md:self-start">
+          <Card className="border-accent/40 shadow-glow bg-panel2/60 backdrop-blur-glass">
             <CardContent className="space-y-3">
               <BuyOrDownloadButton
                 scriptId={script.id}

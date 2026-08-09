@@ -91,7 +91,7 @@ export default async function SnippetDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 md:sticky md:top-20 md:self-start">
           <Card>
             <CardContent className="flex items-center gap-3">
               <Avatar src={snippet.author?.avatar_url} alt={snippet.author?.username ?? "u"} fallback={snippet.author?.username ?? "u"} size={40} />
