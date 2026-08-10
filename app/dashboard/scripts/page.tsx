@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getMyScripts } from "@/lib/queries/developer";
+import { getMyScripts, getDeveloperStats } from "@/lib/queries/developer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCount } from "@/lib/storage";
 import { DeleteScriptButton } from "@/components/dashboard/delete-script-button";
+import { DeveloperStatsWidget } from "@/components/dashboard/developer-stats-widget";
 
 export const metadata = { title: "My Scripts — Dashboard" };
 
@@ -20,7 +21,10 @@ export default async function MyScriptsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const scripts = await getMyScripts(supabase, user!.id);
+  const [scripts, stats] = await Promise.all([
+    getMyScripts(supabase, user!.id),
+    getDeveloperStats(supabase, user!.id),
+  ]);
 
   return (
     <div>
@@ -33,6 +37,8 @@ export default async function MyScriptsPage() {
           <Button>upload new</Button>
         </Link>
       </div>
+
+      <DeveloperStatsWidget stats={stats} />
 
       {scripts.length === 0 ? (
         <Card>
