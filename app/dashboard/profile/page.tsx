@@ -3,6 +3,7 @@ import { Terminal, Bug, Mail, FileText, ScrollText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { ProfileForm } from "@/components/dashboard/profile-form";
 import { AvatarUploader } from "@/components/dashboard/avatar-uploader";
+import { ChangelogModal } from "@/components/layout/changelog-modal";
 import { ChangeEmailForm } from "@/components/dashboard/change-email-form";
 import { ChangePasswordForm } from "@/components/dashboard/change-password-form";
 import { TwoFactorSettings } from "@/components/dashboard/two-factor-settings";
@@ -154,7 +155,13 @@ export default async function DashboardProfilePage() {
         <div className="flex items-center gap-2">
           <Terminal size={18} className="text-accent" />
           <span className="font-mono text-text">Fathir Code</span>
-          <span className="font-data text-xs text-muted">v1.0.1</span>
+          <ChangelogModal
+            trigger={
+              <span className="font-data text-xs text-accent hover:underline cursor-pointer">
+                v1.0.1 — lihat perubahan
+              </span>
+            }
+          />
         </div>
         <div className="grid gap-2">
           <Link href="/privacy-policy" className="flex items-center gap-2 font-data text-sm text-muted hover:text-accent">
