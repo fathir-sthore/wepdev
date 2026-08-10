@@ -3,6 +3,8 @@ import { searchScripts, getCategories, getDistinctFilterValues } from "@/lib/que
 import { Filters } from "@/components/public/filters";
 import { ScriptCard } from "@/components/public/script-card";
 import { Pagination } from "@/components/public/pagination";
+import { EmptyState } from "@/components/ui/empty-state";
+import { SearchX } from "lucide-react";
 
 export const metadata = { title: "Browse scripts — Fathir Code" };
 
@@ -73,9 +75,11 @@ export default async function SearchPage({ searchParams }: Props) {
       <p className="font-data text-xs text-muted mb-4">{total} script(s) found</p>
 
       {scripts.length === 0 ? (
-        <p className="font-data text-sm text-muted py-12 text-center">
-          no scripts match your filters yet.
-        </p>
+        <EmptyState
+          icon={SearchX}
+          title="Nggak ada script yang cocok"
+          description="Coba ubah kata kunci atau filter kategori/bahasa yang kamu pakai."
+        />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {scripts.map((script) => (

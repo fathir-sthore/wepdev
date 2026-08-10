@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ShoppingBag } from "lucide-react";
 
 export const metadata = { title: "Purchases — Dashboard" };
 
@@ -36,11 +38,13 @@ export default async function PurchasesPage() {
       <h1 className="text-title text-2xl text-text mb-6">Purchases</h1>
 
       {!purchases || purchases.length === 0 ? (
-        <Card>
-          <CardContent className="text-sm text-muted font-data">
-            no purchases yet.
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={ShoppingBag}
+          title="Belum ada pembelian"
+          description="Riwayat transaksi script premium kamu bakal muncul di sini."
+          actionLabel="Jelajahi script premium"
+          actionHref="/search"
+        />
       ) : (
         <div className="grid gap-3">
           {purchases.map((p) => {

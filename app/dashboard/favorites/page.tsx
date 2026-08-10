@@ -3,6 +3,8 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { publicStorageUrl } from "@/lib/storage";
 import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Heart } from "lucide-react";
 
 export const metadata = { title: "Favorites — Dashboard" };
 
@@ -30,11 +32,13 @@ export default async function DashboardFavoritesPage() {
       <h1 className="text-title text-2xl text-text mb-6">Favorites</h1>
 
       {!favorites || favorites.length === 0 ? (
-        <Card>
-          <CardContent className="text-sm text-muted font-data">
-            no favorites yet. tap the heart on any script to save it here.
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={Heart}
+          title="Belum ada favorit"
+          description="Tap ikon hati di script mana pun buat nyimpennya di sini."
+          actionLabel="Jelajahi script"
+          actionHref="/search"
+        />
       ) : (
         <div className="grid gap-3">
           {favorites.map((fav) => {

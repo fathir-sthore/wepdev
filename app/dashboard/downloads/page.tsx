@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { DownloadCloud } from "lucide-react";
 
 export const metadata = { title: "Downloads — Dashboard" };
 
@@ -29,11 +31,13 @@ export default async function DashboardDownloadsPage() {
       <h1 className="text-title text-2xl text-text mb-6">Download history</h1>
 
       {!downloads || downloads.length === 0 ? (
-        <Card>
-          <CardContent className="text-sm text-muted font-data">
-            no downloads yet.
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={DownloadCloud}
+          title="Belum ada riwayat download"
+          description="Script yang kamu download bakal muncul di sini."
+          actionLabel="Jelajahi script"
+          actionHref="/search"
+        />
       ) : (
         <div className="grid gap-3">
           {downloads.map((dl) => {

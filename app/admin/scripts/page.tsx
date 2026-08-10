@@ -3,6 +3,8 @@ import { getAllScriptsAdmin } from "@/lib/queries/admin";
 import { AdminScriptsTable } from "@/components/admin/scripts-table";
 import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import { Pagination } from "@/components/public/pagination";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PackageSearch } from "lucide-react";
 
 export const metadata = { title: "Manage scripts — Admin" };
 
@@ -42,7 +44,7 @@ export default async function AdminScriptsPage({ searchParams }: Props) {
       <p className="font-data text-xs text-muted mb-4">{total} script(s)</p>
 
       {scripts.length === 0 ? (
-        <p className="font-data text-sm text-muted">no scripts found.</p>
+        <EmptyState icon={PackageSearch} title="Nggak ada script" description="Nggak ada script yang cocok dengan filter status ini." />
       ) : (
         <AdminScriptsTable scripts={scripts} />
       )}

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { formatCount } from "@/lib/storage";
 import { DeleteScriptButton } from "@/components/dashboard/delete-script-button";
 import { DeveloperStatsWidget } from "@/components/dashboard/developer-stats-widget";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Upload } from "lucide-react";
 
 export const metadata = { title: "My Scripts — Dashboard" };
 
@@ -41,11 +43,13 @@ export default async function MyScriptsPage() {
       <DeveloperStatsWidget stats={stats} />
 
       {scripts.length === 0 ? (
-        <Card>
-          <CardContent className="text-sm text-muted font-data">
-            you haven't uploaded any scripts yet.
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={Upload}
+          title="Belum ada script"
+          description="Upload script pertama kamu dan mulai jual/bagikan ke developer lain."
+          actionLabel="Upload script"
+          actionHref="/dashboard/scripts/new"
+        />
       ) : (
         <div className="grid gap-3">
           {scripts.map((script) => (

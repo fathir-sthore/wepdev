@@ -5,6 +5,8 @@ import { SnippetCard } from "@/components/code/snippet-card";
 import { SnippetFilters } from "@/components/code/snippet-filters";
 import { Pagination } from "@/components/public/pagination";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { FileCode2 } from "lucide-react";
 
 export const metadata = { title: "Source Code — Fathir Code" };
 
@@ -57,7 +59,13 @@ export default async function CodePage({ searchParams }: Props) {
       <p className="font-data text-xs text-muted mb-4">{total} kode ditemukan</p>
 
       {snippets.length === 0 ? (
-        <p className="font-data text-sm text-muted py-12 text-center">belum ada kode di kategori ini.</p>
+        <EmptyState
+          icon={FileCode2}
+          title="Belum ada kode di sini"
+          description="Jadi yang pertama upload snippet buat kategori/bahasa ini."
+          actionLabel="Upload kode"
+          actionHref="/dashboard/code/new"
+        />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {snippets.map((s) => (
