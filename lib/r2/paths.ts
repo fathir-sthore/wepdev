@@ -107,6 +107,12 @@ const MAX_SIZE_BYTES: Record<FileCategory, number> = {
 // Above this, the upload flow uses multipart instead of a single PUT.
 export const MULTIPART_THRESHOLD_BYTES = 100 * 1024 * 1024; // 100MB
 
+// Files at or under this size are proxied through our own API route
+// (browser -> our server -> R2) instead of a direct browser -> R2 presigned
+// PUT. This sidesteps needing CORS configured on the R2 bucket entirely.
+// Kept safely under Vercel's ~4.5MB serverless request body limit.
+export const PROXY_UPLOAD_THRESHOLD_BYTES = 4 * 1024 * 1024; // 4MB
+
 export function getExtension(filename: string): string {
   return (filename.split(".").pop() ?? "").toLowerCase();
 }

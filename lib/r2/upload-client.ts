@@ -1,8 +1,46 @@
 import type { StorageFolder } from "@/lib/r2/paths";
+import { PROXY_UPLOAD_THRESHOLD_BYTES } from "@/lib/r2/paths";
 
 type ProgressCallback = (percent: number) => void;
 
 const PART_RETRY_ATTEMPTS = 3;
+
+/** POSTs a file to our own /api/r2/upload proxy route (browser -> our
+ * server -> R2), via XHR so we still get upload progress events. Used for
+ * files under PROXY_UPLOAD_THRESHOLD_BYTES — this never touches R2 directly
+ * from the browser, so it works even without CORS configured on the bucket. */
+function uploadViaProxy(
+  file: File,
+  folder: StorageFolder,
+  onProgress?: (loaded: number) => void
+): Promise<{ key: string }> {
+  return new Promise((resolve, reject) => {
+    const form = new FormData();
+    form.append("file", file);
+    form.append("folder", folder);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/r2/upload");
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) onProgress?.(e.loaded);
+    };
+    xhr.onload = () => {
+      let data: any = {};
+      try {
+        data = JSON.parse(xhr.responseText);
+      } catch {
+        // ignore parse failure — status check below still handles it
+      }
+      if (xhr.status >= 200 && xhr.status < 300 && data.key) {
+        resolve({ key: data.key });
+      } else {
+        reject(new Error(data.error ?? `upload failed with status ${xhr.status}`));
+      }
+    };
+    xhr.onerror = () => reject(new Error("network error during upload"));
+    xhr.send(form);
+  });
+}
 
 /** PUTs a blob to a presigned URL via XHR (fetch has no upload progress
  * events), retrying on failure. Resolves with the response ETag header. */
@@ -62,6 +100,13 @@ export async function uploadFileToR2(
   folder: StorageFolder,
   onProgress?: ProgressCallback
 ): Promise<{ key: string }> {
+  // Small files: proxy through our server — no CORS dependency at all.
+  if (file.size <= PROXY_UPLOAD_THRESHOLD_BYTES) {
+    return uploadViaProxy(file, folder, (loaded) => {
+      onProgress?.(Math.round((loaded / file.size) * 100));
+    });
+  }
+
   const presignRes = await fetch("/api/r2/presign-upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
