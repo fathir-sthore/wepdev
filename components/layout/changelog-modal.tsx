@@ -52,8 +52,8 @@ export function ChangelogModal({
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md max-h-[80vh] flex flex-col rounded-lg border border-accent/40 bg-panel2/95 backdrop-blur-glass shadow-glow">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4">
+          <div className="w-full max-w-md max-h-[80vh] flex flex-col rounded-lg border border-accent/40 bg-panel2 shadow-glow">
             <div className="flex items-center justify-between px-5 py-4 border-b border-line shrink-0">
               <div className="flex items-center gap-2">
                 <Sparkles size={16} className="text-accent" />
@@ -68,7 +68,7 @@ export function ChangelogModal({
               {CHANGELOG.map((entry) => (
                 <div key={entry.version}>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="rounded-full border border-accent/40 bg-accent/15 px-2 py-0.5 font-data text-[11px] text-accent">
+                    <span className="rounded-full border border-accent bg-accent px-2 py-0.5 font-data text-[11px] text-ink font-medium">
                       v{entry.version}
                     </span>
                     <span className="font-data text-[11px] text-muted">{entry.date}</span>
