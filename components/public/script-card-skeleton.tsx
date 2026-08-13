@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function ScriptCardSkeleton() {
   return (
-    <div className="rounded-lg border border-line/60 bg-panel2/40 backdrop-blur-glass overflow-hidden">
+    <div className="rounded-lg border border-line bg-panel2 overflow-hidden">
       <Skeleton className="aspect-video w-full rounded-none border-0" />
       <div className="p-4 space-y-2">
         <Skeleton className="h-2.5 w-16" />

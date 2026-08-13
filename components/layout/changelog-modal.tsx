@@ -53,7 +53,7 @@ export function ChangelogModal({
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4">
-          <div className="w-full max-w-md max-h-[80vh] flex flex-col rounded-lg border border-accent/40 bg-panel2 shadow-glow">
+          <div className="w-full max-w-md max-h-[80vh] flex flex-col rounded-lg border border-accent/40 bg-panel2">
             <div className="flex items-center justify-between px-5 py-4 border-b border-line shrink-0">
               <div className="flex items-center gap-2">
                 <Sparkles size={16} className="text-accent" />

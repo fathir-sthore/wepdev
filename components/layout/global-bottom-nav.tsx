@@ -22,7 +22,7 @@ export function GlobalBottomNav() {
   }
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-ink/95 backdrop-blur">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-ink">
       <div className="relative grid grid-cols-5 items-end">
         {leftLinks.map((link) => {
           const active = isActive(link);
@@ -46,7 +46,7 @@ export function GlobalBottomNav() {
         <div className="flex justify-center">
           <Link
             href="/dashboard"
-            className="relative -top-4 flex h-14 w-14 flex-col items-center justify-center rounded-full bg-accent text-ink shadow-glow border-4 border-ink"
+            className="relative -top-4 flex h-14 w-14 flex-col items-center justify-center rounded-full bg-accent text-ink border-4 border-ink"
           >
             <LayoutDashboard size={22} />
           </Link>

@@ -111,8 +111,8 @@ export function PaymentModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 backdrop-blur-sm p-4">
-      <div className="w-full max-w-sm rounded-lg border border-line bg-panel shadow-glow overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4">
+      <div className="w-full max-w-sm rounded-lg border border-line bg-panel overflow-hidden">
         <div className="flex items-center justify-between border-b border-line px-4 py-3">
           <span className="font-data text-xs text-muted truncate">$ fathir pay --qris</span>
           <button onClick={onClose} className="text-muted hover:text-text">

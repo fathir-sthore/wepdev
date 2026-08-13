@@ -18,11 +18,13 @@ export default async function HomePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [categories, banners, sections, statsRes] = await Promise.all([
+  const [categories, banners, sections, statsRes, usersRes, codeRes] = await Promise.all([
     getCategories(supabase),
     getActiveBanners(supabase),
     getUserDashboardSections(supabase, user?.id ?? null),
     supabase.from("scripts").select("download_count").eq("status", "published"),
+    supabase.from("profiles").select("id", { count: "exact", head: true }),
+    supabase.from("code_snippets").select("id", { count: "exact", head: true }).eq("status", "published"),
   ]);
 
   const totalDownloads = (statsRes.data ?? []).reduce(
@@ -34,7 +36,12 @@ export default async function HomePage() {
     <>
       <Hero />
       <BannerSlider banners={banners} />
-      <StatsBar totalScripts={(statsRes.data ?? []).length} totalDownloads={totalDownloads} />
+      <StatsBar
+        totalScripts={(statsRes.data ?? []).length}
+        totalDownloads={totalDownloads}
+        totalUsers={usersRes.count ?? 0}
+        totalCode={codeRes.count ?? 0}
+      />
 
       <ScriptSection
         title="Trending"

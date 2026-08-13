@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 import type { ScriptWithRelations } from "@/lib/queries/scripts";
 
 const badgeStyles: Record<string, string> = {
-  NEW: "bg-signal/20 text-signal border-signal/40",
-  UPDATED: "bg-accent/20 text-accent border-accent/40",
-  HOT: "bg-danger/20 text-danger border-danger/40",
+  NEW: "bg-signal/10 text-signal border-signal/30",
+  UPDATED: "bg-accent/10 text-accent border-accent/30",
+  HOT: "bg-danger/10 text-danger border-danger/30",
 };
 
 export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?: boolean }) {
@@ -20,14 +20,8 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
 
   return (
     <Link href={`/script/${script.slug}`} className="group block">
-      <div
-        className={cn(
-          "overflow-hidden h-full flex flex-col rounded-lg border border-line/60",
-          "bg-panel2/40 backdrop-blur-glass transition-all duration-200",
-          "group-hover:border-accent/50 group-hover:shadow-glow"
-        )}
-      >
-        <div className="relative aspect-video bg-panel2">
+      <div className="overflow-hidden h-full flex flex-col rounded-lg border border-line bg-panel2 transition-colors group-hover:border-accent/50">
+        <div className="relative aspect-video bg-panel">
           {thumbnail ? (
             <Image
               src={thumbnail}
@@ -45,11 +39,11 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
           {/* Status badge — FREE (Neon Mint) or PREMIUM (Cyber Amber) + price */}
           <span
             className={cn(
-              "absolute top-2 right-2 rounded-full backdrop-blur-glass px-2.5 py-0.5",
+              "absolute top-2 right-2 rounded-full bg-ink px-2.5 py-0.5",
               "font-data text-[11px] font-medium border",
               script.is_premium
-                ? "bg-premium/15 text-premium border-premium/40"
-                : "bg-free/15 text-free border-free/40"
+                ? "text-premium border-premium/40"
+                : "text-free border-free/40"
             )}
           >
             {script.is_premium ? `Rp ${script.price.toLocaleString("id-ID")}` : "FREE"}
@@ -60,10 +54,7 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
               {badges.map((b) => (
                 <span
                   key={b}
-                  className={cn(
-                    "rounded-full border px-2 py-0.5 font-data text-[10px] backdrop-blur-glass",
-                    badgeStyles[b]
-                  )}
+                  className={cn("rounded-full border bg-ink px-2 py-0.5 font-data text-[10px]", badgeStyles[b])}
                 >
                   {b}
                 </span>
@@ -129,7 +120,7 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
             className={cn(
               "mt-1 flex items-center justify-center gap-1.5 rounded-md py-1.5",
               "font-data text-[11px] font-medium border border-accent/30 text-accent",
-              "bg-accent/5 group-hover:bg-accent/15 group-hover:shadow-glow transition-all"
+              "group-hover:bg-accent/10 transition-colors"
             )}
           >
             {script.is_premium ? (

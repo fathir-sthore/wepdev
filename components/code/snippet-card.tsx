@@ -10,19 +10,13 @@ import type { SnippetWithAuthor } from "@/lib/queries/code-snippets";
 export function SnippetCard({ snippet }: { snippet: SnippetWithAuthor }) {
   return (
     <Link href={`/code/${snippet.slug}`} className="group block">
-      <div
-        className={cn(
-          "h-full flex flex-col p-4 rounded-lg border border-line/60",
-          "bg-panel2/40 backdrop-blur-glass transition-all duration-200",
-          "group-hover:border-accent/50 group-hover:shadow-glow"
-        )}
-      >
+      <div className="h-full flex flex-col p-4 rounded-lg border border-line bg-panel2 transition-colors group-hover:border-accent/50">
         <div className="flex items-center justify-between mb-2">
           <span className="flex items-center gap-1 rounded border border-line px-2 py-0.5 font-data text-[11px] text-signal">
             <Code2 size={11} />
             {LANGUAGE_LABELS[snippet.language as DetectedLanguage] ?? snippet.language}
           </span>
-          <span className="rounded-full border border-free/40 bg-free/15 px-2 py-0.5 font-data text-[10px] text-free">
+          <span className="rounded-full border border-free/40 bg-ink px-2 py-0.5 font-data text-[10px] text-free">
             FREE
           </span>
         </div>
@@ -61,7 +55,7 @@ export function SnippetCard({ snippet }: { snippet: SnippetWithAuthor }) {
           className={cn(
             "mt-3 flex items-center justify-center gap-1.5 rounded-md py-1.5",
             "font-data text-[11px] font-medium border border-accent/30 text-accent",
-            "bg-accent/5 group-hover:bg-accent/15 group-hover:shadow-glow transition-all"
+            "group-hover:bg-accent/10 transition-colors"
           )}
         >
           <FileCode2 size={12} /> Lihat kode

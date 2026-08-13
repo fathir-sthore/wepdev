@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function NotFound() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
-      <div className="rounded-full border border-line bg-panel2/60 backdrop-blur-glass p-4 mb-6 text-accent shadow-glow">
+      <div className="rounded-full border border-line bg-panel2 p-4 mb-6 text-accent">
         <TerminalSquare size={32} />
       </div>
 

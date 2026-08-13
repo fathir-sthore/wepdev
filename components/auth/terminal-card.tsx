@@ -11,7 +11,7 @@ export function TerminalCard({
   className?: string;
 }) {
   return (
-    <Card className={cn("w-full max-w-md shadow-glow overflow-hidden", className)}>
+    <Card className={cn("w-full max-w-md overflow-hidden", className)}>
       <div className="flex items-center gap-2 border-b border-line bg-panel2 px-4 py-3">
         <span className="term-dot bg-danger/70" />
         <span className="term-dot bg-accent/70" />

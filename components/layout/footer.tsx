@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ChangelogModal } from "@/components/layout/changelog-modal";
 
 const columns = [
   {
@@ -60,18 +59,8 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="border-t border-line px-4 py-4 flex flex-col sm:flex-row items-center justify-center gap-2 text-center font-data text-xs text-muted">
-        <span>
-          © {new Date().getFullYear()} Fathir Code. Built for developers, by a developer.
-        </span>
-        <span className="hidden sm:inline text-line">•</span>
-        <ChangelogModal
-          trigger={
-            <span className="inline-flex items-center rounded-full border border-line bg-panel2 px-2 py-0.5 text-accent hover:border-accent/50 cursor-pointer transition-colors">
-              v1.0.2
-            </span>
-          }
-        />
+      <div className="border-t border-line px-4 py-4 text-center font-data text-xs text-muted">
+        © {new Date().getFullYear()} Fathir Code. Built for developers, by a developer.
       </div>
     </footer>
   );

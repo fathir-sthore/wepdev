@@ -20,7 +20,7 @@ export function DashboardSidebar({ isAdmin, adminHref }: { isAdmin: boolean; adm
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:flex w-56 shrink-0 border-r border-line bg-panel/60 min-h-screen p-4 flex-col">
+    <aside className="hidden md:flex w-56 shrink-0 border-r border-line bg-panel min-h-screen p-4 flex-col">
       <p className="font-data text-xs text-muted mb-6 px-2">~/dashboard</p>
       <nav className="flex flex-col gap-1">
         {links.map(({ href, label, icon: Icon, exact }) => {

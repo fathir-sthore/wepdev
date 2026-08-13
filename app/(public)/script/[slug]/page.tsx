@@ -123,7 +123,7 @@ export default async function ScriptDetailPage({ params }: Props) {
         <div className="md:col-span-2 space-y-6">
           <div className="relative aspect-video rounded-lg overflow-hidden border border-line bg-panel2">
             {thumbnail ? (
-              <Image src={thumbnail} alt={script.title} fill className="object-cover" priority />
+              <Image src={thumbnail} alt={script.title} fill className="object-cover" />
             ) : (
               <div className="flex h-full items-center justify-center font-data text-xs text-muted">
                 no preview
@@ -216,7 +216,7 @@ export default async function ScriptDetailPage({ params }: Props) {
         </div>
 
         <div className="space-y-4 md:sticky md:top-20 md:self-start">
-          <Card className="border-accent/40 shadow-glow bg-panel2/60 backdrop-blur-glass">
+          <Card className="border-accent/40 bg-panel2">
             <CardContent className="space-y-3">
               <BuyOrDownloadButton
                 scriptId={script.id}

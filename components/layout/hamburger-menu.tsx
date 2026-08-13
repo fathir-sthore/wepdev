@@ -29,11 +29,11 @@ export function HamburgerMenu() {
 
   const links = [
     isHome
-      ? { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard }
-      : { href: "/", label: "Menu Utama", icon: ArrowLeftCircle },
-    { href: "/code", label: "Code Menu", icon: Code2 },
-    { href: "/search", label: "All Script", icon: Search },
-    { href: "/dashboard/profile", label: "Pengaturan", icon: Settings },
+      ? { href: "/dashboard", label: "dashboard", icon: LayoutDashboard }
+      : { href: "/", label: "menu utama", icon: ArrowLeftCircle },
+    { href: "/code", label: "code", icon: Code2 },
+    { href: "/search", label: "all script", icon: Search },
+    { href: "/dashboard/profile", label: "pengaturan", icon: Settings },
   ];
 
   return (
@@ -47,7 +47,7 @@ export function HamburgerMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-56 rounded-md border border-line bg-panel shadow-glow z-40 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-56 rounded-md border border-line bg-panel z-40 overflow-hidden">
           {links.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
             return (

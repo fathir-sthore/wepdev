@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function SnippetCardSkeleton() {
   return (
-    <div className="rounded-lg border border-line/60 bg-panel2/40 backdrop-blur-glass p-4">
+    <div className="rounded-lg border border-line bg-panel2 p-4">
       <div className="flex items-center justify-between mb-3">
         <Skeleton className="h-5 w-20" />
         <Skeleton className="h-5 w-12" />

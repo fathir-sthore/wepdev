@@ -63,7 +63,7 @@ export function SearchBar({ className }: { className?: string }) {
       />
 
       {open && suggestions.length > 0 && (
-        <div className="absolute z-20 mt-1 w-full rounded-md border border-line bg-panel shadow-glow overflow-hidden">
+        <div className="absolute z-20 mt-1 w-full rounded-md border border-line bg-panel overflow-hidden">
           {suggestions.map((s) => (
             <Link
               key={s.slug}

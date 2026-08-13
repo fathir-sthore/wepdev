@@ -24,11 +24,11 @@ export async function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-ink/90 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-line bg-ink">
       <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Terminal size={20} className="text-accent" />
-          <span className="font-mono text-sm font-semibold hidden sm:inline bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent">
+          <span className="font-mono text-sm font-semibold hidden sm:inline text-text">
             fathir code
           </span>
         </Link>

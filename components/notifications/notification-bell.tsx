@@ -91,7 +91,7 @@ export function NotificationBell({ userId }: { userId: string }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto rounded-md border border-line bg-panel shadow-glow z-40">
+        <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto rounded-md border border-line bg-panel z-40">
           <div className="flex items-center justify-between border-b border-line px-3 py-2">
             <span className="font-mono text-xs text-text">Notifikasi</span>
             {unreadCount > 0 && (

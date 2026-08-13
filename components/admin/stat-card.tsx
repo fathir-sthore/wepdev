@@ -16,8 +16,8 @@ export function StatCard({
   return (
     <Card
       className={cn(
-        "bg-panel2/40 backdrop-blur-glass transition-all duration-200",
-        "hover:border-accent/50 hover:shadow-glow"
+        "bg-panel2 transition-colors",
+        "hover:border-accent/50"
       )}
     >
       <CardContent className="flex items-center gap-3">

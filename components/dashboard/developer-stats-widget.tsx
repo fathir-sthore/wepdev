@@ -27,7 +27,7 @@ export function DeveloperStatsWidget({ stats }: { stats: DeveloperStats }) {
       </div>
 
       {chartData.length > 0 && (
-        <Card className="bg-panel2/40 backdrop-blur-glass">
+        <Card className="bg-panel2">
           <CardHeader>
             <p className="font-mono text-sm text-text">Performa script (top downloads)</p>
           </CardHeader>
