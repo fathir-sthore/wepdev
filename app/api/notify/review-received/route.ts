@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { reviewReceivedEmail } from "@/lib/email/templates";
 import { createNotification } from "@/lib/notifications";
+import { SITE_URL } from "@/lib/site-url";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -61,7 +62,7 @@ export async function POST(request: Request) {
         reviewerName: reviewer?.username ?? "seseorang",
         rating,
         comment: comment ?? null,
-        scriptUrl: `https://fathirsthore.my.id/script/${script.slug}`,
+        scriptUrl: `${SITE_URL}/script/${script.slug}`,
       }),
     });
 

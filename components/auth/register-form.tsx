@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { OtpInput } from "@/components/auth/otp-input";
 import { AuthSplitLayout } from "@/components/auth/auth-split-layout";
+import { TurnstileWidget, CAPTCHA_ENABLED } from "@/components/auth/turnstile-widget";
+import { verifyCaptcha } from "@/lib/captcha-client";
 
 type Step = "form" | "otp";
 
@@ -24,16 +26,35 @@ export function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [resent, setResent] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (CAPTCHA_ENABLED && !captchaToken) {
+      setError("Selesaikan verifikasi CAPTCHA dulu.");
+      return;
+    }
+
     setLoading(true);
+
+    if (CAPTCHA_ENABLED) {
+      const captcha = await verifyCaptcha(captchaToken);
+      if (!captcha.ok) {
+        setLoading(false);
+        setError(captcha.error ?? "Verifikasi CAPTCHA gagal.");
+        return;
+      }
+    }
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { user_name: username } },
+      options: {
+        data: { user_name: username },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
 
     setLoading(false);
@@ -189,7 +210,9 @@ export function RegisterForm() {
           </p>
         )}
 
-        <Button type="submit" disabled={loading} className="w-full font-display">
+        <TurnstileWidget onToken={setCaptchaToken} />
+
+        <Button type="submit" disabled={loading || (CAPTCHA_ENABLED && !captchaToken)} className="w-full font-display">
           {loading ? "membuat akun..." : "Buat akun"}
         </Button>
       </form>

@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { reportFiledEmail } from "@/lib/email/templates";
 import { createNotification } from "@/lib/notifications";
+import { SITE_URL } from "@/lib/site-url";
 
 export async function POST(request: Request) {
   const { snippetId, reason, details } = await request.json();
@@ -42,7 +43,7 @@ export async function POST(request: Request) {
         scriptTitle: snippet.title,
         reason,
         details: details ?? null,
-        adminUrl: `https://fathirsthore.my.id/code/${snippet.slug}`,
+        adminUrl: `${SITE_URL}/code/${snippet.slug}`,
       }),
     });
 

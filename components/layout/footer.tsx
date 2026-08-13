@@ -68,7 +68,7 @@ export function Footer() {
         <ChangelogModal
           trigger={
             <span className="inline-flex items-center rounded-full border border-line bg-panel2 px-2 py-0.5 text-accent hover:border-accent/50 cursor-pointer transition-colors">
-              v1.0.1
+              v1.0.2
             </span>
           }
         />

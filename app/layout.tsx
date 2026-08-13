@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site-url";
 
 // v1.0.1 "Futuristic Developer Marketplace" design system — typography
 // hierarchy by content role: Judul -> Bold Serif (Fraunces), Sub-judul ->
@@ -19,8 +20,6 @@ const fraunces = Fraunces({
   weight: ["600", "700", "900"],
   variable: "--font-serif",
 });
-
-const SITE_URL = "https://fathirsthore.my.id";
 
 // Target keywords from the original site brief — used here (metadata) and
 // echoed in the WebSite JSON-LD below. Google mostly ignores the <meta

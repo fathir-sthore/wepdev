@@ -158,7 +158,7 @@ export default async function DashboardProfilePage() {
           <ChangelogModal
             trigger={
               <span className="font-data text-xs text-accent hover:underline cursor-pointer">
-                v1.0.1 — lihat perubahan
+                v1.0.2 — lihat perubahan
               </span>
             }
           />

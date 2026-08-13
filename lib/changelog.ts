@@ -7,6 +7,17 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.0.2",
+    date: "2026-08-13",
+    title: "Code Viewer, CAPTCHA & URL Consistency",
+    notes: [
+      "Code viewer diperbaiki jadi isolated scroll container — cuma area kode yang bisa digeser (horizontal & vertical), halaman utama nggak ikut bergerak lagi. Ada juga mode expand fullscreen.",
+      "CAPTCHA Cloudflare Turnstile ditambahkan di halaman Register, Login, dan Forgot Password buat cegah spam & bot.",
+      "URL production dikonsolidasi jadi satu sumber (NEXT_PUBLIC_SITE_URL) dipakai konsisten di metadata, sitemap, email, dan webhook — nggak ada lagi domain campur aduk.",
+      "Perbaikan redirect Supabase: signup & reset password sekarang eksplisit redirect ke domain production yang benar.",
+    ],
+  },
+  {
     version: "1.0.1",
     date: "2026-08-10",
     title: "Futuristic Developer Marketplace",

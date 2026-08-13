@@ -1,4 +1,4 @@
-const SITE_URL = "https://fathirsthore.my.id";
+import { SITE_URL } from "@/lib/site-url";
 
 function wrapper(glowColor: string, glowColor2: string, bodyHtml: string) {
   return `

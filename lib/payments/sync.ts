@@ -4,6 +4,7 @@ import { getPakasirTransactionDetail } from "@/lib/payments/pakasir";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { purchaseConfirmationEmail } from "@/lib/email/templates";
 import { createNotification } from "@/lib/notifications";
+import { SITE_URL } from "@/lib/site-url";
 
 type Purchase = Database["public"]["Tables"]["purchases"]["Row"];
 
@@ -25,7 +26,7 @@ async function sendPurchaseConfirmation(admin: SupabaseClient<Database>, purchas
           scriptTitle: script.title,
           amount: purchase.total_payment ?? purchase.amount,
           orderId: purchase.order_id,
-          downloadUrl: `https://fathirsthore.my.id/api/scripts/${script.id}/download`,
+          downloadUrl: `${SITE_URL}/api/scripts/${script.id}/download`,
         }),
       }),
       createNotification({

@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { OtpInput } from "@/components/auth/otp-input";
 import { AuthSplitLayout } from "@/components/auth/auth-split-layout";
+import { TurnstileWidget, CAPTCHA_ENABLED } from "@/components/auth/turnstile-widget";
+import { verifyCaptcha } from "@/lib/captcha-client";
 
 type Step = "request" | "reset";
 
@@ -21,13 +23,31 @@ export function ForgotPasswordForm() {
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   async function handleRequest(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (CAPTCHA_ENABLED && !captchaToken) {
+      setError("Selesaikan verifikasi CAPTCHA dulu.");
+      return;
+    }
+
     setLoading(true);
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (CAPTCHA_ENABLED) {
+      const captcha = await verifyCaptcha(captchaToken);
+      if (!captcha.ok) {
+        setLoading(false);
+        setError(captcha.error ?? "Verifikasi CAPTCHA gagal.");
+        return;
+      }
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/forgot-password`,
+    });
 
     setLoading(false);
     if (error) {
@@ -153,7 +173,8 @@ export function ForgotPasswordForm() {
             {error}
           </p>
         )}
-        <Button type="submit" disabled={loading} className="w-full font-display">
+        <TurnstileWidget onToken={setCaptchaToken} />
+        <Button type="submit" disabled={loading || (CAPTCHA_ENABLED && !captchaToken)} className="w-full font-display">
           {loading ? "mengirim..." : "Kirim kode OTP"}
         </Button>
       </form>

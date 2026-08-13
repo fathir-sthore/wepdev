@@ -56,7 +56,7 @@ export default async function SnippetDetailPage({ params }: Props) {
       </p>
 
       <div className="grid md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-6 min-w-0">
           <div>
             <div className="flex items-center justify-between mb-2">
               <h1 className="text-title text-2xl text-text">{snippet.title}</h1>

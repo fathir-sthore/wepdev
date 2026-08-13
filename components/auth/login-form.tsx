@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { TerminalCard } from "@/components/auth/terminal-card";
 import { OtpInput } from "@/components/auth/otp-input";
+import { TurnstileWidget, CAPTCHA_ENABLED } from "@/components/auth/turnstile-widget";
+import { verifyCaptcha } from "@/lib/captcha-client";
 
 export function LoginForm({ next }: { next?: string }) {
   const router = useRouter();
@@ -18,6 +20,7 @@ export function LoginForm({ next }: { next?: string }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   // 2FA step-up, only shown if the account has a verified TOTP factor.
   const [needsMfa, setNeedsMfa] = useState(false);
@@ -37,7 +40,22 @@ export function LoginForm({ next }: { next?: string }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (CAPTCHA_ENABLED && !captchaToken) {
+      setError("Selesaikan verifikasi CAPTCHA dulu.");
+      return;
+    }
+
     setLoading(true);
+
+    if (CAPTCHA_ENABLED) {
+      const captcha = await verifyCaptcha(captchaToken);
+      if (!captcha.ok) {
+        setLoading(false);
+        setError(captcha.error ?? "Verifikasi CAPTCHA gagal.");
+        return;
+      }
+    }
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
@@ -158,7 +176,9 @@ export function LoginForm({ next }: { next?: string }) {
           </p>
         )}
 
-        <Button type="submit" disabled={loading} className="w-full">
+        <TurnstileWidget onToken={setCaptchaToken} />
+
+        <Button type="submit" disabled={loading || (CAPTCHA_ENABLED && !captchaToken)} className="w-full">
           {loading ? "authenticating..." : "run login"}
         </Button>
       </form>

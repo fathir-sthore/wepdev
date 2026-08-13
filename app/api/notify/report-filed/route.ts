@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { reportFiledEmail } from "@/lib/email/templates";
 import { createNotification } from "@/lib/notifications";
+import { SITE_URL } from "@/lib/site-url";
 import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 
 export async function POST(request: Request) {
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
         scriptTitle: script.title,
         reason,
         details: details ?? null,
-        adminUrl: `https://fathirsthore.my.id/${ADMIN_BASE_PATH}/reports`,
+        adminUrl: `${SITE_URL}/${ADMIN_BASE_PATH}/reports`,
       }),
     });
 
