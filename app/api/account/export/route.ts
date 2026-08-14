@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function GET() {
   const supabase = await createClient();
@@ -11,13 +12,14 @@ export async function GET() {
     return NextResponse.json({ error: "login required" }, { status: 401 });
   }
 
+  const admin = createAdminClient();
   const [profile, scripts, purchases, favorites, downloads, reviews] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", user.id).single(),
-    supabase.from("scripts").select("*").eq("developer_id", user.id),
-    supabase.from("purchases").select("*").eq("user_id", user.id),
-    supabase.from("favorites").select("*").eq("user_id", user.id),
-    supabase.from("downloads").select("*").eq("user_id", user.id),
-    supabase.from("reviews").select("*").eq("user_id", user.id),
+    admin.from("profiles").select("*").eq("id", user.id).single(),
+    admin.from("scripts").select("*").eq("developer_id", user.id),
+    admin.from("purchases").select("*").eq("user_id", user.id),
+    admin.from("favorites").select("*").eq("user_id", user.id),
+    admin.from("downloads").select("*").eq("user_id", user.id),
+    admin.from("reviews").select("*").eq("user_id", user.id),
   ]);
 
   const exportData = {

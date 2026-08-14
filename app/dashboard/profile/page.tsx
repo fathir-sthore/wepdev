@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Terminal, Bug, Mail, FileText, ScrollText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { ProfileForm } from "@/components/dashboard/profile-form";
 import { AvatarUploader } from "@/components/dashboard/avatar-uploader";
 import { ChangeEmailForm } from "@/components/dashboard/change-email-form";
@@ -23,8 +24,9 @@ export default async function DashboardProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const admin = createAdminClient();
   const [profileRes, downloadsRes, favoritesRes, reviewsRes, loginHistoryRes] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", user!.id).single(),
+    admin.from("profiles").select("*").eq("id", user!.id).single(),
     supabase.from("downloads").select("id", { count: "exact", head: true }).eq("user_id", user!.id),
     supabase.from("favorites").select("id", { count: "exact", head: true }).eq("user_id", user!.id),
     supabase.from("reviews").select("id", { count: "exact", head: true }).eq("user_id", user!.id),
