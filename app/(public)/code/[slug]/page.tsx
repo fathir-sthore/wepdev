@@ -15,6 +15,7 @@ import { CommentForm } from "@/components/code/comment-form";
 import { CommentList } from "@/components/code/comment-list";
 import { ReportSnippetDialog } from "@/components/code/report-snippet-dialog";
 import { SnippetViewTracker } from "@/components/code/snippet-view-tracker";
+import { SITE_URL } from "@/lib/site-url";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -23,9 +24,19 @@ export async function generateMetadata({ params }: Props) {
   const supabase = await createClient();
   const snippet = await getSnippetBySlug(supabase, slug);
   if (!snippet) return { title: "Kode tidak ditemukan — Fathir Code" };
+  const description =
+    snippet.description ??
+    `Kode ${LANGUAGE_LABELS[snippet.language as DetectedLanguage] ?? snippet.language} oleh @${snippet.author?.username}`;
   return {
     title: `${snippet.title} — Fathir Code`,
-    description: snippet.description ?? `Kode ${LANGUAGE_LABELS[snippet.language as DetectedLanguage] ?? snippet.language} oleh @${snippet.author?.username}`,
+    description,
+    alternates: { canonical: `${SITE_URL}/code/${snippet.slug}` },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title: snippet.title,
+      description,
+      url: `${SITE_URL}/code/${snippet.slug}`,
+    },
   };
 }
 

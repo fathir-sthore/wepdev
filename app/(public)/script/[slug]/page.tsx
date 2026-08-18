@@ -16,6 +16,7 @@ import { ReportDialog } from "@/components/public/report-dialog";
 import { ReviewForm } from "@/components/public/review-form";
 import { ReviewList } from "@/components/public/review-list";
 import { ViewTracker } from "@/components/public/view-tracker";
+import { SITE_URL } from "@/lib/site-url";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -27,9 +28,12 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: `${script.title} — Fathir Code`,
     description: script.short_description,
+    alternates: { canonical: `${SITE_URL}/script/${script.slug}` },
+    robots: { index: true, follow: true },
     openGraph: {
       title: script.title,
       description: script.short_description,
+      url: `${SITE_URL}/script/${script.slug}`,
       images: script.thumbnail_path
         ? [publicStorageUrl("thumbnails", script.thumbnail_path)!]
         : [],

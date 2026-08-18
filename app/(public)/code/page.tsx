@@ -8,7 +8,12 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FileCode2 } from "lucide-react";
 
-export const metadata = { title: "Source Code — Fathir Code" };
+export const metadata = {
+  title: "Source Code — Fathir Code",
+  description:
+    "Jelajahi kumpulan source code dan snippet dari developer: JavaScript, Python, dan bahasa lainnya, gratis untuk digunakan.",
+  alternates: { canonical: "/code" },
+};
 
 type Props = {
   searchParams: Promise<{ q?: string; language?: string; sort?: string; page?: string }>;

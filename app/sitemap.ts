@@ -11,18 +11,25 @@ import { SITE_URL } from "@/lib/site-url";
  *   including them risks duplicate/thin-content signals.
  * - No changeFrequency/priority — Google has stated for years it ignores
  *   both, so they're just noise in the output.
- * - lastModified only set when the DB value is a real, valid date.
+ * - lastModified only set when the DB value is a real, valid, non-future
+ *   date — a future timestamp would misrepresent freshness to crawlers.
  * - Any Supabase failure is caught and logged, never allowed to throw and
  *   fail the whole sitemap route — worst case we fall back to the static
  *   routes instead of returning nothing at all.
+ * - Cached for 1 hour (revalidate) so this doesn't hit the database on
+ *   every single crawl request.
  */
+export const revalidate = 3600;
 
-/** Returns a Date only if `value` parses to a real, valid date; otherwise
- * undefined so we simply omit lastModified rather than emit garbage. */
+/** Returns a Date only if `value` parses to a real, valid date that isn't
+ * in the future; otherwise undefined so we simply omit lastModified rather
+ * than emit a garbage or misleading value. */
 function safeDate(value: string | null | undefined): Date | undefined {
   if (!value) return undefined;
   const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? undefined : d;
+  if (Number.isNaN(d.getTime())) return undefined;
+  if (d.getTime() > Date.now()) return undefined;
+  return d;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

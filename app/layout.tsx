@@ -46,26 +46,26 @@ const KEYWORDS = [
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Fathir Code — Developer Marketplace & Source Code Hub",
+    default: "Fathir Code — Platform Script & Code",
     template: "%s — Fathir Code",
   },
   description:
-    "Download script gratis dan premium: bot Telegram, bot WhatsApp, aplikasi Flutter, panel hosting, dan source code lainnya. Diupload langsung oleh developer.",
+    "FATHIR CODE adalah platform untuk mencari, berbagi, dan mengunduh script, source code, tools, dan resource developer — bot Telegram, bot WhatsApp, aplikasi Flutter, panel, dan lainnya.",
   keywords: KEYWORDS,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: "Fathir Code",
-    title: "Fathir Code — Developer Marketplace & Source Code Hub",
+    title: "Fathir Code — Platform Script & Code",
     description:
-      "Download script gratis dan premium: bot Telegram, bot WhatsApp, aplikasi Flutter, panel hosting, dan source code lainnya.",
+      "Platform untuk mencari, berbagi, dan mengunduh script, source code, tools, dan resource developer.",
     url: SITE_URL,
     locale: "id_ID",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fathir Code — Developer Marketplace & Source Code Hub",
-    description: "Download script gratis dan premium: bot, panel, dan aplikasi siap pakai.",
+    title: "Fathir Code — Platform Script & Code",
+    description: "Platform untuk mencari, berbagi, dan mengunduh script, source code, dan resource developer.",
   },
   robots: { index: true, follow: true },
 };
@@ -84,6 +84,7 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
       name: "Fathir Code",
+      alternateName: ["FATHIR CODE", "Fathir Sthore"],
       url: SITE_URL,
       publisher: { "@id": `${SITE_URL}/#organization` },
       potentialAction: {

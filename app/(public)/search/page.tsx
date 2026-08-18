@@ -6,7 +6,12 @@ import { Pagination } from "@/components/public/pagination";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SearchX } from "lucide-react";
 
-export const metadata = { title: "Browse scripts — Fathir Code" };
+export const metadata = {
+  title: "Browse scripts — Fathir Code",
+  description:
+    "Cari dan unduh script Telegram bot, WhatsApp bot, aplikasi Flutter, panel, dan source code developer lainnya di Fathir Code.",
+  alternates: { canonical: "/search" },
+};
 
 type Props = {
   searchParams: Promise<{
