@@ -9,6 +9,7 @@ import { CategoryGrid } from "@/components/public/category-grid";
 import { ScriptSection } from "@/components/public/script-section";
 import { BannerSlider } from "@/components/dashboard-home/banner-slider";
 import { Faq } from "@/components/public/faq";
+import { DownloaderPromo } from "@/components/public/downloader-promo";
 
 export const revalidate = 60;
 
@@ -36,6 +37,7 @@ export default async function HomePage() {
     <>
       <Hero />
       <BannerSlider banners={banners} />
+      <DownloaderPromo />
       <StatsBar
         totalScripts={(statsRes.data ?? []).length}
         totalDownloads={totalDownloads}

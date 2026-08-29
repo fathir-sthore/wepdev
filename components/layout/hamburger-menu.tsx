@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, LayoutDashboard, ArrowLeftCircle, Code2, Search, Settings, X } from "lucide-react";
+import { Menu, LayoutDashboard, ArrowLeftCircle, Code2, Search, Settings, Download, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function HamburgerMenu() {
@@ -32,6 +32,7 @@ export function HamburgerMenu() {
       ? { href: "/dashboard", label: "dashboard", icon: LayoutDashboard }
       : { href: "/", label: "menu utama", icon: ArrowLeftCircle },
     { href: "/code", label: "code", icon: Code2 },
+    { href: "/downloader", label: "downloader", icon: Download },
     { href: "/search", label: "all script", icon: Search },
     { href: "/dashboard/profile", label: "pengaturan", icon: Settings },
   ];
