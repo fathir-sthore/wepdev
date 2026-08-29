@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Music2, Youtube, Download, Loader2, Link2, Clock, User2 } from "lucide-react";
+import { Music2, Youtube, Download, Loader2, Link2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,13 +64,6 @@ const PLATFORMS: { id: Platform; label: string; icon: typeof Music2; placeholder
   },
 ];
 
-function formatDuration(seconds: number) {
-  if (!seconds || Number.isNaN(seconds)) return "--:--";
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
 export function DownloaderPanel() {
   const [platform, setPlatform] = useState<Platform>("tiktok");
   const [url, setUrl] = useState("");
@@ -108,12 +101,60 @@ export function DownloaderPanel() {
         return;
       }
 
-      setResult({ platform, data: json.data } as ResultState);
+      const data = json.data;
+      setResult({ platform, data } as ResultState);
+      triggerDownload(platform, data);
     } catch {
       setError("Gagal terhubung ke server, coba lagi.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function triggerAnchorDownload(href: string, filename: string) {
+    const a = document.createElement("a");
+    a.href = href;
+    a.download = filename;
+    a.rel = "noopener noreferrer";
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function triggerDownload(p: Platform, data: TikTokData | YouTubeData | SpotifyData) {
+    if (p === "tiktok") {
+      const d = data as TikTokData;
+      if (d.isImageSlide) {
+        // Multiple images — trigger each with a small stagger so browsers
+        // don't swallow them as a popup flood.
+        d.images.forEach((img, i) => {
+          setTimeout(() => triggerAnchorDownload(img, `tiktok-${i + 1}.jpg`), i * 400);
+        });
+      } else if (d.video) {
+        triggerAnchorDownload(d.video, `${slugify(d.title)}.mp4`);
+      } else if (d.audio) {
+        triggerAnchorDownload(d.audio, `${slugify(d.title)}.mp3`);
+      }
+      return;
+    }
+
+    if (p === "youtube") {
+      const d = data as YouTubeData;
+      if (d.video) {
+        triggerAnchorDownload(d.video.url, `${slugify(d.title)}.${d.video.container}`);
+      } else if (d.audio) {
+        triggerAnchorDownload(d.audio.url, `${slugify(d.title)}.${d.audio.container}`);
+      }
+      return;
+    }
+
+    const d = data as SpotifyData;
+    triggerAnchorDownload(d.audio.url, `${slugify(`${d.artist} - ${d.title}`)}.${d.audio.container}`);
+  }
+
+  function slugify(name: string) {
+    return name.replace(/[\\/:*?"<>|]+/g, "").trim().slice(0, 80) || "download";
   }
 
   return (
@@ -173,129 +214,66 @@ export function DownloaderPanel() {
         </div>
       )}
 
-      {!loading && result && <ResultCard result={result} />}
+      {!loading && result && (
+        <ResultCard result={result} onRedownload={() => triggerDownload(result.platform, result.data)} />
+      )}
     </div>
   );
 }
 
-function ResultCard({ result }: { result: ResultState }) {
-  if (result.platform === "tiktok") return <TikTokResult data={result.data} />;
-  if (result.platform === "youtube") return <YouTubeResult data={result.data} />;
-  return <SpotifyResult data={result.data} />;
-}
-
-/** Shared "now playing" shell — square cover art + info, Spotify-inspired. */
-function MediaCard({
-  cover,
-  title,
-  subtitle,
-  meta,
-  children,
+function ResultCard({
+  result,
+  onRedownload,
 }: {
-  cover: string;
-  title: string;
-  subtitle: string;
-  meta?: string;
-  children: React.ReactNode;
+  result: ResultState;
+  onRedownload: () => void;
 }) {
+  const { cover, title, subtitle } = getDisplayInfo(result);
+
   return (
-    <div className="rounded-lg border border-line bg-panel p-5">
-      <div className="flex flex-col sm:flex-row gap-5">
-        <div className="relative h-28 w-28 sm:h-32 sm:w-32 shrink-0 rounded-md overflow-hidden bg-panel2">
-          {cover ? (
-            <Image src={cover} alt={title} fill sizes="128px" className="object-cover" unoptimized />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-muted">
-              <Music2 size={28} />
-            </div>
-          )}
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <h2 className="text-title text-lg text-text truncate">{title}</h2>
-          <p className="flex items-center gap-1.5 text-sm text-muted mt-1 truncate">
-            <User2 size={13} className="shrink-0" />
-            {subtitle}
-          </p>
-          {meta && (
-            <p className="flex items-center gap-1.5 text-xs text-muted mt-1">
-              <Clock size={12} className="shrink-0" />
-              {meta}
-            </p>
-          )}
-
-          <div className="flex flex-wrap gap-2 mt-4">{children}</div>
-        </div>
+    <div className="rounded-lg border border-line bg-panel p-5 flex items-center gap-4">
+      <div className="relative h-16 w-16 shrink-0 rounded-md overflow-hidden bg-panel2">
+        {cover ? (
+          <Image src={cover} alt={title} fill sizes="64px" className="object-cover" unoptimized />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-muted">
+            <Music2 size={22} />
+          </div>
+        )}
       </div>
+
+      <div className="flex-1 min-w-0">
+        <p className="flex items-center gap-1.5 text-xs text-accent mb-1">
+          <CheckCircle2 size={13} />
+          Unduhan dimulai
+        </p>
+        <h2 className="text-sm font-medium text-text truncate">{title}</h2>
+        <p className="text-xs text-muted truncate">{subtitle}</p>
+        {result.platform === "spotify" && (
+          <p className="text-[11px] text-muted mt-1">
+            Diambil dari YouTube: &quot;{result.data.matchedYoutubeTitle}&quot;
+          </p>
+        )}
+      </div>
+
+      <Button size="sm" variant="outline" onClick={onRedownload} className="shrink-0 gap-1.5">
+        <Download size={13} />
+        Ulangi
+      </Button>
     </div>
   );
 }
 
-function DownloadButton({ href, label }: { href: string; label: string }) {
-  return (
-    <a href={href} download target="_blank" rel="noopener noreferrer">
-      <Button size="sm" className="gap-1.5">
-        <Download size={14} />
-        {label}
-      </Button>
-    </a>
-  );
-}
-
-function TikTokResult({ data }: { data: TikTokData }) {
-  return (
-    <MediaCard
-      cover={data.cover}
-      title={data.title || "TikTok Video"}
-      subtitle={data.author.name}
-      meta={formatDuration(data.duration)}
-    >
-      {data.isImageSlide ? (
-        data.images.map((img, i) => (
-          <DownloadButton key={img} href={img} label={`Gambar ${i + 1}`} />
-        ))
-      ) : (
-        <>
-          {data.video && <DownloadButton href={data.video} label="Video (No Watermark)" />}
-          {data.audio && <DownloadButton href={data.audio} label="Audio" />}
-        </>
-      )}
-    </MediaCard>
-  );
-}
-
-function YouTubeResult({ data }: { data: YouTubeData }) {
-  return (
-    <MediaCard
-      cover={data.thumbnail}
-      title={data.title}
-      subtitle={data.author}
-      meta={formatDuration(data.durationSeconds)}
-    >
-      {data.video && (
-        <DownloadButton
-          href={data.video.url}
-          label={`Video ${data.video.quality} (.${data.video.container})`}
-        />
-      )}
-      {data.audio && (
-        <DownloadButton href={data.audio.url} label={`Audio (.${data.audio.container})`} />
-      )}
-    </MediaCard>
-  );
-}
-
-function SpotifyResult({ data }: { data: SpotifyData }) {
-  return (
-    <>
-      <MediaCard cover={data.cover} title={data.title} subtitle={data.artist}>
-        <DownloadButton href={data.audio.url} label={`Audio (.${data.audio.container})`} />
-      </MediaCard>
-      <p className="mt-3 text-xs text-muted">
-        Spotify tidak menyediakan file audio untuk diunduh secara langsung — audio di atas diambil
-        dari YouTube yang paling cocok dengan lagu ini:{" "}
-        <span className="text-text">&quot;{data.matchedYoutubeTitle}&quot;</span>.
-      </p>
-    </>
-  );
+function getDisplayInfo(result: ResultState) {
+  if (result.platform === "tiktok") {
+    return {
+      cover: result.data.cover,
+      title: result.data.title || "TikTok Video",
+      subtitle: result.data.author.name,
+    };
+  }
+  if (result.platform === "youtube") {
+    return { cover: result.data.thumbnail, title: result.data.title, subtitle: result.data.author };
+  }
+  return { cover: result.data.cover, title: result.data.title, subtitle: result.data.artist };
 }

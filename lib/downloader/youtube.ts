@@ -75,11 +75,19 @@ export async function downloadYouTubeById(videoId: string): Promise<YouTubeResul
 
   let info;
   try {
-    info = await yt.getInfo(videoId);
-  } catch (err) {
-    throw new YouTubeDownloadError(
-      err instanceof Error ? err.message : "Video tidak ditemukan atau bersifat privat"
-    );
+    // Default WEB client increasingly gets served an "interstitial" (bot
+    // check) page from server/datacenter IPs like Vercel's, which the
+    // parser doesn't recognize and throws on. The ANDROID client skips
+    // that consent/interstitial flow entirely.
+    info = await yt.getInfo(videoId, { client: "ANDROID" });
+  } catch {
+    try {
+      info = await yt.getInfo(videoId, { client: "IOS" });
+    } catch (err) {
+      throw new YouTubeDownloadError(
+        err instanceof Error ? err.message : "Video tidak ditemukan atau bersifat privat"
+      );
+    }
   }
 
   if (info.basic_info.is_live) {
