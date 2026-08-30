@@ -24,8 +24,6 @@ type TikTokData = {
 type YouTubeData = {
   title: string;
   thumbnail: string;
-  author: string;
-  durationSeconds: number;
   video: { url: string; quality: string; container: string } | null;
   audio: { url: string; container: string; bitrate: number } | null;
 };
@@ -35,7 +33,6 @@ type SpotifyData = {
   artist: string;
   cover: string;
   audio: { url: string; container: string; bitrate: number };
-  matchedYoutubeTitle: string;
 };
 
 type ResultState =
@@ -258,12 +255,7 @@ function ResultCard({
           Unduhan dimulai
         </p>
         <h2 className="text-sm font-medium text-text truncate">{title}</h2>
-        <p className="text-xs text-muted truncate">{subtitle}</p>
-        {result.platform === "spotify" && (
-          <p className="text-[11px] text-muted mt-1">
-            Diambil dari YouTube: &quot;{result.data.matchedYoutubeTitle}&quot;
-          </p>
-        )}
+        {subtitle && <p className="text-xs text-muted truncate">{subtitle}</p>}
       </div>
 
       <Button size="sm" variant="outline" onClick={onRedownload} className="shrink-0 gap-1.5">
@@ -283,7 +275,11 @@ function getDisplayInfo(result: ResultState) {
     };
   }
   if (result.platform === "youtube") {
-    return { cover: result.data.thumbnail, title: result.data.title, subtitle: result.data.author };
+    return {
+      cover: result.data.thumbnail,
+      title: result.data.title,
+      subtitle: result.data.video?.quality ? `Kualitas ${result.data.video.quality}` : "",
+    };
   }
   return { cover: result.data.cover, title: result.data.title, subtitle: result.data.artist };
 }

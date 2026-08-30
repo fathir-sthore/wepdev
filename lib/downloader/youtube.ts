@@ -1,51 +1,39 @@
 import "server-only";
-import { Innertube } from "youtubei.js";
 
 /**
- * YouTube downloader — powered by youtubei.js (InnerTube client library).
- * Docs: https://ytjs.dev — talks directly to YouTube's own internal API,
- * no third-party middleman, no API key. Actively maintained (successor to
- * the now-unmaintained ytdl-core / @distube/ytdl-core forks).
+ * YouTube downloader — proxied through api.siputzx.my.id's public
+ * "savefrom" endpoint (free, no API key), which itself automates
+ * SaveFrom.net server-side. Source (open source, verified before use):
+ * https://github.com/siputzx/apisku/blob/master/router/downloader/saveform.ts
+ *
+ * Why not talk to YouTube directly (as an earlier version of this file
+ * did, via youtubei.js): YouTube's anti-bot measures against datacenter
+ * IPs (which is exactly what Vercel serverless functions are) escalated
+ * hard in 2026 and now block/interstitial a large share of requests
+ * regardless of client type or session freshness — a problem affecting
+ * yt-dlp and every other cloud-hosted extractor industry-wide, not
+ * something fixable by tweaking our own request. SaveFrom.net's own
+ * servers have a much better IP/session reputation with YouTube, so
+ * proxying through their already-solved extraction is far more reliable
+ * than re-solving the same anti-bot problem ourselves.
  */
 
-let sharedClientPromise: Promise<Innertube> | null = null;
-
-/** Shared session — fine for search, which hasn't shown the bot-check issue. */
-function getSharedClient() {
-  if (!sharedClientPromise) {
-    sharedClientPromise = Innertube.create({ lang: "id", location: "ID" });
-  }
-  return sharedClientPromise;
-}
-
-/**
- * A fresh session per download attempt. Reusing one cached session across
- * every request on a warm serverless instance means the moment YouTube
- * flags that session's visitor data, every subsequent download on that
- * instance fails the same way until it goes cold. A new session per
- * request costs a bit of latency but avoids that shared-blast-radius
- * problem.
- */
-function getFreshClient() {
-  return Innertube.create({ lang: "id", location: "ID", generate_session_locally: true });
-}
+const SAVEFROM_ENDPOINT = "https://api.siputzx.my.id/api/d/savefrom";
 
 export class YouTubeDownloadError extends Error {}
 
-function tryChooseFormat(
-  info: Awaited<ReturnType<Innertube["getInfo"]>>,
-  options: Parameters<Awaited<ReturnType<Innertube["getInfo"]>>["chooseFormat"]>[0]
-) {
-  try {
-    return info.chooseFormat(options);
-  } catch {
-    return null;
-  }
-}
+type SaveFromItem = {
+  title?: string;
+  platform?: string;
+  type?: "video" | "audio" | "image" | "unknown";
+  format?: string;
+  url?: string;
+  thumb?: string | null;
+  quality?: string | null;
+};
 
 function extractVideoId(input: string): string | null {
   const trimmed = input.trim();
-  // Bare 11-char video id
   if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
 
   try {
@@ -65,14 +53,22 @@ function extractVideoId(input: string): string | null {
 }
 
 export type YouTubeResult = {
-  id: string;
   title: string;
   thumbnail: string;
-  author: string;
-  durationSeconds: number;
   video: { url: string; quality: string; container: string } | null;
   audio: { url: string; container: string; bitrate: number } | null;
 };
+
+/** Highest-quality item first — parses a leading number out of "720p", "1080", etc. */
+function pickBest(items: SaveFromItem[]): SaveFromItem | null {
+  const withUrl = items.filter((i) => i.url);
+  if (withUrl.length === 0) return null;
+  return [...withUrl].sort((a, b) => {
+    const qa = parseInt(a.quality || "0", 10) || 0;
+    const qb = parseInt(b.quality || "0", 10) || 0;
+    return qb - qa;
+  })[0];
+}
 
 export async function downloadYouTube(input: string): Promise<YouTubeResult> {
   const videoId = extractVideoId(input);
@@ -80,118 +76,50 @@ export async function downloadYouTube(input: string): Promise<YouTubeResult> {
     throw new YouTubeDownloadError("URL bukan link YouTube yang valid");
   }
 
-  return downloadYouTubeById(videoId);
-}
+  const canonicalUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  const endpoint = `${SAVEFROM_ENDPOINT}?url=${encodeURIComponent(canonicalUrl)}`;
 
-export async function downloadYouTubeById(videoId: string): Promise<YouTubeResult> {
-  const yt = await getFreshClient();
-  const player = yt.session.player;
-
-  // Different InnerTube clients expose different format sets, and some
-  // (WEB) increasingly get served a bot-check interstitial from
-  // datacenter IPs like Vercel's, which crashes the parser outright.
-  // Try a cascade until one gives us something usable — ANDROID/IOS are
-  // most reliable against bot-checks but sometimes only expose
-  // adaptive (video-only + audio-only) streams, not a muxed
-  // video+audio file, so we keep trying further down the list until we
-  // find a client that has a proper muxed format too.
-  const CLIENT_CASCADE = ["ANDROID", "IOS", "TV_EMBEDDED", "MWEB", "WEB"] as const;
-
-  let basicInfo: Awaited<ReturnType<Innertube["getInfo"]>> | null = null;
-  let bestVideo: ReturnType<typeof tryChooseFormat> = null;
-  let bestAudio: ReturnType<typeof tryChooseFormat> = null;
-  let lastError: unknown = null;
-
-  for (const client of CLIENT_CASCADE) {
-    let info;
-    try {
-      info = await yt.getInfo(videoId, { client });
-    } catch (err) {
-      lastError = err;
-      console.error(
-        `[downloader/youtube] getInfo failed for client=${client}`,
-        err instanceof Error ? err.message : err
-      );
-      continue;
-    }
-
-    if (!basicInfo) basicInfo = info;
-
-    if (info.basic_info.is_live) {
-      throw new YouTubeDownloadError("Video sedang live — tidak bisa diunduh");
-    }
-
-    if (!bestVideo) {
-      const muxed = tryChooseFormat(info, { type: "video+audio", quality: "best" });
-      if (muxed) bestVideo = muxed;
-    }
-    if (!bestAudio) {
-      const audioOnly = tryChooseFormat(info, { type: "audio", quality: "best" });
-      if (audioOnly) bestAudio = audioOnly;
-    }
-
-    console.log(
-      `[downloader/youtube] client=${client} video=${!!bestVideo} audio=${!!bestAudio}`
-    );
-
-    // Got a full muxed file — that's the best possible outcome, stop early.
-    if (bestVideo) break;
+  let res: Response;
+  try {
+    // The upstream scraper drives a headless browser on its own end, so
+    // it's genuinely slower than a direct API call — give it real room.
+    res = await fetch(endpoint, { signal: AbortSignal.timeout(55_000) });
+  } catch {
+    throw new YouTubeDownloadError("Gagal terhubung ke layanan pengunduh, coba lagi sebentar lagi");
   }
 
-  if (!basicInfo) {
+  if (!res.ok) {
+    throw new YouTubeDownloadError(`Layanan pengunduh merespons ${res.status}`);
+  }
+
+  const json = await res.json();
+
+  if (!json.status || !Array.isArray(json.data) || json.data.length === 0) {
     throw new YouTubeDownloadError(
-      lastError instanceof Error ? lastError.message : "Video tidak ditemukan atau bersifat privat"
+      json.error || "Video tidak ditemukan, bersifat privat, atau tidak bisa diproses"
     );
   }
 
-  const video = bestVideo
-    ? {
-        url: await bestVideo.decipher(player),
-        quality: bestVideo.quality_label || "unknown",
-        container: bestVideo.mime_type?.split(";")[0].split("/")[1] || "mp4",
-      }
-    : null;
+  const items: SaveFromItem[] = json.data;
+  const bestVideo = pickBest(items.filter((i) => i.type === "video"));
+  const bestAudio = pickBest(items.filter((i) => i.type === "audio"));
 
-  const audio = bestAudio
-    ? {
-        url: await bestAudio.decipher(player),
-        container: bestAudio.mime_type?.split(";")[0].split("/")[1] || "m4a",
-        bitrate: bestAudio.bitrate || 0,
-      }
-    : null;
-
-  if (!video && !audio) {
+  if (!bestVideo && !bestAudio) {
     throw new YouTubeDownloadError("Tidak ada format yang bisa diunduh untuk video ini");
   }
 
   return {
-    id: videoId,
-    title: basicInfo.basic_info.title || "YouTube Video",
-    thumbnail: basicInfo.basic_info.thumbnail?.[0]?.url || "",
-    author: basicInfo.basic_info.author || "unknown",
-    durationSeconds: basicInfo.basic_info.duration || 0,
-    video,
-    audio,
+    title: items[0]?.title || "YouTube Video",
+    thumbnail: items[0]?.thumb || "",
+    video: bestVideo
+      ? {
+          url: bestVideo.url!,
+          quality: bestVideo.quality || "unknown",
+          container: bestVideo.format || "mp4",
+        }
+      : null,
+    audio: bestAudio
+      ? { url: bestAudio.url!, container: bestAudio.format || "mp3", bitrate: 0 }
+      : null,
   };
-}
-
-/** Used by the Spotify fallback: find the best-matching YouTube video for a track. */
-export async function searchYouTubeBestMatch(query: string): Promise<{ id: string; title: string } | null> {
-  const yt = await getSharedClient();
-  const search = await yt.search(query, { type: "video" });
-
-  type MaybeVideo = { id?: string; video_id?: string; title?: { toString(): string } | string };
-  const candidates: MaybeVideo[] =
-    (search as unknown as { videos?: MaybeVideo[] }).videos ??
-    (search as unknown as { results?: MaybeVideo[] }).results ??
-    [];
-
-  const first = candidates.find((c) => c?.id || c?.video_id);
-  const id = first?.id || first?.video_id;
-  if (!id) return null;
-
-  const title =
-    typeof first?.title === "string" ? first.title : first?.title?.toString() || query;
-
-  return { id, title };
 }

@@ -3,7 +3,7 @@ import { downloadYouTube, YouTubeDownloadError } from "@/lib/downloader/youtube"
 import { getClientIp, hashIp } from "@/lib/ip";
 import { isRateLimited } from "@/lib/downloader/rate-limit";
 
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   const ip = hashIp(getClientIp(request));

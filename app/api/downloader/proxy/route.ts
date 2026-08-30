@@ -19,6 +19,7 @@ const ALLOWED_HOST_SUFFIXES = [
   "ibytedtos.com",
   "ibyteimg.com",
   "googlevideo.com",
+  "spotimate.io",
 ];
 
 function isAllowedHost(hostname: string) {

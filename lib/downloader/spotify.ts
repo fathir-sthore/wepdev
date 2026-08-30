@@ -1,36 +1,21 @@
 import "server-only";
-import { createRequire } from "module";
-import { downloadYouTubeById, searchYouTubeBestMatch } from "./youtube";
 
 /**
- * Spotify downloader — there is no official Spotify API for downloading audio
- * (tracks are DRM-protected). What every legitimate-looking "Spotify downloader"
- * actually does is:
- *   1. Read the track's public metadata (title, artist, cover) — no key needed.
- *      spotify-url-info reads this from Spotify's own oEmbed/embed page.
- *      Docs: https://www.npmjs.com/package/spotify-url-info
- *   2. Find the matching audio on YouTube and serve that.
- * This is the same approach used by spotDL, the most widely used open-source
- * Spotify downloader (https://github.com/spotDL/spotify-downloader).
+ * Spotify downloader — proxied through api.siputzx.my.id's public
+ * "spotifyv2" endpoint (free, no API key), which automates Spotimate.io
+ * server-side (including solving its Cloudflare Turnstile challenge).
+ * Source (open source, verified before use):
+ * https://github.com/siputzx/apisku/blob/master/router/downloader/spotifyv2.ts
+ *
+ * Spotify itself has no public API for downloading audio (tracks are
+ * DRM-protected) — Spotimate.io has already solved the practical side of
+ * this (matching + fetching playable audio for a given track), so we
+ * proxy through their solved extraction rather than re-solving it
+ * ourselves via a YouTube search-and-match fallback.
  */
 
-type SpotifyPreview = {
-  title: string;
-  track: string;
-  artist: string;
-  image?: string;
-  link: string;
-};
-
-// The package's bundled .d.ts declares its CJS default export as an
-// interface-only type, which trips `isolatedModules`. Load it via require
-// instead of a typed ES import, and type the shape ourselves.
-const require = createRequire(import.meta.url);
-const spotifyUrlInfoFactory = require("spotify-url-info") as (
-  fetchImpl: typeof fetch
-) => { getPreview: (url: string, opts?: RequestInit) => Promise<SpotifyPreview> };
-
-const { getPreview: fetchPreview } = spotifyUrlInfoFactory(fetch);
+const SPOTIFY_ENDPOINT = "https://api.siputzx.my.id/api/d/spotifyv2";
+const SPOTIMATE_ORIGIN = "https://spotimate.io";
 
 export class SpotifyDownloadError extends Error {}
 
@@ -38,10 +23,7 @@ function isSpotifyTrackUrl(url: string) {
   try {
     const u = new URL(url);
     const host = u.hostname.replace(/^www\./, "");
-    return (
-      (host === "open.spotify.com" && u.pathname.startsWith("/track/")) ||
-      host === "spotify.link"
-    );
+    return (host === "open.spotify.com" && u.pathname.startsWith("/track/")) || host === "spotify.link";
   } catch {
     return false;
   }
@@ -51,9 +33,7 @@ export type SpotifyResult = {
   title: string;
   artist: string;
   cover: string;
-  spotifyUrl: string;
   audio: { url: string; container: string; bitrate: number };
-  matchedYoutubeTitle: string;
 };
 
 export async function downloadSpotifyTrack(url: string): Promise<SpotifyResult> {
@@ -62,41 +42,45 @@ export async function downloadSpotifyTrack(url: string): Promise<SpotifyResult> 
     throw new SpotifyDownloadError("URL bukan link lagu (track) Spotify yang valid");
   }
 
-  let preview;
+  const endpoint = `${SPOTIFY_ENDPOINT}?url=${encodeURIComponent(trimmed)}`;
+
+  let res: Response;
   try {
-    preview = await fetchPreview(trimmed, {
-      headers: { "user-agent": "googlebot" },
-    });
-  } catch (err) {
-    console.error("[downloader/spotify] preview fetch failed", err);
-    throw new SpotifyDownloadError("Gagal membaca metadata lagu dari Spotify");
+    res = await fetch(endpoint, { signal: AbortSignal.timeout(55_000) });
+  } catch {
+    throw new SpotifyDownloadError("Gagal terhubung ke layanan pengunduh, coba lagi sebentar lagi");
   }
 
-  const title = preview?.title || preview?.track;
-  const artist = preview?.artist;
-
-  if (!title) {
-    throw new SpotifyDownloadError("Lagu tidak ditemukan — pastikan link mengarah ke sebuah track");
+  if (!res.ok) {
+    throw new SpotifyDownloadError(`Layanan pengunduh merespons ${res.status}`);
   }
 
-  const query = artist ? `${artist} - ${title} audio` : `${title} audio`;
-  const match = await searchYouTubeBestMatch(query);
+  const json = await res.json();
 
-  if (!match) {
-    throw new SpotifyDownloadError("Tidak menemukan audio yang cocok untuk lagu ini");
+  if (!json.status || !json.data) {
+    throw new SpotifyDownloadError(json.error || "Lagu tidak ditemukan");
   }
 
-  const yt = await downloadYouTubeById(match.id);
-  if (!yt.audio) {
+  const d = json.data as {
+    songTitle?: string;
+    title?: string;
+    artist?: string;
+    coverImage?: string;
+    mp3DownloadLink?: string | null;
+  };
+
+  if (!d.mp3DownloadLink) {
     throw new SpotifyDownloadError("Audio untuk lagu ini tidak tersedia saat ini");
   }
 
+  const audioUrl = d.mp3DownloadLink.startsWith("http")
+    ? d.mp3DownloadLink
+    : `${SPOTIMATE_ORIGIN}${d.mp3DownloadLink}`;
+
   return {
-    title,
-    artist: artist || "Unknown Artist",
-    cover: preview?.image || "",
-    spotifyUrl: trimmed,
-    audio: yt.audio,
-    matchedYoutubeTitle: match.title,
+    title: d.songTitle || d.title || "Unknown Track",
+    artist: d.artist || "Unknown Artist",
+    cover: d.coverImage || "",
+    audio: { url: audioUrl, container: "mp3", bitrate: 0 },
   };
 }
