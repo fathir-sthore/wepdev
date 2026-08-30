@@ -30,6 +30,7 @@ export async function POST(request: Request) {
     const result = await downloadYouTube(url);
     return NextResponse.json({ ok: true, data: result });
   } catch (err) {
+    console.error("[downloader/youtube]", err);
     const message =
       err instanceof YouTubeDownloadError
         ? err.message

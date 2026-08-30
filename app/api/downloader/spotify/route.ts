@@ -30,6 +30,7 @@ export async function POST(request: Request) {
     const result = await downloadSpotifyTrack(url);
     return NextResponse.json({ ok: true, data: result });
   } catch (err) {
+    console.error("[downloader/spotify]", err);
     const message =
       err instanceof SpotifyDownloadError
         ? err.message

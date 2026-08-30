@@ -67,7 +67,8 @@ export async function downloadSpotifyTrack(url: string): Promise<SpotifyResult> 
     preview = await fetchPreview(trimmed, {
       headers: { "user-agent": "googlebot" },
     });
-  } catch {
+  } catch (err) {
+    console.error("[downloader/spotify] preview fetch failed", err);
     throw new SpotifyDownloadError("Gagal membaca metadata lagu dari Spotify");
   }
 

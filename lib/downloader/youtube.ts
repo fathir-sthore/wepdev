@@ -108,6 +108,10 @@ export async function downloadYouTubeById(videoId: string): Promise<YouTubeResul
       info = await yt.getInfo(videoId, { client });
     } catch (err) {
       lastError = err;
+      console.error(
+        `[downloader/youtube] getInfo failed for client=${client}`,
+        err instanceof Error ? err.message : err
+      );
       continue;
     }
 
@@ -125,6 +129,10 @@ export async function downloadYouTubeById(videoId: string): Promise<YouTubeResul
       const audioOnly = tryChooseFormat(info, { type: "audio", quality: "best" });
       if (audioOnly) bestAudio = audioOnly;
     }
+
+    console.log(
+      `[downloader/youtube] client=${client} video=${!!bestVideo} audio=${!!bestAudio}`
+    );
 
     // Got a full muxed file — that's the best possible outcome, stop early.
     if (bestVideo) break;
