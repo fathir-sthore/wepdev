@@ -72,51 +72,70 @@ export async function downloadYouTube(input: string): Promise<YouTubeResult> {
 
 export async function downloadYouTubeById(videoId: string): Promise<YouTubeResult> {
   const yt = await getClient();
-
-  let info;
-  try {
-    // Default WEB client increasingly gets served an "interstitial" (bot
-    // check) page from server/datacenter IPs like Vercel's, which the
-    // parser doesn't recognize and throws on. The ANDROID client skips
-    // that consent/interstitial flow entirely.
-    info = await yt.getInfo(videoId, { client: "ANDROID" });
-  } catch {
-    try {
-      info = await yt.getInfo(videoId, { client: "IOS" });
-    } catch (err) {
-      throw new YouTubeDownloadError(
-        err instanceof Error ? err.message : "Video tidak ditemukan atau bersifat privat"
-      );
-    }
-  }
-
-  if (info.basic_info.is_live) {
-    throw new YouTubeDownloadError("Video sedang live — tidak bisa diunduh");
-  }
-
-  // Progressive (muxed video+audio) format — simplest reliable single-file
-  // download, no ffmpeg merge needed. YouTube caps progressive at 720p.
-  // chooseFormat throws (rather than returning null) when nothing matches,
-  // so each attempt is isolated — a missing video format shouldn't also
-  // kill the audio-only fallback, and vice versa.
-  const videoFormat = tryChooseFormat(info, { type: "video+audio", quality: "best" });
-  const audioFormat = tryChooseFormat(info, { type: "audio", quality: "best" });
-
   const player = yt.session.player;
 
-  const video = videoFormat
+  // Different InnerTube clients expose different format sets, and some
+  // (WEB) increasingly get served a bot-check interstitial from
+  // datacenter IPs like Vercel's, which crashes the parser outright.
+  // Try a cascade until one gives us something usable — ANDROID/IOS are
+  // most reliable against bot-checks but sometimes only expose
+  // adaptive (video-only + audio-only) streams, not a muxed
+  // video+audio file, so we keep trying further down the list until we
+  // find a client that has a proper muxed format too.
+  const CLIENT_CASCADE = ["ANDROID", "IOS", "TV_EMBEDDED", "MWEB", "WEB"] as const;
+
+  let basicInfo: Awaited<ReturnType<Innertube["getInfo"]>> | null = null;
+  let bestVideo: ReturnType<typeof tryChooseFormat> = null;
+  let bestAudio: ReturnType<typeof tryChooseFormat> = null;
+  let lastError: unknown = null;
+
+  for (const client of CLIENT_CASCADE) {
+    let info;
+    try {
+      info = await yt.getInfo(videoId, { client });
+    } catch (err) {
+      lastError = err;
+      continue;
+    }
+
+    if (!basicInfo) basicInfo = info;
+
+    if (info.basic_info.is_live) {
+      throw new YouTubeDownloadError("Video sedang live — tidak bisa diunduh");
+    }
+
+    if (!bestVideo) {
+      const muxed = tryChooseFormat(info, { type: "video+audio", quality: "best" });
+      if (muxed) bestVideo = muxed;
+    }
+    if (!bestAudio) {
+      const audioOnly = tryChooseFormat(info, { type: "audio", quality: "best" });
+      if (audioOnly) bestAudio = audioOnly;
+    }
+
+    // Got a full muxed file — that's the best possible outcome, stop early.
+    if (bestVideo) break;
+  }
+
+  if (!basicInfo) {
+    throw new YouTubeDownloadError(
+      lastError instanceof Error ? lastError.message : "Video tidak ditemukan atau bersifat privat"
+    );
+  }
+
+  const video = bestVideo
     ? {
-        url: await videoFormat.decipher(player),
-        quality: videoFormat.quality_label || "unknown",
-        container: videoFormat.mime_type?.split(";")[0].split("/")[1] || "mp4",
+        url: await bestVideo.decipher(player),
+        quality: bestVideo.quality_label || "unknown",
+        container: bestVideo.mime_type?.split(";")[0].split("/")[1] || "mp4",
       }
     : null;
 
-  const audio = audioFormat
+  const audio = bestAudio
     ? {
-        url: await audioFormat.decipher(player),
-        container: audioFormat.mime_type?.split(";")[0].split("/")[1] || "m4a",
-        bitrate: audioFormat.bitrate || 0,
+        url: await bestAudio.decipher(player),
+        container: bestAudio.mime_type?.split(";")[0].split("/")[1] || "m4a",
+        bitrate: bestAudio.bitrate || 0,
       }
     : null;
 
@@ -126,10 +145,10 @@ export async function downloadYouTubeById(videoId: string): Promise<YouTubeResul
 
   return {
     id: videoId,
-    title: info.basic_info.title || "YouTube Video",
-    thumbnail: info.basic_info.thumbnail?.[0]?.url || "",
-    author: info.basic_info.author || "unknown",
-    durationSeconds: info.basic_info.duration || 0,
+    title: basicInfo.basic_info.title || "YouTube Video",
+    thumbnail: basicInfo.basic_info.thumbnail?.[0]?.url || "",
+    author: basicInfo.basic_info.author || "unknown",
+    durationSeconds: basicInfo.basic_info.duration || 0,
     video,
     audio,
   };

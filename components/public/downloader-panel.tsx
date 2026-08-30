@@ -111,15 +111,20 @@ export function DownloaderPanel() {
     }
   }
 
-  function triggerAnchorDownload(href: string, filename: string) {
+  function triggerAnchorDownload(href: string) {
     const a = document.createElement("a");
     a.href = href;
-    a.download = filename;
     a.rel = "noopener noreferrer";
-    a.target = "_blank";
     document.body.appendChild(a);
     a.click();
     a.remove();
+  }
+
+  /** Route every download through our own origin so the browser actually
+   * saves the file — cross-origin URLs get opened instead of downloaded. */
+  function proxiedHref(remoteUrl: string, filename: string) {
+    const params = new URLSearchParams({ url: remoteUrl, filename });
+    return `/api/downloader/proxy?${params.toString()}`;
   }
 
   function triggerDownload(p: Platform, data: TikTokData | YouTubeData | SpotifyData) {
@@ -129,12 +134,15 @@ export function DownloaderPanel() {
         // Multiple images — trigger each with a small stagger so browsers
         // don't swallow them as a popup flood.
         d.images.forEach((img, i) => {
-          setTimeout(() => triggerAnchorDownload(img, `tiktok-${i + 1}.jpg`), i * 400);
+          setTimeout(
+            () => triggerAnchorDownload(proxiedHref(img, `tiktok-${i + 1}.jpg`)),
+            i * 500
+          );
         });
       } else if (d.video) {
-        triggerAnchorDownload(d.video, `${slugify(d.title)}.mp4`);
+        triggerAnchorDownload(proxiedHref(d.video, `${slugify(d.title)}.mp4`));
       } else if (d.audio) {
-        triggerAnchorDownload(d.audio, `${slugify(d.title)}.mp3`);
+        triggerAnchorDownload(proxiedHref(d.audio, `${slugify(d.title)}.mp3`));
       }
       return;
     }
@@ -142,15 +150,17 @@ export function DownloaderPanel() {
     if (p === "youtube") {
       const d = data as YouTubeData;
       if (d.video) {
-        triggerAnchorDownload(d.video.url, `${slugify(d.title)}.${d.video.container}`);
+        triggerAnchorDownload(proxiedHref(d.video.url, `${slugify(d.title)}.${d.video.container}`));
       } else if (d.audio) {
-        triggerAnchorDownload(d.audio.url, `${slugify(d.title)}.${d.audio.container}`);
+        triggerAnchorDownload(proxiedHref(d.audio.url, `${slugify(d.title)}.${d.audio.container}`));
       }
       return;
     }
 
     const d = data as SpotifyData;
-    triggerAnchorDownload(d.audio.url, `${slugify(`${d.artist} - ${d.title}`)}.${d.audio.container}`);
+    triggerAnchorDownload(
+      proxiedHref(d.audio.url, `${slugify(`${d.artist} - ${d.title}`)}.${d.audio.container}`)
+    );
   }
 
   function slugify(name: string) {
