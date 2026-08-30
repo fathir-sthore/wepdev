@@ -8,13 +8,26 @@ import { Innertube } from "youtubei.js";
  * the now-unmaintained ytdl-core / @distube/ytdl-core forks).
  */
 
-let clientPromise: Promise<Innertube> | null = null;
+let sharedClientPromise: Promise<Innertube> | null = null;
 
-function getClient() {
-  if (!clientPromise) {
-    clientPromise = Innertube.create({ lang: "id", location: "ID" });
+/** Shared session — fine for search, which hasn't shown the bot-check issue. */
+function getSharedClient() {
+  if (!sharedClientPromise) {
+    sharedClientPromise = Innertube.create({ lang: "id", location: "ID" });
   }
-  return clientPromise;
+  return sharedClientPromise;
+}
+
+/**
+ * A fresh session per download attempt. Reusing one cached session across
+ * every request on a warm serverless instance means the moment YouTube
+ * flags that session's visitor data, every subsequent download on that
+ * instance fails the same way until it goes cold. A new session per
+ * request costs a bit of latency but avoids that shared-blast-radius
+ * problem.
+ */
+function getFreshClient() {
+  return Innertube.create({ lang: "id", location: "ID", generate_session_locally: true });
 }
 
 export class YouTubeDownloadError extends Error {}
@@ -71,7 +84,7 @@ export async function downloadYouTube(input: string): Promise<YouTubeResult> {
 }
 
 export async function downloadYouTubeById(videoId: string): Promise<YouTubeResult> {
-  const yt = await getClient();
+  const yt = await getFreshClient();
   const player = yt.session.player;
 
   // Different InnerTube clients expose different format sets, and some
@@ -156,7 +169,7 @@ export async function downloadYouTubeById(videoId: string): Promise<YouTubeResul
 
 /** Used by the Spotify fallback: find the best-matching YouTube video for a track. */
 export async function searchYouTubeBestMatch(query: string): Promise<{ id: string; title: string } | null> {
-  const yt = await getClient();
+  const yt = await getSharedClient();
   const search = await yt.search(query, { type: "video" });
 
   type MaybeVideo = { id?: string; video_id?: string; title?: { toString(): string } | string };
