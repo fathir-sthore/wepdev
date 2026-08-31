@@ -44,15 +44,24 @@ export async function downloadSpotifyTrack(url: string): Promise<SpotifyResult> 
 
   const endpoint = `${SPOTIFY_ENDPOINT}?url=${encodeURIComponent(trimmed)}`;
 
-  let res: Response;
-  try {
-    res = await fetch(endpoint, { signal: AbortSignal.timeout(55_000) });
-  } catch {
-    throw new SpotifyDownloadError("Gagal terhubung ke layanan pengunduh, coba lagi sebentar lagi");
+  // Spotimate.io (behind this proxy) solves a Cloudflare Turnstile
+  // challenge per request, which occasionally 503s under load — one retry
+  // with a short backoff clears most of those transient hiccups.
+  let res: Response | null = null;
+  let lastStatus = 0;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      res = await fetch(endpoint, { signal: AbortSignal.timeout(55_000) });
+    } catch {
+      throw new SpotifyDownloadError("Gagal terhubung ke layanan pengunduh, coba lagi sebentar lagi");
+    }
+    if (res.ok) break;
+    lastStatus = res.status;
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));
   }
 
-  if (!res.ok) {
-    throw new SpotifyDownloadError(`Layanan pengunduh merespons ${res.status}`);
+  if (!res || !res.ok) {
+    throw new SpotifyDownloadError(`Layanan pengunduh sedang sibuk (${lastStatus}), coba lagi sebentar lagi`);
   }
 
   const json = await res.json();

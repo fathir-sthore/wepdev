@@ -59,6 +59,25 @@ export type YouTubeResult = {
   audio: { url: string; container: string; bitrate: number } | null;
 };
 
+const VIDEO_EXTENSIONS = ["mp4", "webm", "mov", "avi", "mkv", "3gp", "flv"];
+const AUDIO_EXTENSIONS = ["mp3", "m4a", "aac", "wav", "ogg", "opus", "weba"];
+
+function guessKind(item: SaveFromItem): "video" | "audio" | "other" {
+  if (item.type === "video") return "video";
+  if (item.type === "audio") return "audio";
+
+  // The upstream classifier falls back to type "unknown" whenever the
+  // scraped format string doesn't match its own hardcoded extension list —
+  // the link itself is still perfectly valid, so widen the net ourselves
+  // using both the declared format and the URL's file extension.
+  const format = (item.format || "").toLowerCase();
+  const urlExt = (item.url?.split("?")[0].split(".").pop() || "").toLowerCase();
+
+  if (VIDEO_EXTENSIONS.includes(format) || VIDEO_EXTENSIONS.includes(urlExt)) return "video";
+  if (AUDIO_EXTENSIONS.includes(format) || AUDIO_EXTENSIONS.includes(urlExt)) return "audio";
+  return "other";
+}
+
 /** Highest-quality item first — parses a leading number out of "720p", "1080", etc. */
 function pickBest(items: SaveFromItem[]): SaveFromItem | null {
   const withUrl = items.filter((i) => i.url);
@@ -101,10 +120,14 @@ export async function downloadYouTube(input: string): Promise<YouTubeResult> {
   }
 
   const items: SaveFromItem[] = json.data;
-  const bestVideo = pickBest(items.filter((i) => i.type === "video"));
-  const bestAudio = pickBest(items.filter((i) => i.type === "audio"));
+  const bestVideo = pickBest(items.filter((i) => guessKind(i) === "video"));
+  const bestAudio = pickBest(items.filter((i) => guessKind(i) === "audio"));
 
   if (!bestVideo && !bestAudio) {
+    console.error(
+      "[downloader/youtube] no video/audio match after fallback, raw items:",
+      JSON.stringify(items).slice(0, 2000)
+    );
     throw new YouTubeDownloadError("Tidak ada format yang bisa diunduh untuk video ini");
   }
 
