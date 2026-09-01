@@ -17,7 +17,6 @@ export default async function AdminOverviewPage() {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir admin --stats</p>
       <h1 className="text-title text-2xl text-text mb-6">Overview</h1>
 
       <div className="mb-8">
@@ -43,7 +42,7 @@ export default async function AdminOverviewPage() {
             <p className="font-mono text-sm text-text">Downloads — last 14 days</p>
           </CardHeader>
           <CardContent>
-            <TrendChart data={stats.downloadsPerDay} color="#7000FF" />
+            <TrendChart data={stats.downloadsPerDay} color="#7C5CFA" />
           </CardContent>
         </Card>
         <Card>
@@ -51,7 +50,7 @@ export default async function AdminOverviewPage() {
             <p className="font-mono text-sm text-text">Uploads — last 14 days</p>
           </CardHeader>
           <CardContent>
-            <TrendChart data={stats.uploadsPerDay} color="#00F0FF" />
+            <TrendChart data={stats.uploadsPerDay} color="#3552D8" />
           </CardContent>
         </Card>
       </div>
@@ -98,8 +97,8 @@ export default async function AdminOverviewPage() {
       </Card>
 
       <div className="mt-6">
-        <Link href={`/${ADMIN_BASE_PATH}/transactions`} className="font-data text-xs text-accent hover:underline">
-          lihat detail transaksi &amp; pendapatan →
+        <Link href={`/${ADMIN_BASE_PATH}/transactions`} className="text-sm text-accent hover:underline">
+          Lihat detail transaksi &amp; pendapatan
         </Link>
       </div>
     </div>

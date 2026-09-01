@@ -10,13 +10,13 @@ import type { SnippetWithAuthor } from "@/lib/queries/code-snippets";
 export function SnippetCard({ snippet }: { snippet: SnippetWithAuthor }) {
   return (
     <Link href={`/code/${snippet.slug}`} className="group block">
-      <div className="h-full flex flex-col p-4 rounded-lg border border-line bg-panel2 transition-colors group-hover:border-accent/50">
+      <div className="glass h-full flex flex-col p-4 rounded-2xl transition-colors group-hover:border-accent/50">
         <div className="flex items-center justify-between mb-2">
-          <span className="flex items-center gap-1 rounded border border-line px-2 py-0.5 font-data text-[11px] text-signal">
+          <span className="flex items-center gap-1 rounded border border-line px-2 py-0.5 text-[11px] text-signal">
             <Code2 size={11} />
             {LANGUAGE_LABELS[snippet.language as DetectedLanguage] ?? snippet.language}
           </span>
-          <span className="rounded-full border border-free/40 bg-ink px-2 py-0.5 font-data text-[10px] text-free">
+          <span className="rounded-full border border-free/40 bg-panel px-2 py-0.5 text-[10px] text-free">
             FREE
           </span>
         </div>

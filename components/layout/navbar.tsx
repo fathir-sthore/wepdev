@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Terminal } from "lucide-react";
+import { Code2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { SearchBar } from "@/components/public/search-bar";
 import { NotificationBell } from "@/components/notifications/notification-bell";
@@ -24,12 +24,12 @@ export async function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-ink">
+    <header className="glass sticky top-0 z-30 rounded-none">
       <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Terminal size={20} className="text-accent" />
-          <span className="font-mono text-sm font-semibold hidden sm:inline text-text">
-            fathir code
+          <Code2 size={20} className="text-accent" />
+          <span className="font-sans text-sm font-semibold hidden sm:inline text-text">
+            Fathir Code
           </span>
         </Link>
 
@@ -51,10 +51,10 @@ export async function Navbar() {
           ) : (
             <div className="hidden sm:flex items-center gap-2">
               <Link href="/login">
-                <Button variant="ghost" size="sm">login</Button>
+                <Button variant="ghost" size="sm">Masuk</Button>
               </Link>
               <Link href="/register">
-                <Button size="sm">register</Button>
+                <Button size="sm">Daftar</Button>
               </Link>
             </div>
           )}

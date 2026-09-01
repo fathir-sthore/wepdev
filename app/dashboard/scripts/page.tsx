@@ -32,7 +32,6 @@ export default async function MyScriptsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="font-data text-xs text-signal mb-2">$ fathir scripts --mine</p>
           <h1 className="text-title text-2xl text-text">My scripts</h1>
         </div>
         <Link href="/dashboard/scripts/new">

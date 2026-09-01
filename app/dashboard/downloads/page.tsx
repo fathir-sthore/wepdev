@@ -27,7 +27,6 @@ export default async function DashboardDownloadsPage() {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir downloads --history</p>
       <h1 className="text-title text-2xl text-text mb-6">Download history</h1>
 
       {!downloads || downloads.length === 0 ? (

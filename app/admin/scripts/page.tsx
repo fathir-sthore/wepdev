@@ -22,7 +22,6 @@ export default async function AdminScriptsPage({ searchParams }: Props) {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir admin --scripts</p>
       <h1 className="text-title text-2xl text-text mb-6">Manage scripts</h1>
 
       <div className="flex gap-2 mb-6">

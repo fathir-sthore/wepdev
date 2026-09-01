@@ -10,30 +10,39 @@ export default function OpengraphImage() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#090A0F",
+          background: "#EEF1F7",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: 24,
         }}
       >
-        <div style={{ display: "flex", fontSize: 48, color: "#7000FF", fontFamily: "monospace" }}>
-          $ fathir code --init
-        </div>
         <div
           style={{
             display: "flex",
-            fontSize: 80,
-            fontWeight: 700,
-            color: "#F0F4FF",
-            fontFamily: "monospace",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 20,
+            padding: "64px 96px",
+            borderRadius: 32,
+            background: "rgba(255,255,255,0.7)",
+            border: "1px solid rgba(255,255,255,0.9)",
+            boxShadow: "0 24px 70px rgba(23,26,35,0.18)",
           }}
         >
-          Fathir Code
-        </div>
-        <div style={{ display: "flex", fontSize: 32, color: "#00F0FF", fontFamily: "monospace" }}>
-          Script Download Center
+          <div
+            style={{
+              display: "flex",
+              fontSize: 76,
+              fontWeight: 700,
+              color: "#171A23",
+              fontFamily: "sans-serif",
+            }}
+          >
+            Fathir Code
+          </div>
+          <div style={{ display: "flex", fontSize: 30, color: "#3552D8", fontFamily: "sans-serif" }}>
+            Platform Script & Source Code untuk Developer
+          </div>
         </div>
       </div>
     ),

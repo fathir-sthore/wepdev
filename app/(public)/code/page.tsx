@@ -46,7 +46,6 @@ export default async function CodePage({ searchParams }: Props) {
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
-          <p className="font-data text-xs text-signal mb-2">$ fathir code --browse</p>
           <h1 className="text-title text-2xl text-text">Source Code</h1>
           <p className="text-sm text-muted mt-1">
             Snippet kode dari user & admin — JS, Python, JSON, Dart, Shell, HTML.

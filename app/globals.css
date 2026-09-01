@@ -3,43 +3,56 @@
 @tailwind utilities;
 
 :root,
-.dark {
-  /* Design System v1.0.1 — "Futuristic Developer Marketplace" */
+.light {
+  /* Design System v2.0 — "Clean Modern Minimalist + Glassmorphism" */
   --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
   --font-display: var(--font-sans);
-  --font-mono: "JetBrains Mono", "Fira Code", monospace;
-  --font-data: var(--font-mono);
-  --font-serif: "Fraunces", "Georgia", serif;
+  --font-mono: var(--font-sans); /* UI chrome now uses the same clean sans as everything else */
+  --font-data: var(--font-sans);
 
-  --color-ink: #090A0F;        /* Deep Space Black — canvas utama */
-  --color-panel: #12141D;      /* Obsidian Surface — cards, sidebar, topbar, modals */
-  --color-panel2: #1A1D2B;     /* Slate Glass — hover states & interactive elements */
-  --color-line: #2A2E43;       /* Steel Border — structural dividers */
-  --color-text: #F0F4FF;       /* Ice White — heading & high contrast text */
-  --color-muted: #8A92B2;      /* Cool Slate — subtitles & secondary info */
-  --color-accent: #00F0FF;     /* Electric Cyan — focus states, CTA utama, glow */
-  --color-accent-dim: #0B8A99;
-  --color-signal: #7000FF;     /* Hyper Purple — category badges, secondary highlights */
-  --color-signal-dim: #4A00AD;
-  --color-danger: #FF3B5C;
-  --color-free: #00FF9D;       /* Neon Mint — badge FREE */
-  --color-premium: #FFB800;    /* Cyber Amber — badge PREMIUM */
+  --color-ink: #EEF1F7;         /* canvas — soft cool off-white */
+  --color-panel: #FFFFFF;       /* solid surface — dense/data areas */
+  --color-panel2: #F4F6FB;      /* solid surface, hover/alt rows */
+  --color-line: rgba(23, 26, 35, 0.08);
+  --color-text: #171A23;
+  --color-muted: #6B7280;
+  --color-accent: #3552D8;
+  --color-accent-dim: #2A41AD;
+  --color-signal: #7C5CFA;
+  --color-signal-dim: #6544D6;
+  --color-danger: #E1425A;
+  --color-free: #16A35D;
+  --color-premium: #D98A11;
+
+  --color-glass: rgba(255, 255, 255, 0.6);
+  --color-glass-border: rgba(255, 255, 255, 0.8);
+  --color-on-brand: #FFFFFF; /* text color used on top of accent/signal buttons */
+  --color-overlay: rgba(15, 17, 23, 0.6); /* modal/lightbox backdrop scrim — always dark, both themes */
+  --shadow-soft: 0 1px 2px rgba(23, 26, 35, 0.04), 0 16px 40px -12px rgba(23, 26, 35, 0.14);
+  --shadow-soft-lg: 0 24px 70px -16px rgba(23, 26, 35, 0.22);
 }
 
-.light {
-  --color-ink: #F4F6FC;
-  --color-panel: #FFFFFF;
-  --color-panel2: #E9ECF7;
-  --color-line: #D7DCEC;
-  --color-text: #0B0D16;
-  --color-muted: #565E7E;
-  --color-accent: #0091A8;
-  --color-accent-dim: #00F0FF;
-  --color-signal: #5A00CC;
-  --color-signal-dim: #7000FF;
-  --color-danger: #D6203F;
-  --color-free: #00A36B;
-  --color-premium: #C77E00;
+.dark {
+  --color-ink: #10131C;
+  --color-panel: #171B27;
+  --color-panel2: #1D2230;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-text: #F1F3FA;
+  --color-muted: #8A92AC;
+  --color-accent: #6E8CFF;
+  --color-accent-dim: #4F6BDB;
+  --color-signal: #A98CFF;
+  --color-signal-dim: #8A6AE0;
+  --color-danger: #FF6B7F;
+  --color-free: #3FD888;
+  --color-premium: #F0B23D;
+
+  --color-glass: rgba(255, 255, 255, 0.06);
+  --color-glass-border: rgba(255, 255, 255, 0.12);
+  --color-on-brand: #0B0D16;
+  --color-overlay: rgba(8, 9, 13, 0.72);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.2), 0 16px 40px -12px rgba(0, 0, 0, 0.45);
+  --shadow-soft-lg: 0 24px 70px -16px rgba(0, 0, 0, 0.55);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -56,34 +69,50 @@ body {
   background-color: var(--color-ink);
   color: var(--color-text);
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 240, 255, 0.10), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(112, 0, 255, 0.08), transparent),
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+    radial-gradient(ellipse 70% 50% at 15% -10%, rgba(53, 82, 216, 0.10), transparent),
+    radial-gradient(ellipse 60% 45% at 100% 0%, rgba(124, 92, 250, 0.08), transparent);
+  background-attachment: fixed;
 }
 
-.light body,
-.light {
-  color-scheme: light;
-}
-
-.light body {
+.dark body {
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 145, 168, 0.06), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(90, 0, 204, 0.05), transparent),
-    repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 3px);
+    radial-gradient(ellipse 70% 50% at 15% -10%, rgba(110, 140, 255, 0.10), transparent),
+    radial-gradient(ellipse 60% 45% at 100% 0%, rgba(169, 140, 255, 0.08), transparent);
 }
 
-/* terminal window chrome, used by the auth card */
-.term-dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 9999px;
+/* Site text is presentational, not source material — selection/copy is
+   disabled by default. Re-enabled explicitly below for code, form
+   fields, and anything a person legitimately needs to select or copy. */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+[contenteditable="true"],
+pre,
+code,
+.selectable {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 /* visible keyboard focus, applied globally */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* Glassmorphism surface — used deliberately on primary content cards,
+   not on every element. Needs a colored/gradient canvas behind it
+   (see body background above) to actually read as glass. */
+.glass {
+  background: var(--color-glass);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: var(--shadow-soft);
 }
 
 /* ---------------------------------------------------------------------
@@ -94,7 +123,7 @@ code[class*="language-"],
 pre[class*="language-"] {
   color: #d4d4d4;
   background: none;
-  font-family: var(--font-data), "JetBrains Mono", "Fira Code", monospace;
+  font-family: var(--font-code), "JetBrains Mono", "Fira Code", monospace;
   text-shadow: none;
 }
 
@@ -163,26 +192,22 @@ pre[class*="language-"] {
 }
 
 /* ============================================================
-   Typography hierarchy (v1.0.1) — role-based font usage
-   Judul -> Bold Serif | Sub-judul -> Italic Bold Sans
-   Deskripsi -> Normal Sans | Angka -> Bold Sans
+   Typography — one family throughout, weight carries hierarchy
+   instead of mixing serif/italic/mono roles.
    ============================================================ */
 .text-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 700;
 }
 .text-subtitle {
   font-family: var(--font-sans);
-  font-style: italic;
-  font-weight: 700;
+  font-weight: 600;
 }
 .text-desc {
   font-family: var(--font-sans);
   font-weight: 400;
-  font-style: normal;
 }
 .text-stat {
   font-family: var(--font-sans);
   font-weight: 700;
-  font-style: normal;
 }

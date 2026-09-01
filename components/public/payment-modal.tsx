@@ -111,17 +111,17 @@ export function PaymentModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay p-4">
       <div className="w-full max-w-sm rounded-lg border border-line bg-panel overflow-hidden">
         <div className="flex items-center justify-between border-b border-line px-4 py-3">
-          <span className="font-data text-xs text-muted truncate">$ fathir pay --qris</span>
+          <span className="text-sm font-medium text-text truncate">Pembayaran QRIS</span>
           <button onClick={onClose} className="text-muted hover:text-text">
             <X size={16} />
           </button>
         </div>
 
         <div className="p-6 flex flex-col items-center text-center gap-4">
-          <p className="font-mono text-sm text-text line-clamp-1">{scriptTitle}</p>
+          <p className="text-sm font-medium text-text line-clamp-1">{scriptTitle}</p>
 
           {phase === "loading" && (
             <div className="py-12 flex flex-col items-center gap-3 text-muted">

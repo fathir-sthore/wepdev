@@ -24,7 +24,7 @@ export function StatsBar({
         {stats.map((s) => (
           <div key={s.label} className="text-center">
             <p className="text-stat text-xl text-accent">{s.value}</p>
-            <p className="font-data text-[11px] text-muted uppercase tracking-wide">
+            <p className="text-xs text-muted">
               {s.label}
             </p>
           </div>

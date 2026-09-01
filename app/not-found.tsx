@@ -9,7 +9,6 @@ export default function NotFound() {
         <TerminalSquare size={32} />
       </div>
 
-      <p className="font-data text-xs text-signal mb-2">$ fathir code --resolve ./404</p>
       <h1 className="text-title text-4xl text-text mb-2">404</h1>
       <p className="text-desc text-sm text-muted max-w-sm mb-8">
         Halaman yang kamu cari nggak ketemu — mungkin sudah dipindah, dihapus, atau memang belum

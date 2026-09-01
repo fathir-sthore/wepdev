@@ -2,18 +2,18 @@ import Link from "next/link";
 
 const columns = [
   {
-    title: "product",
+    title: "Produk",
     links: [
-      { href: "/search", label: "browse scripts" },
-      { href: "/code", label: "source code" },
-      { href: "/register", label: "become a developer" },
+      { href: "/search", label: "Jelajahi script" },
+      { href: "/code", label: "Source code" },
+      { href: "/register", label: "Jadi developer" },
     ],
   },
   {
-    title: "legal",
+    title: "Legal",
     links: [
-      { href: "/privacy-policy", label: "privacy policy" },
-      { href: "/terms-of-service", label: "terms of service" },
+      { href: "/privacy-policy", label: "Kebijakan privasi" },
+      { href: "/terms-of-service", label: "Ketentuan layanan" },
     ],
   },
 ];
@@ -24,9 +24,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 grid grid-cols-2 gap-8">
         {columns.map((col) => (
           <div key={col.title}>
-            <p className="font-data text-xs uppercase tracking-wider text-signal mb-3">
-              {col.title}
-            </p>
+            <p className="text-sm font-semibold text-text mb-3">{col.title}</p>
             <ul className="space-y-2">
               {col.links.map((l) => (
                 <li key={l.href}>
@@ -42,8 +40,8 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="border-t border-line px-4 py-4 text-center font-data text-xs text-muted">
-        © {new Date().getFullYear()} Fathir Code. Built for developers, by a developer.
+      <div className="border-t border-line px-4 py-4 text-center text-xs text-muted">
+        © {new Date().getFullYear()} Fathir Code. Dibangun untuk developer, oleh developer.
       </div>
     </footer>
   );

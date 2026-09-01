@@ -10,7 +10,6 @@ export default async function AdminReportsPage() {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir admin --reports</p>
       <h1 className="text-title text-2xl text-text mb-6">Reports</h1>
       <AdminReportsTable reports={reports} />
     </div>

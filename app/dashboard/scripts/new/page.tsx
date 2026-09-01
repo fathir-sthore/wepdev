@@ -13,7 +13,6 @@ export default async function NewScriptPage() {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir scripts --upload</p>
       <h1 className="text-title text-2xl text-text mb-6">Upload a new script</h1>
       <ScriptForm userId={user!.id} categories={categories} />
     </div>

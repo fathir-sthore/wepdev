@@ -33,7 +33,6 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
-          <p className="font-data text-xs text-signal mb-2">$ fathir admin --transactions</p>
           <h1 className="text-title text-2xl text-text">Transaksi &amp; Pendapatan</h1>
         </div>
         <TransactionExportButtons />
@@ -51,7 +50,7 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
             <p className="font-mono text-sm text-text">Pendapatan harian — 30 hari terakhir</p>
           </CardHeader>
           <CardContent>
-            <TrendChart data={stats.dailyRevenue} color="#7000FF" />
+            <TrendChart data={stats.dailyRevenue} color="#7C5CFA" />
           </CardContent>
         </Card>
         <Card>
@@ -59,7 +58,7 @@ export default async function AdminTransactionsPage({ searchParams }: Props) {
             <p className="font-mono text-sm text-text">Pendapatan bulanan — 12 bulan terakhir</p>
           </CardHeader>
           <CardContent>
-            <TrendChart data={stats.monthlyRevenue} color="#00F0FF" />
+            <TrendChart data={stats.monthlyRevenue} color="#3552D8" />
           </CardContent>
         </Card>
       </div>

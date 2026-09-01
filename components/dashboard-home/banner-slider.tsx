@@ -73,14 +73,14 @@ export function BannerSlider({ banners }: { banners: Banner[] }) {
             <button
               onClick={() => goTo(index - 1)}
               aria-label="previous banner"
-              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-ink/60 p-2 text-text hover:bg-ink"
+              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-overlay p-2 text-white hover:bg-overlay/90"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={() => goTo(index + 1)}
               aria-label="next banner"
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-ink/60 p-2 text-text hover:bg-ink"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-overlay p-2 text-white hover:bg-overlay/90"
             >
               <ChevronRight size={18} />
             </button>
@@ -103,7 +103,7 @@ export function BannerSlider({ banners }: { banners: Banner[] }) {
 
       {lightboxOpen && image && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-overlay p-4"
           onClick={() => setLightboxOpen(false)}
         >
           <button

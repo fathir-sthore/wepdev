@@ -11,7 +11,6 @@ export default function DownloaderPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:py-14">
       <div className="text-center max-w-2xl mx-auto mb-10">
-        <p className="font-data text-xs text-signal mb-3">$ fathir code --downloader</p>
         <h1 className="text-title text-3xl sm:text-4xl text-text">
           Satu tempat, semua unduhan
         </h1>

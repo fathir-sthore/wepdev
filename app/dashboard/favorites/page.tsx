@@ -28,7 +28,6 @@ export default async function DashboardFavoritesPage() {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir favorites --list</p>
       <h1 className="text-title text-2xl text-text mb-6">Favorites</h1>
 
       {!favorites || favorites.length === 0 ? (

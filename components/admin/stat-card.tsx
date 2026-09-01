@@ -33,7 +33,7 @@ export function StatCard({
         </div>
         <div className="min-w-0">
           <p className="text-stat text-xl text-text truncate">{value}</p>
-          <p className="font-data text-[11px] text-muted uppercase tracking-wide truncate">{label}</p>
+          <p className="text-xs text-muted truncate">{label}</p>
         </div>
       </CardContent>
     </Card>

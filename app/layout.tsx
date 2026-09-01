@@ -1,25 +1,20 @@
 import type { Metadata } from "next";
-import { Fraunces, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site-url";
 
-// v1.0.1 "Futuristic Developer Marketplace" design system — typography
-// hierarchy by content role: Judul -> Bold Serif (Fraunces), Sub-judul ->
-// Italic Bold Sans, Deskripsi -> Normal Sans, Angka -> Bold Sans. Code
-// blocks / interface chrome keep JetBrains Mono.
+// v2.0 "Clean Modern Minimalist + Glassmorphism" design system — one
+// typeface family throughout (Plus Jakarta Sans), weight carries the
+// hierarchy instead of mixing serif/italic/mono roles. JetBrains Mono is
+// kept strictly for actual code content in the code viewer.
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   style: ["normal", "italic"],
   weight: ["400", "500", "600", "700", "800"],
   variable: "--font-sans",
 });
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  weight: ["600", "700", "900"],
-  variable: "--font-serif",
-});
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-code" });
 
 // Target keywords from the original site brief — used here (metadata) and
 // echoed in the WebSite JSON-LD below. Google mostly ignores the <meta
@@ -104,7 +99,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${plusJakarta.variable} ${jetbrainsMono.variable} ${fraunces.variable}`}
+      className={`${plusJakarta.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">

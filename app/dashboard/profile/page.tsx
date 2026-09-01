@@ -178,7 +178,6 @@ export default async function DashboardProfilePage() {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir profile --settings</p>
       <h1 className="text-title text-2xl text-text mb-6">Profile &amp; Settings</h1>
       <SettingsTabs sections={sections} />
     </div>

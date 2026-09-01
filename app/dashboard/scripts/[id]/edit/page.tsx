@@ -26,7 +26,6 @@ export default async function EditScriptPage({
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir scripts --edit {script.slug}</p>
       <h1 className="text-title text-2xl text-text mb-6">Edit script</h1>
       <ScriptForm userId={user!.id} categories={categories} initialData={script} />
     </div>

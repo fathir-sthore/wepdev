@@ -179,7 +179,7 @@ export function DownloaderPanel() {
               className={cn(
                 "flex-1 flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-data transition-colors border",
                 isActive
-                  ? "bg-accent text-ink border-accent"
+                  ? "bg-accent text-on-brand border-accent"
                   : "bg-panel text-muted border-line hover:text-text hover:border-accent/50"
               )}
             >

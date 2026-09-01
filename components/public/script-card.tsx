@@ -20,7 +20,7 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
 
   return (
     <Link href={`/script/${script.slug}`} className="group block">
-      <div className="overflow-hidden h-full flex flex-col rounded-lg border border-line bg-panel2 transition-colors group-hover:border-accent/50">
+      <div className="glass overflow-hidden h-full flex flex-col rounded-2xl transition-colors group-hover:border-accent/50">
         <div className="relative aspect-video bg-panel">
           {thumbnail ? (
             <Image
@@ -39,7 +39,7 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
           {/* Status badge — FREE (Neon Mint) or PREMIUM (Cyber Amber) + price */}
           <span
             className={cn(
-              "absolute top-2 right-2 rounded-full bg-ink px-2.5 py-0.5",
+              "absolute top-2 right-2 rounded-full bg-panel/90 backdrop-blur-sm px-2.5 py-0.5",
               "font-data text-[11px] font-medium border",
               script.is_premium
                 ? "text-premium border-premium/40"
@@ -54,7 +54,7 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
               {badges.map((b) => (
                 <span
                   key={b}
-                  className={cn("rounded-full border bg-ink px-2 py-0.5 font-data text-[10px]", badgeStyles[b])}
+                  className={cn("rounded-full border bg-panel/90 backdrop-blur-sm px-2 py-0.5 font-data text-[10px]", badgeStyles[b])}
                 >
                   {b}
                 </span>
@@ -65,7 +65,7 @@ export function ScriptCard({ script, hot }: { script: ScriptWithRelations; hot?:
 
         <div className="p-4 flex-1 flex flex-col gap-2">
           {script.category && (
-            <span className="font-data text-[11px] uppercase tracking-wide text-signal">
+            <span className="text-xs text-signal">
               {script.category.name}
             </span>
           )}

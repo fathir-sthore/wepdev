@@ -22,7 +22,7 @@ export function GlobalBottomNav() {
   }
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-ink">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-panel shadow-soft">
       <div className="relative grid grid-cols-5 items-end">
         {leftLinks.map((link) => {
           const active = isActive(link);
@@ -32,7 +32,7 @@ export function GlobalBottomNav() {
               key={link.href}
               href={link.href}
               className={cn(
-                "flex flex-col items-center gap-1 py-2.5 font-data text-[10px]",
+                "flex flex-col items-center gap-1 py-2.5 text-[10px] capitalize",
                 active ? "text-accent" : "text-muted"
               )}
             >
@@ -46,7 +46,7 @@ export function GlobalBottomNav() {
         <div className="flex justify-center">
           <Link
             href="/dashboard"
-            className="relative -top-4 flex h-14 w-14 flex-col items-center justify-center rounded-full bg-accent text-ink border-4 border-ink"
+            className="relative -top-4 flex h-14 w-14 flex-col items-center justify-center rounded-full bg-accent text-on-brand shadow-soft border-4 border-panel"
           >
             <LayoutDashboard size={22} />
           </Link>
@@ -60,7 +60,7 @@ export function GlobalBottomNav() {
               key={link.href}
               href={link.href}
               className={cn(
-                "flex flex-col items-center gap-1 py-2.5 font-data text-[10px]",
+                "flex flex-col items-center gap-1 py-2.5 text-[10px] capitalize",
                 active ? "text-accent" : "text-muted"
               )}
             >

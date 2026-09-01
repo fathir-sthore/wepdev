@@ -34,7 +34,6 @@ export default async function PurchasesPage() {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir purchases --list</p>
       <h1 className="text-title text-2xl text-text mb-6">Purchases</h1>
 
       {!purchases || purchases.length === 0 ? (

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
-import { TerminalCard } from "@/components/auth/terminal-card";
+import { AuthCard } from "@/components/auth/auth-card";
 import { OtpInput } from "@/components/auth/otp-input";
 import { TurnstileWidget, CAPTCHA_ENABLED } from "@/components/auth/turnstile-widget";
 import { verifyCaptcha } from "@/lib/captcha-client";
@@ -115,27 +115,27 @@ export function LoginForm({ next }: { next?: string }) {
 
   if (needsMfa) {
     return (
-      <TerminalCard command="fathir auth --2fa">
+      <AuthCard title="Verifikasi dua langkah">
         <form onSubmit={handleMfaSubmit} className="space-y-4">
-          <p className="font-data text-xs text-muted">
-            masukkan kode 6 digit dari aplikasi authenticator kamu
+          <p className="text-sm text-muted">
+            Masukkan kode 6 digit dari aplikasi authenticator kamu.
           </p>
           <OtpInput value={mfaCode} onChange={setMfaCode} length={6} />
           {error && (
-            <p className="font-data text-xs text-danger" role="alert">
-              error: {error}
+            <p className="text-sm text-danger" role="alert">
+              {error}
             </p>
           )}
           <Button type="submit" disabled={loading || mfaCode.length < 6} className="w-full">
-            {loading ? "memverifikasi..." : "verifikasi"}
+            {loading ? "Memverifikasi..." : "Verifikasi"}
           </Button>
         </form>
-      </TerminalCard>
+      </AuthCard>
     );
   }
 
   return (
-    <TerminalCard command="fathir auth --login">
+    <AuthCard title="Masuk ke akun kamu">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
@@ -154,9 +154,9 @@ export function LoginForm({ next }: { next?: string }) {
             <Label htmlFor="password">Password</Label>
             <Link
               href="/forgot-password"
-              className="text-xs font-data text-muted hover:text-accent mb-1.5"
+              className="text-xs text-muted hover:text-accent mb-1.5"
             >
-              forgot?
+              Lupa password?
             </Link>
           </div>
           <Input
@@ -171,32 +171,32 @@ export function LoginForm({ next }: { next?: string }) {
         </div>
 
         {error && (
-          <p className="font-data text-xs text-danger" role="alert">
-            error: {error}
+          <p className="text-sm text-danger" role="alert">
+            {error}
           </p>
         )}
 
         <TurnstileWidget onToken={setCaptchaToken} />
 
         <Button type="submit" disabled={loading || (CAPTCHA_ENABLED && !captchaToken)} className="w-full">
-          {loading ? "authenticating..." : "run login"}
+          {loading ? "Memproses..." : "Masuk"}
         </Button>
       </form>
 
       <div className="my-6 flex items-center gap-3">
         <div className="h-px flex-1 bg-line" />
-        <span className="text-xs font-data text-muted">or continue with</span>
+        <span className="text-xs text-muted">atau lanjutkan dengan</span>
         <div className="h-px flex-1 bg-line" />
       </div>
 
       <OAuthButtons next={next} />
 
-      <p className="mt-6 text-center text-xs font-data text-muted">
-        no account?{" "}
+      <p className="mt-6 text-center text-xs text-muted">
+        Belum punya akun?{" "}
         <Link href="/register" className="text-accent hover:underline">
-          register
+          Daftar
         </Link>
       </p>
-    </TerminalCard>
+    </AuthCard>
   );
 }

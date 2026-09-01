@@ -26,7 +26,6 @@ export default async function EditSnippetPage({
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir code --edit {snippet.slug}</p>
       <h1 className="text-title text-2xl text-text mb-6">Edit kode</h1>
       <SnippetForm userId={user!.id} initialData={snippet} />
     </div>

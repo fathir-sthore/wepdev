@@ -27,7 +27,7 @@ export function ThemeToggle() {
           className={cn(
             "flex items-center gap-1.5 rounded px-3 py-1.5 font-data text-xs transition-colors",
             mounted && theme === value
-              ? "bg-accent text-ink"
+              ? "bg-accent text-on-brand"
               : "text-muted hover:text-text"
           )}
         >

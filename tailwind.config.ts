@@ -26,20 +26,21 @@ const config: Config = {
         danger: "var(--color-danger)",
         free: "var(--color-free)",
         premium: "var(--color-premium)",
+        "on-brand": "var(--color-on-brand)",
+        overlay: "var(--color-overlay)",
       },
       fontFamily: {
-        mono: ["var(--font-mono)", "JetBrains Mono", "Fira Code", "monospace"],
+        mono: ["var(--font-mono)", "Plus Jakarta Sans", "Inter", "sans-serif"],
         sans: ["var(--font-sans)", "Plus Jakarta Sans", "Inter", "sans-serif"],
-        data: ["var(--font-data)", "JetBrains Mono", "Fira Code", "monospace"],
+        data: ["var(--font-data)", "Plus Jakarta Sans", "Inter", "sans-serif"],
         display: ["var(--font-display)", "Plus Jakarta Sans", "sans-serif"],
-        serif: ["var(--font-serif)", "Fraunces", "Georgia", "serif"],
       },
       boxShadow: {
-        glow: "0 0 0 1px rgba(0,240,255,0.18), 0 0 24px rgba(0,240,255,0.12)",
-        "glow-purple": "0 0 0 1px rgba(112,0,255,0.18), 0 0 24px rgba(112,0,255,0.12)",
+        soft: "var(--shadow-soft)",
+        "soft-lg": "var(--shadow-soft-lg)",
       },
       backdropBlur: {
-        glass: "16px",
+        glass: "20px",
       },
       keyframes: {
         caret: {

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Terminal } from "lucide-react";
+import { Code2 } from "lucide-react";
 
 export function AuthSplitLayout({
   imageSrc,
@@ -21,8 +21,10 @@ export function AuthSplitLayout({
     <div className="min-h-screen grid md:grid-cols-2 font-display">
       {/* Image panel — swap `imageSrc` in for the real photo once uploaded.
           Falls back to a generated gradient so the page still looks
-          finished in the meantime. */}
-      <div className="relative hidden md:block bg-ink overflow-hidden">
+          finished in the meantime. This panel is always dark regardless
+          of light/dark theme, so its text uses fixed white — not the
+          theme-following text color. */}
+      <div className="relative hidden md:block bg-[#10131C] overflow-hidden">
         {imageSrc ? (
           <Image src={imageSrc} alt={imageAlt} fill priority className="object-cover" />
         ) : (
@@ -30,29 +32,27 @@ export function AuthSplitLayout({
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(circle at 20% 20%, rgba(0,240,255,0.25), transparent 45%), radial-gradient(circle at 80% 70%, rgba(112,0,255,0.2), transparent 45%), linear-gradient(160deg, #090A0F 0%, #12141D 60%, #1A1D2B 100%)",
+                "radial-gradient(circle at 20% 20%, rgba(53,82,216,0.35), transparent 45%), radial-gradient(circle at 80% 70%, rgba(124,92,250,0.3), transparent 45%), linear-gradient(160deg, #10131C 0%, #171B27 60%, #1D2230 100%)",
             }}
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
         <div className="relative z-10 flex h-full flex-col justify-between p-10">
           <Link href="/" className="flex items-center gap-2 w-fit">
-            <Terminal size={22} className="text-accent" />
-            <span className="font-display font-semibold drop-shadow-md bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent">Fathir Code</span>
+            <Code2 size={22} className="text-accent" />
+            <span className="font-display font-semibold text-white drop-shadow-md">Fathir Code</span>
           </Link>
 
           {/* Skip the redundant caption when a custom image is used — the
               artwork already carries its own title treatment. */}
           {!imageSrc && (
             <div className="max-w-sm">
-              <p className="font-display text-xs font-semibold uppercase tracking-widest text-signal mb-3">
-                {eyebrow}
-              </p>
-              <h2 className="text-title text-3xl font-bold text-text leading-tight">
+              <p className="font-display text-sm font-semibold text-white/70 mb-3">{eyebrow}</p>
+              <h2 className="text-title text-3xl font-bold text-white leading-tight">
                 {title}
               </h2>
-              <p className="mt-3 text-sm text-muted">{subtitle}</p>
+              <p className="mt-3 text-sm text-white/70">{subtitle}</p>
             </div>
           )}
         </div>
@@ -62,8 +62,8 @@ export function AuthSplitLayout({
       <div className="flex items-center justify-center bg-ink px-6 py-16">
         <div className="w-full max-w-sm">
           <Link href="/" className="mb-8 flex items-center gap-2 md:hidden w-fit">
-            <Terminal size={20} className="text-accent" />
-            <span className="font-display font-semibold bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent">Fathir Code</span>
+            <Code2 size={20} className="text-accent" />
+            <span className="font-display font-semibold text-text">Fathir Code</span>
           </Link>
           {children}
         </div>

@@ -24,8 +24,8 @@ export function ScriptSection({
           {icon}
           {title}
         </h2>
-        <Link href={viewAllHref} className="font-data text-xs text-accent hover:underline">
-          view all →
+        <Link href={viewAllHref} className="text-sm text-accent hover:underline">
+          Lihat semua
         </Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

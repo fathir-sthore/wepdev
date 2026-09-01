@@ -51,7 +51,7 @@ export default async function BannerDetailPage({ params }: Props) {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(circle at 20% 20%, rgba(0,240,255,0.25), transparent 45%), radial-gradient(circle at 80% 70%, rgba(112,0,255,0.2), transparent 45%), linear-gradient(160deg, #090A0F 0%, #12141D 60%, #1A1D2B 100%)",
+                "radial-gradient(circle at 20% 20%, rgba(53,82,216,0.35), transparent 45%), radial-gradient(circle at 80% 70%, rgba(124,92,250,0.3), transparent 45%), linear-gradient(160deg, #10131C 0%, #171B27 60%, #1D2230 100%)",
             }}
           />
         )}
@@ -68,7 +68,7 @@ export default async function BannerDetailPage({ params }: Props) {
       </div>
 
       {banner.subtitle && (
-        <p className="font-data text-xs uppercase tracking-widest text-signal mb-2">
+        <p className="text-sm text-signal mb-2">
           {banner.subtitle}
         </p>
       )}

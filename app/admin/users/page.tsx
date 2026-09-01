@@ -21,7 +21,6 @@ export default async function AdminUsersPage({ searchParams }: Props) {
 
   return (
     <div>
-      <p className="font-data text-xs text-signal mb-2">$ fathir admin --users</p>
       <h1 className="text-title text-2xl text-text mb-6">Users</h1>
       <p className="font-data text-xs text-muted mb-4">{total} user(s)</p>
 

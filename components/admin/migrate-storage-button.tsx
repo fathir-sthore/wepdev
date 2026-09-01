@@ -30,21 +30,21 @@ export function MigrateStorageButton() {
   return (
     <Card>
       <CardContent className="space-y-3">
-        <p className="font-data text-xs text-muted">
+        <p className="text-sm text-muted">
           Pindahkan file lama (masih di Supabase Storage) ke Cloudflare R2 dan
           update path-nya di database. Aman dijalankan berkali-kali — file
           yang sudah di R2 otomatis dilewati.
         </p>
         <Button size="sm" onClick={handleClick} disabled={loading}>
           <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
-          {loading ? "memigrasikan..." : "migrasikan file lama ke R2"}
+          {loading ? "Memigrasikan..." : "Migrasikan file lama ke R2"}
         </Button>
 
-        {error && <p className="font-data text-xs text-danger">error: {error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
 
         {result && (
-          <div className="font-data text-xs text-signal space-y-1">
-            <p>✓ {result.scripts} script, {result.banners} banner, {result.avatars} avatar berhasil dipindah</p>
+          <div className="text-sm text-signal space-y-1">
+            <p>{result.scripts} script, {result.banners} banner, {result.avatars} avatar berhasil dipindah</p>
             {result.failed.length > 0 && (
               <div className="text-danger">
                 <p>gagal ({result.failed.length}):</p>

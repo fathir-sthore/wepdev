@@ -10,7 +10,7 @@ export default function AppleIcon() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#090A0F",
+          background: "#3552D8",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -19,13 +19,13 @@ export default function AppleIcon() {
         <div
           style={{
             display: "flex",
-            fontSize: 96,
+            fontSize: 88,
             fontWeight: 700,
-            color: "#00F0FF",
-            fontFamily: "monospace",
+            color: "#FFFFFF",
+            fontFamily: "sans-serif",
           }}
         >
-          {">_"}
+          FC
         </div>
       </div>
     ),

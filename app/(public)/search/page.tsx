@@ -66,18 +66,15 @@ export default async function SearchPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <p className="font-data text-xs text-signal mb-2">
-        $ fathir search{params.q ? ` --query "${params.q}"` : ""}
-      </p>
       <h1 className="text-title text-2xl text-text mb-6">
-        {params.q ? `Results for "${params.q}"` : "Browse all scripts"}
+        {params.q ? `Hasil untuk "${params.q}"` : "Jelajahi semua script"}
       </h1>
 
       <div className="mb-6">
         <Filters categories={categories} languages={languages} frameworks={frameworks} developers={developers} />
       </div>
 
-      <p className="font-data text-xs text-muted mb-4">{total} script(s) found</p>
+      <p className="text-sm text-muted mb-4">{total} script ditemukan</p>
 
       {scripts.length === 0 ? (
         <EmptyState
