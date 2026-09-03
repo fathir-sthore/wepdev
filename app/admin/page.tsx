@@ -42,7 +42,7 @@ export default async function AdminOverviewPage() {
             <p className="font-mono text-sm text-text">Downloads — last 14 days</p>
           </CardHeader>
           <CardContent>
-            <TrendChart data={stats.downloadsPerDay} color="#7C5CFA" />
+            <TrendChart data={stats.downloadsPerDay} color="var(--color-signal)" />
           </CardContent>
         </Card>
         <Card>
@@ -50,7 +50,7 @@ export default async function AdminOverviewPage() {
             <p className="font-mono text-sm text-text">Uploads — last 14 days</p>
           </CardHeader>
           <CardContent>
-            <TrendChart data={stats.uploadsPerDay} color="#3552D8" />
+            <TrendChart data={stats.uploadsPerDay} color="var(--color-accent)" />
           </CardContent>
         </Card>
       </div>

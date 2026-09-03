@@ -34,23 +34,23 @@ export function DeveloperStatsWidget({ stats }: { stats: DeveloperStats }) {
           <CardContent>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={chartData} layout="vertical" margin={{ left: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" horizontal={false} />
-                <XAxis type="number" stroke="#6B7280" fontSize={11} allowDecimals={false} tickLine={false} axisLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-line)" horizontal={false} />
+                <XAxis type="number" stroke="var(--color-muted)" fontSize={11} allowDecimals={false} tickLine={false} axisLine={false} />
                 <YAxis
                   type="category"
                   dataKey="name"
-                  stroke="#6B7280"
+                  stroke="var(--color-muted)"
                   fontSize={11}
                   width={100}
                   tickLine={false}
                   axisLine={false}
                 />
                 <Tooltip
-                  contentStyle={{ background: "#FFFFFF", border: "1px solid #E5E7EB", borderRadius: 12, fontSize: 12, boxShadow: "0 8px 24px rgba(23,26,35,0.12)" }}
-                  labelStyle={{ color: "#171A23" }}
-                  cursor={{ fill: "rgba(53,82,216,0.06)" }}
+                  contentStyle={{ background: "var(--color-panel)", border: "1px solid var(--color-line)", borderRadius: 12, fontSize: 12, boxShadow: "var(--shadow-soft)" }}
+                  labelStyle={{ color: "var(--color-text)" }}
+                  cursor={{ fill: "var(--color-panel2)" }}
                 />
-                <Bar dataKey="downloads" fill="#3552D8" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="downloads" fill="var(--color-accent)" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

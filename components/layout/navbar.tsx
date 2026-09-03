@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SearchBar } from "@/components/public/search-bar";
 import { NotificationBell } from "@/components/notifications/notification-bell";
 import { HamburgerMenu } from "@/components/layout/hamburger-menu";
+import { ThemeToggleButton } from "@/components/layout/theme-toggle-button";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 
@@ -60,6 +61,7 @@ export async function Navbar() {
           )}
 
           <HamburgerMenu />
+          <ThemeToggleButton />
         </nav>
       </div>
     </header>

@@ -4,12 +4,15 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 
 export function TrendChart({
   data,
-  color = "#3552D8",
+  color = "var(--color-accent)",
 }: {
   data: { date: string; count: number }[];
   color?: string;
 }) {
-  const gradientId = `trend-gradient-${color.replace("#", "")}`;
+  // color can now be a literal hex or a CSS var() reference (e.g.
+  // "var(--color-accent)") for automatic light/dark theming — strip
+  // anything that isn't a safe SVG id character either way.
+  const gradientId = `trend-gradient-${color.replace(/[^a-zA-Z0-9]/g, "")}`;
 
   return (
     <ResponsiveContainer width="100%" height={200}>
@@ -25,13 +28,13 @@ export function TrendChart({
         <YAxis stroke="#6B7280" fontSize={11} allowDecimals={false} tickLine={false} axisLine={false} />
         <Tooltip
           contentStyle={{
-            background: "#FFFFFF",
-            border: "1px solid #E5E7EB",
+            background: "var(--color-panel)",
+            border: "1px solid var(--color-line)",
             borderRadius: 12,
             fontSize: 12,
-            boxShadow: "0 8px 24px rgba(23,26,35,0.12)",
+            boxShadow: "var(--shadow-soft)",
           }}
-          labelStyle={{ color: "#171A23" }}
+          labelStyle={{ color: "var(--color-text)" }}
         />
         <Area
           type="monotone"
