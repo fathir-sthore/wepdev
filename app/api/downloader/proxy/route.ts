@@ -20,6 +20,7 @@ const ALLOWED_HOST_SUFFIXES = [
   "ibyteimg.com",
   "googlevideo.com",
   "spotyloader.com",
+  "contabostorage.com", // actual file CDN behind spotyloader.com's download_url
 ];
 
 function isAllowedHost(hostname: string) {
