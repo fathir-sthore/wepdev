@@ -100,7 +100,6 @@ export function DownloaderPanel() {
 
       const data = json.data;
       setResult({ platform, data } as ResultState);
-      triggerDownload(platform, data);
     } catch {
       setError("Gagal terhubung ke server, coba lagi.");
     } finally {
@@ -222,7 +221,7 @@ export function DownloaderPanel() {
       )}
 
       {!loading && result && (
-        <ResultCard result={result} onRedownload={() => triggerDownload(result.platform, result.data)} />
+        <ResultCard result={result} onDownload={() => triggerDownload(result.platform, result.data)} />
       )}
     </div>
   );
@@ -230,10 +229,10 @@ export function DownloaderPanel() {
 
 function ResultCard({
   result,
-  onRedownload,
+  onDownload,
 }: {
   result: ResultState;
-  onRedownload: () => void;
+  onDownload: () => void;
 }) {
   const { cover, title, subtitle } = getDisplayInfo(result);
 
@@ -252,15 +251,15 @@ function ResultCard({
       <div className="flex-1 min-w-0">
         <p className="flex items-center gap-1.5 text-xs text-accent mb-1">
           <CheckCircle2 size={13} />
-          Unduhan dimulai
+          Siap diunduh
         </p>
         <h2 className="text-sm font-medium text-text truncate">{title}</h2>
         {subtitle && <p className="text-xs text-muted truncate">{subtitle}</p>}
       </div>
 
-      <Button size="sm" variant="outline" onClick={onRedownload} className="shrink-0 gap-1.5">
+      <Button size="sm" onClick={onDownload} className="shrink-0 gap-1.5">
         <Download size={13} />
-        Ulangi
+        Unduh
       </Button>
     </div>
   );

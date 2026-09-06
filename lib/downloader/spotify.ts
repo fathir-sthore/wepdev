@@ -46,13 +46,20 @@ export type SpotifyResult = {
 };
 
 /** The exact field names in the "ready" payload aren't documented anywhere
- * public, so we check a handful of plausible keys instead of assuming one. */
-function pickString(obj: Record<string, unknown>, keys: string[]): string | undefined {
+ * public, so we check a handful of plausible keys instead of assuming one.
+ * `exclude` filters out values we know are never a real file link — e.g.
+ * some payloads echo the original Spotify URL back under a generic "url"
+ * key, which isn't a download link at all. */
+function pickString(obj: Record<string, unknown>, keys: string[], exclude?: (v: string) => boolean): string | undefined {
   for (const key of keys) {
     const val = obj[key];
-    if (typeof val === "string" && val.length > 0) return val;
+    if (typeof val === "string" && val.length > 0 && !(exclude && exclude(val))) return val;
   }
   return undefined;
+}
+
+function isSpotifyLink(v: string) {
+  return v.includes("open.spotify.com") || v.includes("spotify.link");
 }
 
 export async function downloadSpotifyTrack(url: string): Promise<SpotifyResult> {
@@ -120,9 +127,22 @@ export async function downloadSpotifyTrack(url: string): Promise<SpotifyResult> 
       throw new SpotifyDownloadError("Gagal mendapatkan info lagu");
     }
 
-    const audioUrl = pickString(post, ["url", "downloadUrl", "download_url", "link", "mp3", "file", "audio"]);
+    // Always logged (not just on failure) — the payload shape is
+    // undocumented, so this is how we confirm/refine the field names below
+    // whenever the upstream service changes something.
+    console.log("[downloader/spotify] post payload:", JSON.stringify(post).slice(0, 800));
+
+    // More specific keys first; generic "url" goes last since some
+    // payloads reuse it to echo the original Spotify link rather than a
+    // download link. Any candidate that IS a Spotify link is rejected
+    // outright, regardless of which key it came from.
+    const audioUrl = pickString(
+      post,
+      ["downloadUrl", "download_url", "mp3Url", "audioUrl", "file", "link", "mp3", "audio", "url"],
+      isSpotifyLink
+    );
     if (!audioUrl) {
-      console.error("[downloader/spotify] no download url in post payload:", JSON.stringify(post).slice(0, 500));
+      console.error("[downloader/spotify] no usable download url in post payload:", JSON.stringify(post).slice(0, 800));
       throw new SpotifyDownloadError("Audio untuk lagu ini tidak tersedia saat ini");
     }
 
