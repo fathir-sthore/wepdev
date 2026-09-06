@@ -19,7 +19,7 @@ const ALLOWED_HOST_SUFFIXES = [
   "ibytedtos.com",
   "ibyteimg.com",
   "googlevideo.com",
-  "spotimate.io",
+  "spotyloader.com",
 ];
 
 function isAllowedHost(hostname: string) {
@@ -43,6 +43,7 @@ export async function GET(request: Request) {
   }
 
   if (parsed.protocol !== "https:" || !isAllowedHost(parsed.hostname)) {
+    console.error("[downloader/proxy] blocked host:", parsed.hostname);
     return NextResponse.json({ ok: false, error: "Sumber file tidak diizinkan" }, { status: 400 });
   }
 
