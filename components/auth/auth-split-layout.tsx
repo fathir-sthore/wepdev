@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Code2 } from "lucide-react";
 
 export function AuthSplitLayout({
   imageSrc,
@@ -40,7 +39,7 @@ export function AuthSplitLayout({
 
         <div className="relative z-10 flex h-full flex-col justify-between p-10">
           <Link href="/" className="flex items-center gap-2 w-fit">
-            <Code2 size={22} className="text-accent" />
+            <Image src="/brand/logo-mark.png" alt="Fathir Code" width={28} height={28} />
             <span className="font-display font-semibold text-white drop-shadow-md">Fathir Code</span>
           </Link>
 
@@ -62,7 +61,7 @@ export function AuthSplitLayout({
       <div className="flex items-center justify-center bg-ink px-6 py-16">
         <div className="w-full max-w-sm">
           <Link href="/" className="mb-8 flex items-center gap-2 md:hidden w-fit">
-            <Code2 size={20} className="text-accent" />
+            <Image src="/brand/logo-mark.png" alt="Fathir Code" width={24} height={24} />
             <span className="font-display font-semibold text-text">Fathir Code</span>
           </Link>
           {children}

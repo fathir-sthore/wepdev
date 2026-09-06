@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code2 } from "lucide-react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { SearchBar } from "@/components/public/search-bar";
 import { NotificationBell } from "@/components/notifications/notification-bell";
@@ -28,7 +28,7 @@ export async function Navbar() {
     <header className="glass sticky top-0 z-30 rounded-none">
       <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Code2 size={20} className="text-accent" />
+          <Image src="/brand/logo-mark.png" alt="Fathir Code" width={28} height={28} priority />
           <span className="font-sans text-sm font-semibold hidden sm:inline text-text">
             Fathir Code
           </span>
