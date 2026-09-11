@@ -38,6 +38,8 @@ const config: Config = {
       boxShadow: {
         soft: "var(--shadow-soft)",
         "soft-lg": "var(--shadow-soft-lg)",
+        "glow-accent": "var(--glow-accent)",
+        "glow-signal": "var(--glow-signal)",
       },
       backdropBlur: {
         glass: "20px",

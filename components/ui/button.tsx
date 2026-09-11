@@ -7,10 +7,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-accent text-on-brand shadow-soft hover:bg-accent-dim",
-        outline: "border border-line text-text hover:border-accent/60 hover:text-accent",
+        default: "bg-accent text-on-brand shadow-glow-accent hover:bg-accent-dim",
+        outline: "border border-line text-text hover:border-accent hover:text-accent hover:shadow-glow-accent",
         ghost: "text-muted hover:text-text hover:bg-panel2",
-        signal: "bg-signal text-on-brand shadow-soft hover:bg-signal-dim",
+        signal: "bg-signal text-on-brand shadow-glow-signal hover:bg-signal-dim",
       },
       size: {
         default: "h-10 px-4 py-2",
