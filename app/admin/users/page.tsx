@@ -22,7 +22,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
   return (
     <div>
       <h1 className="text-title text-2xl text-text mb-6">Users</h1>
-      <p className="font-data text-xs text-muted mb-4">{total} user(s)</p>
+      <p className="text-sm text-muted mb-4">{total} user</p>
 
       <AdminUsersTable users={users} currentUserId={user!.id} />
 

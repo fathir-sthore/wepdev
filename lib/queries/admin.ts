@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database.types";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 type Supabase = SupabaseClient<Database>;
 
@@ -147,5 +148,25 @@ export async function getAllUsers(supabase: Supabase, { page = 1 }: { page?: num
     .order("created_at", { ascending: false })
     .range(from, from + pageSize - 1);
 
-  return { users: data ?? [], total: count ?? 0, page, pageSize };
+  const profiles = data ?? [];
+
+  // Suspension status lives on auth.users (Supabase Auth), not the
+  // profiles table — only fetchable via the service-role client. Bounded
+  // to one page's worth of users (pageSize), so N calls here is fine for
+  // an admin-only, infrequently-loaded page.
+  const admin = createAdminClient();
+  const bannedById = new Map<string, string | null>();
+  await Promise.all(
+    profiles.map(async (p) => {
+      const { data: authUser } = await admin.auth.admin.getUserById(p.id);
+      bannedById.set(p.id, authUser?.user?.banned_until ?? null);
+    })
+  );
+
+  const users = profiles.map((p) => ({
+    ...p,
+    banned_until: bannedById.get(p.id) ?? null,
+  }));
+
+  return { users, total: count ?? 0, page, pageSize };
 }
