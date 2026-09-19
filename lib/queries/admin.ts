@@ -138,28 +138,45 @@ export async function getAllReports(supabase: Supabase) {
   return reports.map((r) => ({ ...r, script: scriptMap.get(r.script_id) ?? null }));
 }
 
-export async function getAllUsers(supabase: Supabase, { page = 1 }: { page?: number }) {
+export async function getAllUsers(_supabase: Supabase, { page = 1 }: { page?: number }) {
   const pageSize = 20;
   const from = (page - 1) * pageSize;
 
-  const { data, count } = await supabase
+  // Uses the service-role client, not the caller's session client — the
+  // profiles table's column-level GRANTs (added to stop public scraping
+  // of other users' bio/preferences) apply to the whole `authenticated`
+  // role, admins included, so a plain `select("*")` from an admin's own
+  // session silently errors out on the restricted columns and this list
+  // renders as empty. The service role bypasses RLS *and* GRANTs.
+  const admin = createAdminClient();
+
+  const { data, count, error } = await admin
     .from("profiles")
     .select("*", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(from, from + pageSize - 1);
 
+  if (error) {
+    console.error("[admin/getAllUsers] profiles query failed:", error.message);
+  }
+
   const profiles = data ?? [];
 
   // Suspension status lives on auth.users (Supabase Auth), not the
-  // profiles table — only fetchable via the service-role client. Bounded
-  // to one page's worth of users (pageSize), so N calls here is fine for
-  // an admin-only, infrequently-loaded page.
-  const admin = createAdminClient();
+  // profiles table. Bounded to one page's worth of users, so N calls
+  // here is fine for an admin-only, infrequently-loaded page. Each
+  // lookup is isolated (not a fail-fast Promise.all) so one bad id
+  // doesn't blank out the whole list.
   const bannedById = new Map<string, string | null>();
   await Promise.all(
     profiles.map(async (p) => {
-      const { data: authUser } = await admin.auth.admin.getUserById(p.id);
-      bannedById.set(p.id, authUser?.user?.banned_until ?? null);
+      try {
+        const { data: authUser } = await admin.auth.admin.getUserById(p.id);
+        bannedById.set(p.id, authUser?.user?.banned_until ?? null);
+      } catch (err) {
+        console.error("[admin/getAllUsers] getUserById failed for", p.id, err);
+        bannedById.set(p.id, null);
+      }
     })
   );
 
