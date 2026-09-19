@@ -23,16 +23,16 @@ export function TrendChart({
             <stop offset="100%" stopColor={color} stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
-        <XAxis dataKey="date" stroke="#6B7280" fontSize={11} tickLine={false} axisLine={false} />
-        <YAxis stroke="#6B7280" fontSize={11} allowDecimals={false} tickLine={false} axisLine={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-line)" vertical={false} />
+        <XAxis dataKey="date" stroke="var(--color-muted)" fontSize={11} tickLine={false} axisLine={false} />
+        <YAxis stroke="var(--color-muted)" fontSize={11} allowDecimals={false} tickLine={false} axisLine={false} />
         <Tooltip
           contentStyle={{
             background: "var(--color-panel)",
             border: "1px solid var(--color-line)",
             borderRadius: 12,
             fontSize: 12,
-            boxShadow: "var(--shadow-soft)",
+            boxShadow: "var(--shadow-soft), var(--glow-accent)",
           }}
           labelStyle={{ color: "var(--color-text)" }}
         />
@@ -40,10 +40,11 @@ export function TrendChart({
           type="monotone"
           dataKey="count"
           stroke={color}
-          strokeWidth={2}
+          strokeWidth={2.5}
           fill={`url(#${gradientId})`}
           dot={false}
-          activeDot={{ r: 4, fill: color }}
+          activeDot={{ r: 5, fill: color, stroke: "var(--color-panel)", strokeWidth: 2 }}
+          style={{ filter: `drop-shadow(0 0 6px ${color})` }}
         />
       </AreaChart>
     </ResponsiveContainer>

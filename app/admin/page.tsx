@@ -26,14 +26,14 @@ export default async function AdminOverviewPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard label="scripts" value={formatCount(stats.totalScripts)} icon={Code2} />
         <StatCard label="users" value={formatCount(stats.totalUsers)} icon={Users} />
-        <StatCard label="downloads (all time)" value={formatCount(stats.totalDownloads)} icon={Download} />
-        <StatCard label="storage used" value={formatFileSize(stats.storageUsedBytes)} icon={HardDrive} />
+        <StatCard label="downloads" value={formatCount(stats.totalDownloads)} icon={Download} />
+        <StatCard label="storage" value={formatFileSize(stats.storageUsedBytes)} icon={HardDrive} />
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <StatCard label="reviews" value={formatCount(stats.totalReviews)} icon={Star} />
         <StatCard label="favorites" value={formatCount(stats.totalFavorites)} icon={Heart} />
-        <StatCard label="pendapatan (all time)" value={`Rp ${stats.totalRevenue.toLocaleString("id-ID")}`} icon={DollarSign} />
-        <StatCard label="pengunjung hari ini" value={formatCount(stats.visitorsToday)} icon={Eye} />
+        <StatCard label="pendapatan" value={`Rp ${stats.totalRevenue.toLocaleString("id-ID")}`} icon={DollarSign} />
+        <StatCard label="pengunjung" value={formatCount(stats.visitorsToday)} icon={Eye} />
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
