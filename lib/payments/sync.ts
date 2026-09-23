@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database.types";
-import { getPakasirTransactionDetail } from "@/lib/payments/pakasir";
+import { getPakasirTransactionStatus } from "@/lib/payments/pakasir";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
 import { purchaseConfirmationEmail } from "@/lib/email/templates";
 import { createNotification } from "@/lib/notifications";
@@ -44,9 +44,10 @@ async function sendPurchaseConfirmation(admin: SupabaseClient<Database>, purchas
 }
 
 /**
- * Re-checks a pending purchase against Pakasir's transactiondetail API (the
- * source of truth per their docs) and updates our row if it has changed.
- * Safe to call repeatedly — a no-op once the purchase is in a final state.
+ * Re-checks a pending purchase against Pakasir's v2 transaction-status API
+ * (the source of truth per their docs) and updates our row if it has
+ * changed. Safe to call repeatedly — a no-op once the purchase is in a
+ * final state, or if it predates the v2 migration (no txn_id yet).
  */
 export async function syncPurchaseStatus(
   admin: SupabaseClient<Database>,
@@ -64,18 +65,24 @@ export async function syncPurchaseStatus(
     return data ?? purchase;
   }
 
+  // Pre-v2-migration purchases created before this column existed have no
+  // txn_id to check against — nothing to do but leave them as pending
+  // until they naturally expire.
+  if (!purchase.pakasir_txn_id) return purchase;
+
   try {
-    const detail = await getPakasirTransactionDetail(purchase.order_id, purchase.amount);
+    const detail = await getPakasirTransactionStatus(purchase.pakasir_txn_id);
 
     if (detail.status === purchase.status) return purchase;
 
+    // v2 spells it "canceled" (one L); our own status column has used
+    // "cancelled" (two L) since before this migration — normalize here
+    // rather than touching every other place that reads purchase.status.
     const nextStatus =
       detail.status === "completed"
         ? "completed"
-        : detail.status === "cancelled"
+        : detail.status === "canceled"
         ? "cancelled"
-        : detail.status === "failed"
-        ? "failed"
         : purchase.status;
 
     if (nextStatus === purchase.status) return purchase;

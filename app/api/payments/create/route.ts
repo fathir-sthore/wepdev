@@ -71,11 +71,12 @@ export async function POST(request: Request) {
       user_id: user.id,
       script_id: script.id,
       order_id: orderId,
+      pakasir_txn_id: payment.txn_id,
       amount: script.price,
-      fee: payment.fee,
-      total_payment: payment.total_payment,
-      qr_string: payment.payment_number,
-      expires_at: payment.expired_at,
+      fee: payment.fee ?? 0,
+      total_payment: payment.total_payment ?? script.price,
+      qr_string: payment.qr_string ?? null,
+      expires_at: payment.expired_at ?? null,
       status: "pending",
     });
 
@@ -83,7 +84,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       orderId,
-      qrString: payment.payment_number,
+      qrString: payment.qr_string,
       amount: script.price,
       totalPayment: payment.total_payment,
       expiresAt: payment.expired_at,

@@ -481,6 +481,7 @@ export type Database = {
           user_id: string;
           script_id: string;
           order_id: string;
+          pakasir_txn_id: string | null;
           payment_method: string;
           amount: number;
           fee: number | null;
@@ -497,6 +498,7 @@ export type Database = {
           user_id: string;
           script_id: string;
           order_id: string;
+          pakasir_txn_id?: string | null;
           payment_method?: string;
           amount: number;
           fee?: number | null;
@@ -507,6 +509,7 @@ export type Database = {
         };
         Update: {
           status?: "pending" | "completed" | "failed" | "expired" | "cancelled";
+          pakasir_txn_id?: string | null;
           fee?: number | null;
           total_payment?: number | null;
           qr_string?: string | null;

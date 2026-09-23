@@ -30,11 +30,13 @@ export async function POST(
 
   const admin = createAdminClient();
 
-  try {
-    await cancelPakasirTransaction(purchase.order_id, purchase.amount);
-  } catch {
-    // Pakasir may reject cancelling an already-completed/expired transaction —
-    // we still mark it cancelled locally so the user isn't stuck.
+  if (purchase.pakasir_txn_id) {
+    try {
+      await cancelPakasirTransaction(purchase.pakasir_txn_id);
+    } catch {
+      // Pakasir may reject cancelling an already-completed/expired transaction —
+      // we still mark it cancelled locally so the user isn't stuck.
+    }
   }
 
   await admin.from("purchases").update({ status: "cancelled" }).eq("id", purchase.id);

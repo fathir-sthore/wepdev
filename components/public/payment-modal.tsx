@@ -101,7 +101,7 @@ export function PaymentModal({
       } catch {
         // transient network error — keep polling
       }
-    }, 3000);
+    }, 5000); // Pakasir v2 rate-limits transaction-status to once per 4s/txn
   }
 
   async function handleCancel() {

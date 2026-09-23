@@ -1,4 +1,15 @@
-const BASE_URL = "https://app.pakasir.com/api";
+/**
+ * Pakasir v2 client. v1 (the old /api/transactioncreate etc. endpoints)
+ * is deprecated and shuts down 2026-10-20 — docs verified directly against
+ * pakasir.com/p/{create-transaction,transaction-status,cancel-transaction}
+ * before writing this.
+ *
+ * The core architectural change from v1: transactions are identified by an
+ * opaque `txn_id` returned from create-transaction, not by order_id+amount.
+ * Status checks and cancellation both require that txn_id going forward —
+ * callers must persist it (purchases.pakasir_txn_id).
+ */
+const BASE_URL = "https://app.pakasir.com/api/v2";
 
 function credentials() {
   const project = process.env.PAKASIR_PROJECT_SLUG;
@@ -10,102 +21,100 @@ function credentials() {
 }
 
 export type PakasirPaymentMethod =
+  | "payment_link"
   | "qris"
-  | "bni_va"
   | "bri_va"
+  | "bni_va"
   | "cimb_niaga_va"
-  | "sampoerna_va"
-  | "bnc_va"
-  | "maybank_va"
   | "permata_va"
-  | "atm_bersama_va"
-  | "artha_graha_va";
+  | "maybank_va"
+  | "bnc_va"
+  | "artha_graha_va"
+  | "sampoerna_va";
 
-type PakasirPayment = {
-  project: string;
-  order_id: string;
-  amount: number;
-  fee: number;
-  total_payment: number;
-  payment_method: string;
-  payment_number: string;
-  expired_at: string;
+export type PakasirStatus = "pending" | "completed" | "canceled";
+
+type PakasirCreateResponse = {
+  txn_id: string;
+  payment_link?: string;
+  project?: string;
+  order_id?: string;
+  amount?: number;
+  fee?: number;
+  total_payment?: number;
+  payment_method?: string;
+  qr_string?: string;
+  va_number?: string;
+  expired_at?: string;
+  is_sandbox?: boolean;
+  status?: PakasirStatus;
+  completed_at?: string | null;
 };
 
-type PakasirTransaction = {
-  amount: number;
+type PakasirStatusResponse = {
+  txn_id: string;
   order_id: string;
-  project: string;
-  status: "pending" | "completed" | "failed" | "expired" | "cancelled" | string;
-  payment_method: string;
-  completed_at?: string;
+  amount: number;
+  is_sandbox: boolean;
+  status: PakasirStatus;
+  completed_at: string | null;
 };
 
-/** POST /api/transactioncreate/{method} */
+/** POST /api/v2/create-transaction/{slug}/{order_id} */
 export async function createPakasirTransaction(
   orderId: string,
   amount: number,
   method: PakasirPaymentMethod = "qris"
-): Promise<PakasirPayment> {
+): Promise<PakasirCreateResponse> {
   const { project, apiKey } = credentials();
 
-  const res = await fetch(`${BASE_URL}/transactioncreate/${method}`, {
+  const res = await fetch(`${BASE_URL}/create-transaction/${project}/${orderId}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ project, order_id: orderId, amount, api_key: apiKey }),
+    headers: { "Content-Type": "application/json", "X-Api-Key": apiKey },
+    body: JSON.stringify({ method, amount }),
   });
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Pakasir transactioncreate failed (${res.status}): ${text}`);
+    throw new Error(`Pakasir create-transaction failed (${res.status}): ${text}`);
   }
 
-  const data = await res.json();
-  return data.payment as PakasirPayment;
+  return res.json();
 }
 
 /**
- * GET /api/transactiondetail — Pakasir's docs explicitly recommend using this
- * to confirm real status rather than trusting the webhook body alone, so
- * both the webhook route and the client-facing status-poll route call this.
+ * GET /api/v2/transaction-status/{slug}/{txn_id}
+ * Rate limit per Pakasir's docs: once per 4 seconds per transaction —
+ * callers (syncPurchaseStatus, and the client poll interval it backs)
+ * must not call this more often than that for the same txn_id.
  */
-export async function getPakasirTransactionDetail(
-  orderId: string,
-  amount: number
-): Promise<PakasirTransaction> {
+export async function getPakasirTransactionStatus(txnId: string): Promise<PakasirStatusResponse> {
   const { project, apiKey } = credentials();
 
-  const params = new URLSearchParams({
-    project,
-    amount: String(amount),
-    order_id: orderId,
-    api_key: apiKey,
+  const res = await fetch(`${BASE_URL}/transaction-status/${project}/${txnId}`, {
+    headers: { "X-Api-Key": apiKey },
   });
-
-  const res = await fetch(`${BASE_URL}/transactiondetail?${params.toString()}`);
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Pakasir transactiondetail failed (${res.status}): ${text}`);
+    throw new Error(`Pakasir transaction-status failed (${res.status}): ${text}`);
   }
 
-  const data = await res.json();
-  return data.transaction as PakasirTransaction;
+  return res.json();
 }
 
-/** POST /api/transactioncancel */
-export async function cancelPakasirTransaction(orderId: string, amount: number) {
+/** POST /api/v2/cancel-transaction/{slug}/{txn_id} */
+export async function cancelPakasirTransaction(txnId: string) {
   const { project, apiKey } = credentials();
 
-  const res = await fetch(`${BASE_URL}/transactioncancel`, {
+  const res = await fetch(`${BASE_URL}/cancel-transaction/${project}/${txnId}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ project, order_id: orderId, amount, api_key: apiKey }),
+    headers: { "X-Api-Key": apiKey },
   });
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Pakasir transactioncancel failed (${res.status}): ${text}`);
+    throw new Error(`Pakasir cancel-transaction failed (${res.status}): ${text}`);
   }
 
   return res.json();
