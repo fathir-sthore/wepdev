@@ -8,6 +8,20 @@ import { Button } from "@/components/ui/button";
 
 type Phase = "loading" | "pending" | "completed" | "expired" | "failed" | "cancelled" | "error";
 
+type PaymentKind = "script" | "vps";
+
+const ENDPOINTS: Record<PaymentKind, { create: string; bodyKey: string }> = {
+  script: { create: "/api/payments/create", bodyKey: "scriptId" },
+  vps: { create: "/api/vps-orders/create", bodyKey: "vpsStockId" },
+};
+
+function statusUrl(kind: PaymentKind, orderId: string) {
+  return kind === "script" ? `/api/payments/${orderId}/status` : `/api/vps-orders/${orderId}/status`;
+}
+function cancelUrl(kind: PaymentKind, orderId: string) {
+  return kind === "script" ? `/api/payments/${orderId}/cancel` : `/api/vps-orders/${orderId}/cancel`;
+}
+
 function formatRupiah(n: number) {
   return `Rp ${n.toLocaleString("id-ID")}`;
 }
@@ -36,10 +50,12 @@ function useCountdown(expiresAt: string | null) {
 }
 
 export function PaymentModal({
+  kind = "script",
   scriptId,
   scriptTitle,
   onClose,
 }: {
+  kind?: PaymentKind;
   scriptId: string;
   scriptTitle: string;
   onClose: () => void;
@@ -66,10 +82,11 @@ export function PaymentModal({
     setPhase("loading");
     setError(null);
     try {
-      const res = await fetch("/api/payments/create", {
+      const { create, bodyKey } = ENDPOINTS[kind];
+      const res = await fetch(create, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ scriptId }),
+        body: JSON.stringify({ [bodyKey]: scriptId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "failed to create payment");
@@ -91,7 +108,7 @@ export function PaymentModal({
     if (pollRef.current) clearInterval(pollRef.current);
     pollRef.current = setInterval(async () => {
       try {
-        const res = await fetch(`/api/payments/${id}/status`);
+        const res = await fetch(statusUrl(kind, id));
         const data = await res.json();
         if (data.status && data.status !== "pending") {
           setPhase(data.status);
@@ -106,7 +123,7 @@ export function PaymentModal({
 
   async function handleCancel() {
     if (!orderId) return onClose();
-    await fetch(`/api/payments/${orderId}/cancel`, { method: "POST" }).catch(() => {});
+    await fetch(cancelUrl(kind, orderId), { method: "POST" }).catch(() => {});
     onClose();
   }
 

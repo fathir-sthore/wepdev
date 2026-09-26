@@ -535,6 +535,93 @@ export type Database = {
         Update: never;
         Relationships: [];
       };
+      vps_stock: {
+        Row: {
+          id: string;
+          uploaded_by: string;
+          title: string;
+          description: string | null;
+          provider_type: string;
+          os: string;
+          cpu_cores: number;
+          cpu_model: string | null;
+          ram_gb: number;
+          disk_gb: number;
+          price: number;
+          ip_address: string;
+          port: number;
+          username: string;
+          password: string;
+          status: "available" | "reserved" | "sold";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          uploaded_by: string;
+          title: string;
+          description?: string | null;
+          provider_type: string;
+          os: string;
+          cpu_cores: number;
+          cpu_model?: string | null;
+          ram_gb: number;
+          disk_gb: number;
+          price: number;
+          ip_address: string;
+          port?: number;
+          username: string;
+          password: string;
+          status?: "available" | "reserved" | "sold";
+        };
+        Update: {
+          status?: "available" | "reserved" | "sold";
+        };
+        Relationships: [];
+      };
+      vps_orders: {
+        Row: {
+          id: string;
+          user_id: string;
+          vps_stock_id: string;
+          order_id: string;
+          pakasir_txn_id: string | null;
+          payment_method: string;
+          amount: number;
+          fee: number | null;
+          total_payment: number | null;
+          qr_string: string | null;
+          status: "pending" | "completed" | "failed" | "expired" | "cancelled";
+          expires_at: string | null;
+          completed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          vps_stock_id: string;
+          order_id: string;
+          pakasir_txn_id?: string | null;
+          payment_method?: string;
+          amount: number;
+          fee?: number | null;
+          total_payment?: number | null;
+          qr_string?: string | null;
+          status?: "pending" | "completed" | "failed" | "expired" | "cancelled";
+          expires_at?: string | null;
+        };
+        Update: {
+          status?: "pending" | "completed" | "failed" | "expired" | "cancelled";
+          pakasir_txn_id?: string | null;
+          fee?: number | null;
+          total_payment?: number | null;
+          qr_string?: string | null;
+          expires_at?: string | null;
+          completed_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -544,6 +631,14 @@ export type Database = {
       };
       increment_snippet_view_count: {
         Args: { p_snippet_id: string };
+        Returns: void;
+      };
+      reserve_vps_stock: {
+        Args: { p_stock_id: string };
+        Returns: Database["public"]["Tables"]["vps_stock"]["Row"];
+      };
+      release_vps_stock: {
+        Args: { p_stock_id: string };
         Returns: void;
       };
     };

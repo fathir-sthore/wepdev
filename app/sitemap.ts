@@ -38,6 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/search` },
     { url: `${SITE_URL}/code` },
     { url: `${SITE_URL}/downloader` },
+    { url: `${SITE_URL}/panel-hosting` },
   ];
 
   try {

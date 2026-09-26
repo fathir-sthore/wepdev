@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Code2, Flag, Users, ArrowLeft, Image as ImageIcon, Receipt, Sparkles } from "lucide-react";
+import { LayoutDashboard, Code2, Flag, Users, ArrowLeft, Image as ImageIcon, Receipt, Sparkles, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ADMIN_BASE_PATH } from "@/lib/admin-path";
 import { ChangelogModal } from "@/components/layout/changelog-modal";
@@ -12,6 +12,7 @@ const BASE = `/${ADMIN_BASE_PATH}`;
 const links = [
   { href: BASE, label: "overview", icon: LayoutDashboard },
   { href: `${BASE}/scripts`, label: "scripts", icon: Code2 },
+  { href: `${BASE}/vps-stock`, label: "vps stock", icon: Server },
   { href: `${BASE}/banners`, label: "banners", icon: ImageIcon },
   { href: `${BASE}/transactions`, label: "transactions", icon: Receipt },
   { href: `${BASE}/reports`, label: "reports", icon: Flag },
